@@ -1,6 +1,12 @@
 "use client";
 
-import { FaEnvelope, FaMapMarkedAlt, FaPhone } from "react-icons/fa";
+import {
+  FaEnvelope,
+  FaInstagram,
+  FaMapMarkedAlt,
+  FaTiktok,
+  FaYoutube,
+} from "react-icons/fa";
 import Link from "next/link";
 import { LuSend } from "react-icons/lu";
 import { useState } from "react";
@@ -14,16 +20,31 @@ const contactInfo = [
     link: "#",
   },
   {
-    icon: <FaPhone className="w-6 h-6" />,
-    title: "Nomor Telephone",
-    value: "(+62) 857-3927-64132",
-    link: "#",
-  },
-  {
     icon: <FaMapMarkedAlt className="w-6 h-6" />,
     title: "Lokasi",
     value: "Indonesia, Jawa Timur, Kota Pasuruan",
     link: "#",
+  },
+];
+
+const socialLinks = [
+  {
+    name: "Instagram",
+    icon: <FaInstagram />,
+    value: "qzmiuu",
+    link: "https://www.instagram.com/qzmiuu/",
+  },
+  {
+    name: "TikTok",
+    icon: <FaTiktok />,
+    value: "44zmii",
+    link: "https://www.tiktok.com/@azmii.hh",
+  },
+  {
+    name: "YouTube",
+    icon: <FaYoutube />,
+    value: "Azmi Tech",
+    link: "https://www.youtube.com/channel/UConwuD3udrqXVXSU_BiB8Jg",
   },
 ];
 
@@ -69,13 +90,11 @@ export default function ContactSection() {
   return (
     <section id="contact" className="py-16 lg:py-30">
       <div
-        className="w-[90%] md:w-[80%] lg:[70%] mx-auto grid grid-cols-1 lg:grid-cols-2
-            gap-6 lg:gap-12"
+        className="w-[90%] md:w-[80%] lg:[70%] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12"
       >
         <div data-aos="fade-right">
           <h2
-            className="py-3 text-3xl md:text-4xl font-bold tracking-wide text-transparent bg-clip-text bg-linear-to-r
-            from-indigo-200 to-gray-300"
+            className="py-3 text-3xl md:text-4xl font-bold tracking-wide text-transparent bg-clip-text bg-linear-to-r from-indigo-200 to-gray-300"
           >
             Beri Kritik Atau Saran Anda Disini
           </h2>
@@ -105,6 +124,27 @@ export default function ContactSection() {
                 </Link>
               );
             })}
+          </div>
+
+          <div className="mt-8 flex flex-wrap items-start gap-5">
+            {socialLinks.map((social) => (
+              <Link
+                href={social.link}
+                key={social.name}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={social.name}
+                title={social.name}
+                className="group flex min-w-24 flex-col items-center gap-2 text-center text-gray-300 transition-all hover:-translate-y-1 hover:text-indigo-400"
+              >
+                <span className="grid h-11 w-11 place-items-center rounded-full bg-white/5 text-xl transition-colors group-hover:bg-indigo-500 group-hover:text-white">
+                  {social.icon}
+                </span>
+                <span className="text-xs font-medium text-gray-400 group-hover:text-indigo-400">
+                  {social.name} : {social.value}
+                </span>
+              </Link>
+            ))}
           </div>
         </div>
 

@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={`${poppins.className} antialiased bg-slate-950`}>
+      <body className={`${poppins.className} theme-transition antialiased bg-slate-950`}>
         <Navbar />
         {children}
         <Footer />

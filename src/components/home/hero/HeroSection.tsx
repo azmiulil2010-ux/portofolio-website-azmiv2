@@ -26,14 +26,14 @@ export default function HeroSection() {
       </div>
       <div className="relative z-10 flex flex-col items-center">
         {/* glowing Image */}
-        <div className="relative h-37.5 w-37.5" data-aos="fade-up">
+        <div className="relative h-44 w-44 sm:h-52 sm:w-52" data-aos="fade-up">
           <div className="absolute inset-0 rounded-full bg-linear-to-r from-blue-500 to-purple-600 blur-lg animate-pulse opacity-50"></div>
           <Image
-            src="/image3.png"
+            src="/profil.png"
             alt="Foto Azmi"
-            className="rounded-full object-cover"
+            className="rounded-full object-cover object-[center_65%]"
             fill
-            sizes="150px"
+            sizes="(min-width: 640px) 208px, 176px"
             priority
           />
         </div>
