@@ -7,12 +7,21 @@ import MobileNav from "./MobileNav";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { navLinks } from "./navLinks";
+import { useActiveSection } from "./useActiveSection";
 
 export default function Navbar() {
     const [navOpen, setNavOpen] = useState(false);
-    const [navBackground, setNavBackground] = useState(false);
     const [isDarkMode, setIsDarkMode] = useState(true);
     const pathname = usePathname();
+    const activeSection = useActiveSection();
+
+    const isLinkActive = (section: string) => {
+        if (pathname === "/") {
+            return activeSection === section;
+        }
+
+        return pathname.startsWith(`/${section}`);
+    };
 
     useEffect(() => {
         const savedTheme = window.localStorage.getItem("theme");
@@ -30,21 +39,8 @@ export default function Navbar() {
         window.localStorage.setItem("theme", nextTheme ? "dark" : "light");
     };
 
-    useEffect(() => {
-        const navHandler = () => {
-            if(window.scrollY >= 90) setNavBackground(true);
-            if(window.scrollY < 90) setNavBackground(false);
-        }
-
-        window.addEventListener("scroll", navHandler);
-
-        return () => {
-        window.removeEventListener("scroll", navHandler);
-        }
-    },[])
     return (
-        <nav className={`h-18 fixed z-50 w-full transition-all duration-300 ${
-        navBackground ? "bg-slate-900 shadow-md" : ""}`}>
+        <nav className="site-navbar h-18 fixed z-50 w-full border-b border-slate-800/70 bg-slate-950/75 shadow-lg shadow-slate-950/10 backdrop-blur-md transition-colors duration-300">
             <div className="flex items-center h-full justify-between w-[90%] mx-auto">
                 {/* LOGO */}
                 <Logo />
@@ -55,7 +51,7 @@ export default function Navbar() {
                         return (
                             <li key={link.url}>
                                 <Link
-                                    className={`font-medium transition-colors duration-300 hover:text-cyan-500 ${pathname === link.url ? "text-cyan-400" : "text-gray-200"}`}
+                                    className={`font-medium transition-colors duration-300 hover:text-cyan-500 ${isLinkActive(link.section) ? "text-cyan-400" : "text-gray-200"}`}
                                     href={link.url}
                                 >
                                     {link.label}
@@ -72,7 +68,7 @@ export default function Navbar() {
                         onClick={toggleTheme}
                         aria-label={isDarkMode ? "Aktifkan mode terang" : "Aktifkan mode gelap"}
                         title={isDarkMode ? "Mode terang" : "Mode gelap"}
-                        className="grid h-9 w-9 place-items-center rounded-full text-gray-200 transition-colors hover:bg-white/10 hover:text-cyan-400"
+                        className="theme-toggle grid h-9 w-9 place-items-center rounded-full text-gray-200 transition-colors hover:bg-white/10 hover:text-cyan-400"
                     >
                         {isDarkMode ? <LuSun size={19} /> : <LuMoon size={19} />}
                     </button>
@@ -90,7 +86,7 @@ export default function Navbar() {
                         type="button"
                         onClick={() => setNavOpen(!navOpen)}
                         aria-label="Buka menu navigasi"
-                        className="h-8 w-8 cursor-pointer text-white lg:hidden"
+                        className="mobile-menu-toggle h-8 w-8 cursor-pointer text-white lg:hidden"
                     >
                         <LuMenu size={30} />
                     </button>

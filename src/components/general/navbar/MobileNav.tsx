@@ -3,6 +3,8 @@ import { navLinks } from "./navLinks"
 import LinkButton from"../LinkButton"
 import { LuDownload, LuX } from "react-icons/lu"
 import { usePathname } from "next/navigation"
+import { useActiveSection } from "./useActiveSection"
+import { useEffect } from "react"
 
 interface MobileNavProps {
     navOpen:boolean
@@ -11,6 +13,20 @@ interface MobileNavProps {
 
 export default function MobileNav({navOpen, setNavOpen}:MobileNavProps) {
     const pathname = usePathname();
+    const activeSection = useActiveSection();
+    const isLinkActive = (section: string) => pathname === "/" ? activeSection === section : pathname.startsWith(`/${section}`);
+
+    useEffect(() => {
+        const originalOverflow = document.body.style.overflow;
+
+        if (navOpen) {
+            document.body.style.overflow = "hidden";
+        }
+
+        return () => {
+            document.body.style.overflow = originalOverflow;
+        };
+    }, [navOpen]);
     const panelTransform = navOpen ? "translate-x-0" : "translate-x-full"
     const backdropVisibility = navOpen
         ? "pointer-events-auto opacity-30"
@@ -21,12 +37,15 @@ export default function MobileNav({navOpen, setNavOpen}:MobileNavProps) {
                 onClick={() => setNavOpen(false)}
                 className={`fixed inset-0 right-0 z-55 h-screen w-full bg-black transition-opacity duration-300 ease-in-out ${backdropVisibility} lg:hidden`}
             />
-            <ul className={`fixed right-0 top-0 z-60 flex h-full w-[80%] transform flex-col items-center justify-center space-y-1 bg-slate-800 text-white transition-transform duration-300 ease-in-out sm:w-[60%] ${panelTransform} lg:hidden`}>
+            <ul
+                aria-label="Menu navigasi mobile"
+                className={`mobile-sidebar fixed right-0 top-0 z-60 flex h-dvh w-[80%] transform flex-col items-center justify-start gap-1 overflow-y-auto overscroll-contain bg-slate-800 px-5 pb-8 pt-24 text-white transition-transform duration-300 ease-in-out sm:w-[60%] ${panelTransform} lg:hidden`}
+            >
                 <button
                     type="button"
                     onClick={() => setNavOpen(false)}
                     aria-label="Tutup menu navigasi"
-                    className="absolute right-5 top-5 grid h-10 w-10 place-items-center rounded-full text-white transition-colors hover:bg-slate-700 hover:text-cyan-300"
+                    className="mobile-sidebar-close absolute right-5 top-5 grid h-10 w-10 place-items-center rounded-full text-white transition-colors hover:bg-slate-700 hover:text-cyan-300"
                 >
                     <LuX size={28} aria-hidden="true" />
                 </button>
@@ -36,7 +55,7 @@ export default function MobileNav({navOpen, setNavOpen}:MobileNavProps) {
                             <Link
                             onClick={() => setNavOpen(false)}
                                 href={link.url}
-                                className={`flex w-full items-center justify-center rounded-lg border-b border-slate-700/30 px-6 py-4 text-center text-xl font-medium transition-all duration-300 hover:bg-slate-700/50 hover:text-cyan-300 ${pathname === link.url ? "bg-slate-700/60 text-cyan-300" : "text-white"}`}
+                                className={`mobile-nav-link flex w-full items-center justify-center rounded-lg border-b border-slate-700/30 px-6 py-4 text-center text-xl font-medium transition-all duration-300 hover:bg-slate-700/50 hover:text-cyan-300 ${isLinkActive(link.section) ? "bg-slate-700/60 text-cyan-300" : "text-white"}`}
                             >
                                 {link.label}
                             </Link>

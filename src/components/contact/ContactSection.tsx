@@ -51,7 +51,7 @@ const socialLinks = [
 export default function ContactSection() {
   const [loading, setLoading] = useState(false);
   const InputStyles =
-    "px-4 py-3.5 my-4 bg-slate-800 outline-none rounded-md w-full text-gray-200 placeholder-gray-400";
+    "contact-input px-4 py-3.5 my-4 bg-slate-800 outline-none rounded-md w-full text-gray-200 placeholder-gray-400";
 
   const onSubmit = async (event: React.FormEvent) => {
     setLoading(true);
@@ -88,7 +88,7 @@ export default function ContactSection() {
     console.log(Object.fromEntries(formData.entries()))
   };
   return (
-    <section className="py-16 lg:py-30">
+    <section className="py-10 lg:py-16">
       <div
         className="w-[90%] md:w-[80%] lg:[70%] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12"
       >
@@ -152,7 +152,7 @@ export default function ContactSection() {
         <div data-aos="zoom-in">
           <form
             onSubmit={onSubmit}
-            className="rounded-lg bg-slate-900 px-4 py-8 "
+            className="contact-form rounded-2xl bg-slate-900 px-4 py-8 "
           >
             <input
               type="text"

@@ -27,7 +27,7 @@ export default function ScrollTopButton() {
   return (
     <>
     {showButton && (
-        <button onClick={scrollToTop} className="w-12 h-12 bg-slate-800 cursor-pointer text-white rounded-full grid place-items-center fixed bottom-4 right-4">
+        <button onClick={scrollToTop} aria-label="Kembali ke atas" className="scroll-top-button w-12 h-12 bg-slate-800 cursor-pointer text-white rounded-full grid place-items-center fixed bottom-4 right-4">
       <FaArrowUp />
     </button>
     )}

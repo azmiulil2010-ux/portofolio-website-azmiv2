@@ -14,7 +14,7 @@ export default function ResumeCard({
     description,
 }: ResumeCardProps) {
     return (
-        <div className="flex items-start space-x-6 bg-blue-950/20 p-4 rounded-md">
+        <div className="resume-card flex items-start space-x-6 rounded-2xl border border-transparent bg-blue-950/20 p-4 transition-colors duration-300">
             <div className="resume-icon w-10 h-10 sm:w-14 sm:h-14 bg-blue-950 rounded-full grid place-items-center">
                 <Icon className="w-6 h-6 sm:w-8 sm:h-8 text-gray-200" />
             </div>
