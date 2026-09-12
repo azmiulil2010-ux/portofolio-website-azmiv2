@@ -5,7 +5,7 @@ import ServiceCard from "./ServiceCard";
 
 export default function ServiceSection() {
   return (
-    <section id="services">
+    <section>
       {/* Header */}
       <Header title="My Services" />
       <div className="w-[90%] sm:w-[80%] mx-auto grid grid-cols-1 md:grid-cols-2

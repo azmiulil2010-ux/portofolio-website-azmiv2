@@ -46,7 +46,7 @@ const skills = [
 
 export default function SkillSection() {
   return (
-    <section id="skills" className="py-16">
+    <section className="py-16">
       <Header title="My Skills" />
       <div className="skill-grid mx-auto grid w-[calc(100%-2rem)] max-w-4xl grid-cols-2 justify-items-center gap-4 sm:grid-cols-3 sm:gap-6 lg:grid-cols-4">
         {skills.map((skill, index) => {

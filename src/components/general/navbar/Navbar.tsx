@@ -4,21 +4,15 @@ import LinkButton from "../LinkButton";
 import Logo from "./Logo";
 import Link from "next/link";
 import MobileNav from "./MobileNav";
+import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-
-export const navLinks = [
-    {url:"#home",label:"Home"},
-    {url:"#services",label:"Services"},
-    {url:"#resume",label:"Resume"},
-    {url:"#projects",label:"Projects"},
-    {url:"#skills",label:"Skills"},
-    {url:"#contact",label:"Contact"},
-]
+import { navLinks } from "./navLinks";
 
 export default function Navbar() {
     const [navOpen, setNavOpen] = useState(false);
     const [navBackground, setNavBackground] = useState(false);
     const [isDarkMode, setIsDarkMode] = useState(true);
+    const pathname = usePathname();
 
     useEffect(() => {
         const savedTheme = window.localStorage.getItem("theme");
@@ -60,7 +54,12 @@ export default function Navbar() {
                     {navLinks.map((link) => {
                         return (
                             <li key={link.url}>
-                                <Link className="text-gray-200 hover:text-cyan-500 font-medium transition-colors duration-300" href={link.url}>{link.label}</Link>
+                                <Link
+                                    className={`font-medium transition-colors duration-300 hover:text-cyan-500 ${pathname === link.url ? "text-cyan-400" : "text-gray-200"}`}
+                                    href={link.url}
+                                >
+                                    {link.label}
+                                </Link>
                             </li>
                         )
                     })}

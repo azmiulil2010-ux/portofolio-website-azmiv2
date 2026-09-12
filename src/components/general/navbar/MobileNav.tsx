@@ -1,7 +1,8 @@
 import Link from "next/link"
-import { navLinks } from "./Navbar"
+import { navLinks } from "./navLinks"
 import LinkButton from"../LinkButton"
 import { LuDownload, LuX } from "react-icons/lu"
+import { usePathname } from "next/navigation"
 
 interface MobileNavProps {
     navOpen:boolean
@@ -9,6 +10,7 @@ interface MobileNavProps {
 }
 
 export default function MobileNav({navOpen, setNavOpen}:MobileNavProps) {
+    const pathname = usePathname();
     const panelTransform = navOpen ? "translate-x-0" : "translate-x-full"
     const backdropVisibility = navOpen
         ? "pointer-events-auto opacity-30"
@@ -34,7 +36,7 @@ export default function MobileNav({navOpen, setNavOpen}:MobileNavProps) {
                             <Link
                             onClick={() => setNavOpen(false)}
                                 href={link.url}
-                                className="flex w-full items-center justify-center rounded-lg border-b border-slate-700/30 px-6 py-4 text-center text-xl font-medium text-white transition-all duration-300 hover:bg-slate-700/50 hover:text-cyan-300"
+                                className={`flex w-full items-center justify-center rounded-lg border-b border-slate-700/30 px-6 py-4 text-center text-xl font-medium transition-all duration-300 hover:bg-slate-700/50 hover:text-cyan-300 ${pathname === link.url ? "bg-slate-700/60 text-cyan-300" : "text-white"}`}
                             >
                                 {link.label}
                             </Link>

@@ -5,7 +5,7 @@ import { RiNextjsFill } from "react-icons/ri";
 
 export default function ResumeSection() {
   return (
-    <section id="resume" className="my-12">
+    <section className="my-12">
       <div className="w-[90%] sm:w-[70%] mx-auto grid grid-cols-1 xl:grid-cols-2 gap-10">
         {/* education section */}
         <div data-aos="zoom-out">

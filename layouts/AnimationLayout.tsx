@@ -1,6 +1,7 @@
 "use client";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 const greetings = [
@@ -27,6 +28,7 @@ export default function AnimationLayout({
     const [isIntroLeaving, setIsIntroLeaving] = useState(false);
     const [splashPhase, setSplashPhase] = useState<SplashPhase>('loading');
     const [greetingIndex, setGreetingIndex] = useState(0);
+    const pathname = usePathname();
 
     useEffect(() => {
         const greetingTimer = window.setInterval(() => {
@@ -61,6 +63,10 @@ export default function AnimationLayout({
             window.clearTimeout(removeIntroTimer);
         };
     }, []);
+
+    useEffect(() => {
+        AOS.refreshHard();
+    }, [pathname]);
 
     return (
         <>

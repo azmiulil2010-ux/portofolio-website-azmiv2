@@ -35,7 +35,7 @@ spacing, warna, typography, responsive breakpoint, hover state, dan animasi.
 Style global di `globals.css` melengkapi utility tersebut untuk:
 
 - tema dark dan light melalui atribut `data-theme`;
-- smooth scrolling pada navigasi anchor;
+- transisi tema dan styling halaman;
 - animasi kartu skill dan pengaturan reduced motion;
 - styling khusus komponen yang digunakan berulang.
 
@@ -59,6 +59,7 @@ bagian halaman.
 - `navbar/Navbar.tsx` - navbar desktop, tema dark/light, dan tombol download CV.
 - `navbar/Logo.tsx` - logo pada navbar.
 - `navbar/MobileNav.tsx` - sidebar navigasi mobile dengan animasi buka/tutup.
+- `navbar/navLinks.ts` - daftar route yang dipakai navbar desktop dan mobile.
 
 ### `home/hero/`
 
@@ -87,8 +88,13 @@ bagian halaman.
 
 ## Struktur Halaman
 
-- `src/app/page.tsx` menyusun halaman utama dari berbagai section.
+- `src/app/page.tsx` menampilkan halaman Home.
+- `src/app/about/page.tsx` menampilkan layanan dan resume sebagai halaman About.
+- `src/app/skills/page.tsx` menampilkan halaman Skills.
+- `src/app/projects/page.tsx` menampilkan halaman Projects.
+- `src/app/contact/page.tsx` menampilkan halaman Contact.
 - `src/app/layout.tsx` menyediakan layout HTML dan font global.
+- Navbar, footer, animasi intro, tombol kembali ke atas, dan toaster dipakai bersama melalui root layout.
 - `src/app/not-found.tsx` menampilkan halaman khusus ketika URL tidak ditemukan.
 - `public/cv.png` merupakan file CV yang dapat diunduh melalui tombol Download CV.
 

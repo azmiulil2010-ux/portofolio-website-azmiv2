@@ -17,13 +17,13 @@ const contactInfo = [
     icon: <FaEnvelope className="w-6 h-6" />,
     title: "Email",
     value: "azmiulil2010@gmail.com",
-    link: "#",
+    link: "mailto:azmiulil2010@gmail.com",
   },
   {
     icon: <FaMapMarkedAlt className="w-6 h-6" />,
     title: "Lokasi",
     value: "Indonesia, Jawa Timur, Kota Pasuruan",
-    link: "#",
+    link: "https://maps.google.com/?q=Pasuruan,+Jawa+Timur",
   },
 ];
 
@@ -88,7 +88,7 @@ export default function ContactSection() {
     console.log(Object.fromEntries(formData.entries()))
   };
   return (
-    <section id="contact" className="py-16 lg:py-30">
+    <section className="py-16 lg:py-30">
       <div
         className="w-[90%] md:w-[80%] lg:[70%] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12"
       >
