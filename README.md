@@ -1,36 +1,102 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Azmi Portfolio
 
-## Getting Started
+Website portfolio personal Azmi yang dibangun dengan Next.js App Router, React,
+TypeScript, dan Tailwind CSS.
 
-First, run the development server:
+## Menjalankan Project
+
+Pastikan Node.js dan npm sudah terpasang, kemudian jalankan:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Buka [http://localhost:3000](http://localhost:3000) di browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Perintah lain yang tersedia:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build  # membuat build production
+npm run start  # menjalankan build production
+```
 
-## Learn More
+## Tailwind Styling
 
-To learn more about Next.js, take a look at the following resources:
+Styling menggunakan Tailwind CSS v4 melalui `@tailwindcss/postcss`. Import
+utama Tailwind berada di `src/app/globals.css`:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```css
+@import "tailwindcss";
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Class utility Tailwind digunakan langsung pada elemen JSX untuk mengatur layout,
+spacing, warna, typography, responsive breakpoint, hover state, dan animasi.
+Style global di `globals.css` melengkapi utility tersebut untuk:
 
-## Deploy on Vercel
+- tema dark dan light melalui atribut `data-theme`;
+- smooth scrolling pada navigasi anchor;
+- animasi kartu skill dan pengaturan reduced motion;
+- styling khusus komponen yang digunakan berulang.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Konfigurasi PostCSS terdapat di `postcss.config.mjs`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Struktur Komponen
+
+Seluruh komponen UI berada di `src/components` dan dikelompokkan berdasarkan
+bagian halaman.
+
+### `contact/`
+
+- `ContactSection.tsx` - bagian kontak dan form/interaksi kontak.
+
+### `general/`
+
+- `Footer.tsx` - footer portfolio.
+- `Header.tsx` - komponen header umum.
+- `LinkButton.tsx` - tombol berbasis link dengan dukungan icon, animasi, dan download.
+- `ScrollTopButton.tsx` - tombol untuk kembali ke bagian atas halaman.
+- `navbar/Navbar.tsx` - navbar desktop, tema dark/light, dan tombol download CV.
+- `navbar/Logo.tsx` - logo pada navbar.
+- `navbar/MobileNav.tsx` - sidebar navigasi mobile dengan animasi buka/tutup.
+
+### `home/hero/`
+
+- `HeroSection.tsx` - bagian pembuka portfolio.
+- `AnimatedIntro.tsx` - animasi intro saat halaman dimuat.
+- `Particels.tsx` - efek partikel pada area hero.
+
+### `projects/`
+
+- `ProjectSection.tsx` - daftar project portfolio.
+- `ProjectCard.tsx` - kartu individual untuk setiap project.
+
+### `resume/`
+
+- `ResumeSection.tsx` - bagian riwayat pendidikan dan pengalaman.
+- `ResumeCard.tsx` - kartu individual resume.
+
+### `services/`
+
+- `ServiceSection.tsx` - daftar layanan yang ditawarkan.
+- `ServiceCard.tsx` - kartu individual layanan.
+
+### `skills/`
+
+- `SkillSection.tsx` - daftar skill dan teknologi.
+
+## Struktur Halaman
+
+- `src/app/page.tsx` menyusun halaman utama dari berbagai section.
+- `src/app/layout.tsx` menyediakan layout HTML dan font global.
+- `src/app/not-found.tsx` menampilkan halaman khusus ketika URL tidak ditemukan.
+- `public/cv.png` merupakan file CV yang dapat diunduh melalui tombol Download CV.
+
+## Teknologi
+
+- Next.js 16 dan React 19
+- TypeScript
+- Tailwind CSS 4
+- React Icons
+- AOS dan OGL untuk kebutuhan animasi/visual
+- React Hot Toast untuk notifikasi

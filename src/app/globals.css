@@ -4,6 +4,10 @@
   color-scheme: dark;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 [data-theme="light"] {
   color-scheme: light;
 }

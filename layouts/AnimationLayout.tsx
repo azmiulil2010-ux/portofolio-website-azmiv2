@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 const greetings = [
     'Selamat datang',
     'Welcome',
-    'Bienvenido',
+    'Sugeng Rawuh',
     'Bienvenue',
     'Willkommen',
     'Konnichiwa',

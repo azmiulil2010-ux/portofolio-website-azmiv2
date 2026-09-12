@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { navLinks } from "./Navbar"
 import LinkButton from"../LinkButton"
-import { LuDownload } from "react-icons/lu"
+import { LuDownload, LuX } from "react-icons/lu"
 
 interface MobileNavProps {
     navOpen:boolean
@@ -9,17 +9,25 @@ interface MobileNavProps {
 }
 
 export default function MobileNav({navOpen, setNavOpen}:MobileNavProps) {
-    const showMobileNav = navOpen ? "translate-x-0" : "translate-x-[100%]"
+    const panelTransform = navOpen ? "translate-x-0" : "translate-x-full"
+    const backdropVisibility = navOpen
+        ? "pointer-events-auto opacity-30"
+        : "pointer-events-none opacity-0"
     return (
         <>
-        {/* InsetBavkground */}
-        <div className={`fixed inset-0 transform right-0 z-50 bg-black opacity-30 w-full h-screen transition-all 
-        duration-500 ${showMobileNav} lg:hidden`}>
-
-        </div>
-        {/* NavLinks */}
-            <ul className={`fixed flex items-center justify-center text-white flex-col h-full transform transition-all duration-500 delay-300 w-[80%] sm:w-[60%]
-            bg-slate-800 space-y-1 z-80 right-0 top-0 ${showMobileNav} lg:hidden`}>
+            <div
+                onClick={() => setNavOpen(false)}
+                className={`fixed inset-0 right-0 z-55 h-screen w-full bg-black transition-opacity duration-300 ease-in-out ${backdropVisibility} lg:hidden`}
+            />
+            <ul className={`fixed right-0 top-0 z-60 flex h-full w-[80%] transform flex-col items-center justify-center space-y-1 bg-slate-800 text-white transition-transform duration-300 ease-in-out sm:w-[60%] ${panelTransform} lg:hidden`}>
+                <button
+                    type="button"
+                    onClick={() => setNavOpen(false)}
+                    aria-label="Tutup menu navigasi"
+                    className="absolute right-5 top-5 grid h-10 w-10 place-items-center rounded-full text-white transition-colors hover:bg-slate-700 hover:text-cyan-300"
+                >
+                    <LuX size={28} aria-hidden="true" />
+                </button>
                 {navLinks.map((link) => {
                     return (
                         <li key={link.url}>
@@ -35,7 +43,7 @@ export default function MobileNav({navOpen, setNavOpen}:MobileNavProps) {
                 })}
                 <div className="my-4">
                     <LinkButton
-                        href="/documents/cv.pdf"
+                        href="/cv.png"
                         text="Download CV"
                         download
                         icon={LuDownload}

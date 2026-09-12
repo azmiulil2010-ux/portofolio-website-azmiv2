@@ -1,5 +1,5 @@
 "use client";
-import { LuDownload, LuMenu, LuMoon, LuSun, LuX } from "react-icons/lu";
+import { LuDownload, LuMenu, LuMoon, LuSun } from "react-icons/lu";
 import LinkButton from "../LinkButton";
 import Logo from "./Logo";
 import Link from "next/link";
@@ -79,7 +79,7 @@ export default function Navbar() {
                     </button>
                     <div className="hidden lg:block">
                         <LinkButton
-                            href="/documents/cv.pdf"
+                            href="/cv.png"
                             text="Download CV"
                             download
                             icon={LuDownload}
@@ -88,10 +88,12 @@ export default function Navbar() {
                         />
                     </div>
                     <button
+                        type="button"
                         onClick={() => setNavOpen(!navOpen)}
+                        aria-label="Buka menu navigasi"
                         className="h-8 w-8 cursor-pointer text-white lg:hidden"
                     >
-                        {navOpen ? <LuX size={30} /> : <LuMenu size={30} />}
+                        <LuMenu size={30} />
                     </button>
                 </div>
                 <MobileNav navOpen={navOpen} setNavOpen={setNavOpen} />
