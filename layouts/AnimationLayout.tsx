@@ -21,16 +21,22 @@ type SplashPhase = 'loading' | 'greeting';
 
 export default function AnimationLayout({
     children,
+    skipIntro = false,
 }: {
     children: React.ReactNode;
+    skipIntro?: boolean;
 }) {
-    const [isIntroVisible, setIsIntroVisible] = useState(true);
+    const [isIntroVisible, setIsIntroVisible] = useState(!skipIntro);
     const [isIntroLeaving, setIsIntroLeaving] = useState(false);
     const [splashPhase, setSplashPhase] = useState<SplashPhase>('loading');
     const [greetingIndex, setGreetingIndex] = useState(0);
     const pathname = usePathname();
 
     useEffect(() => {
+        if (skipIntro) {
+            document.cookie = 'skipSplash=; Max-Age=0; path=/';
+        }
+
         const greetingTimer = window.setInterval(() => {
             setGreetingIndex((currentIndex) => (currentIndex + 1) % greetings.length);
         }, 300);
@@ -62,7 +68,7 @@ export default function AnimationLayout({
             window.clearTimeout(introTimer);
             window.clearTimeout(removeIntroTimer);
         };
-    }, []);
+    }, [skipIntro]);
 
     useEffect(() => {
         AOS.refreshHard();

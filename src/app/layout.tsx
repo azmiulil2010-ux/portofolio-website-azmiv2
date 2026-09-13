@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/general/navbar/Navbar";
-import Footer from "@/components/general/Footer";
-import ScrollTopButton from "@/components/general/ScrollTopButton";
-import AnimationLayout from "../../layouts/AnimationLayout";
-import { Toaster } from "react-hot-toast";
+import SiteChrome from "@/components/general/SiteChrome";
+import { cookies } from "next/headers";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -21,18 +18,17 @@ export const metadata: Metadata = {
   }
 }
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const cookieStore = await cookies();
+  const skipSplash = cookieStore.get("skipSplash")?.value === "1";
+
   return (
     <html lang="en" data-scroll-behavior="smooth">
       <head>
         <link rel="icon" href="/logo.png?v=3" type="image/png" />
       </head>
       <body className={`${poppins.className} theme-transition antialiased bg-slate-950`}>
-        <Navbar />
-        <AnimationLayout>{children}</AnimationLayout>
-        <Footer />
-        <ScrollTopButton />
-        <Toaster />
+        <SiteChrome skipSplash={skipSplash}>{children}</SiteChrome>
       </body>
     </html>
   );

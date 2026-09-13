@@ -1,9 +1,9 @@
-import Link from "next/link";
 import { LuArrowLeft, LuHouse, LuSearchX } from "react-icons/lu";
+import ReturnHomeLink from "@/components/general/ReturnHomeLink";
 
 export default function NotFound() {
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden px-6 pb-20 pt-28 text-center">
+    <main className="not-found-page relative flex min-h-screen items-center justify-center overflow-hidden px-6 pb-20 pt-28 text-center">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.16),transparent_35%),radial-gradient(circle_at_bottom_left,rgba(124,58,237,0.14),transparent_35%)]" />
 
       <section className="relative z-10 max-w-xl">
@@ -20,14 +20,11 @@ export default function NotFound() {
           URL yang kamu masukkan tidak tersedia atau mungkin sudah dipindahkan.
           Mari kembali ke halaman utama portofolio.
         </p>
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 rounded-lg bg-linear-to-r from-blue-900 to-purple-800 px-6 py-3 font-medium text-white transition-all duration-300 hover:scale-[1.02] hover:from-blue-800 hover:to-purple-700 active:scale-[0.98]"
-        >
+        <ReturnHomeLink>
           <LuArrowLeft size={19} aria-hidden="true" />
           <LuHouse size={19} aria-hidden="true" />
           Kembali ke Beranda
-        </Link>
+        </ReturnHomeLink>
       </section>
     </main>
   );

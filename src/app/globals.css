@@ -9,6 +9,11 @@ html {
   scroll-padding-top: 5rem;
 }
 
+body:has(.not-found-page) .site-navbar,
+body:has(.not-found-page) .intro-screen {
+  display: none;
+}
+
 [data-theme="light"] {
   color-scheme: light;
 }
