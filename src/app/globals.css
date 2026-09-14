@@ -224,9 +224,12 @@ body:has(.not-found-page) .intro-screen {
 }
 
 [data-theme="light"] .project-search button,
-[data-theme="light"] .contact-form button,
-[data-theme="light"] .project-live-link {
+[data-theme="light"] .contact-form button {
   color: #ffffff !important;
+}
+
+[data-theme="light"] .project-live-link {
+  color: #000000 !important;
 }
 
 [data-theme="dark"] .brand-logo p {
