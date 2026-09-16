@@ -20,7 +20,7 @@ export default async function Projects({ searchParams }: ProjectsPageProps) {
         description="A collection of websites and product ideas built while learning how design, code, and useful functionality come together."
       />
       <ProjectSearch searchTerm={searchTerm} />
-      <ProjectSection searchTerm={searchTerm} />
+      <ProjectSection searchTerm={searchTerm} heading="All Projects" />
     </main>
   );
 }

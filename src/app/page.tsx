@@ -3,18 +3,10 @@ import ServiceSection from "@/components/services/ServiceSection";
 import ResumeSection from "@/components/resume/ResumeSection";
 import SkillSection from "@/components/skills/SkillSection";
 import ProjectSection from "@/components/projects/ProjectSection";
-import ProjectSearch from "@/components/projects/ProjectSearch";
 import ContactSection from "@/components/contact/ContactSection";
 import SpaceDecorations from "@/components/general/SpaceDecorations";
 
-interface HomeProps {
-  searchParams: Promise<{ search?: string }>;
-}
-
-export default async function Home({ searchParams }: HomeProps) {
-  const params = await searchParams;
-  const searchTerm = params.search?.trim() ?? "";
-
+export default function Home() {
   return (
     <main className="relative overflow-hidden">
       <section id="home" className="relative isolate overflow-hidden scroll-mt-20">
@@ -39,8 +31,7 @@ export default async function Home({ searchParams }: HomeProps) {
       <section id="projects" className="relative isolate overflow-hidden scroll-mt-20 py-6 md:py-8">
         <SpaceDecorations />
         <div className="relative z-10">
-          <ProjectSearch searchTerm={searchTerm} basePath="/" />
-          <ProjectSection searchTerm={searchTerm} />
+          <ProjectSection showAllLink />
         </div>
       </section>
       <section id="contact" className="relative isolate overflow-hidden scroll-mt-20 py-6 md:py-8">
