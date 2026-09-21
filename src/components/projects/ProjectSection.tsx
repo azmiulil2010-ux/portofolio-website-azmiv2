@@ -1,5 +1,5 @@
 import ProjectCard from "./ProjectCard";
-import { projects } from "./projectData";
+import { getProjects } from "./projectData";
 import Link from "next/link";
 import { LuArrowRight } from "react-icons/lu";
 
@@ -9,11 +9,12 @@ interface ProjectSectionProps {
   showAllLink?: boolean;
 }
 
-export default function ProjectSection({
+export default async function ProjectSection({
   searchTerm = "",
   heading = "Recent Projects",
   showAllLink = false,
 }: ProjectSectionProps) {
+  const projects = await getProjects();
   const normalizedSearchTerm = searchTerm.trim().toLowerCase();
   const filteredProjects = projects.filter((project) =>
     `${project.title} ${project.description}`.toLowerCase().includes(normalizedSearchTerm),

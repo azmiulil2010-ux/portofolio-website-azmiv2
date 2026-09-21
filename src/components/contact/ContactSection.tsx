@@ -151,6 +151,7 @@ export default function ContactSection() {
         {/* Form */}
         <div data-aos="zoom-in">
           <form
+            suppressHydrationWarning
             onSubmit={onSubmit}
             className="contact-form rounded-2xl bg-slate-900 px-4 py-8 "
           >
@@ -173,7 +174,7 @@ export default function ContactSection() {
               placeholder="Message Destination"
               className={InputStyles}
               required
-              name="suject"
+              name="subject"
             />
             <textarea
               placeholder="Message"

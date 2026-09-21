@@ -6,7 +6,7 @@ import ProjectSection from "@/components/projects/ProjectSection";
 import ContactSection from "@/components/contact/ContactSection";
 import SpaceDecorations from "@/components/general/SpaceDecorations";
 
-export default function Home() {
+export default async function Home() {
   return (
     <main className="relative overflow-hidden">
       <section id="home" className="relative isolate overflow-hidden scroll-mt-20">

@@ -5,7 +5,6 @@ import AnimationLayout from "../../../layouts/AnimationLayout";
 import Footer from "./Footer";
 import ScrollTopButton from "./ScrollTopButton";
 import Navbar from "./navbar/Navbar";
-import { projects } from "../projects/projectData";
 import { Toaster } from "react-hot-toast";
 
 const staticRoutes = new Set(["/", "/about", "/contact", "/projects", "/skills"]);
@@ -18,7 +17,7 @@ function isValidPortfolioRoute(pathname: string) {
   }
 
   const projectId = normalizedPath.match(/^\/projects\/([^/]+)$/)?.[1];
-  return projectId !== undefined && projects.some((project) => project.id === projectId);
+  return projectId !== undefined && projectId.length > 0;
 }
 
 export default function SiteChrome({

@@ -3,6 +3,8 @@ import ProjectSearch from "@/components/projects/ProjectSearch";
 import PageLead from "@/components/general/PageLead";
 import SpaceDecorations from "@/components/general/SpaceDecorations";
 
+export const dynamic = "force-dynamic";
+
 interface ProjectsPageProps {
   searchParams: Promise<{ search?: string }>;
 }

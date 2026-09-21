@@ -1,130 +1,281 @@
-# Azmi Portfolio
+# Portofolio Azmi
 
-Website portfolio personal yang menampilkan profil, layanan, pengalaman,
-keahlian, project, dan kontak Azmi. Aplikasi dibuat dengan Next.js App Router,
-React, TypeScript, dan Tailwind CSS v4.
+Portofolio personal berbasis Next.js yang menampilkan profil, layanan, pengalaman, skill, project, dan kontak. Proyek ini dibuat untuk menampilkan karya dan informasi diri secara modern, responsif, dan terstruktur.
 
-## Fitur Yang Ditambahkan
+## Tentang Project
 
-### Pengalaman halaman
+Project ini dirancang sebagai landing page portfolio personal dengan tampilan yang elegan dan interaktif. Fokus utama aplikasi ini adalah:
 
-- Hero section dengan intro animasi, typewriter, status availability, dan
-	dekorasi partikel/ruang.
-- Splash screen saat pertama kali membuka website, dengan cookie untuk
-	melewati intro pada kunjungan berikutnya.
-- Navigasi desktop dan mobile dengan sidebar, active section, smooth scroll,
-	logo, tombol tema, dan tombol download CV.
-- Tombol scroll to top serta footer yang digunakan pada route portfolio yang
-	valid.
-- Layout responsif untuk desktop, tablet, dan mobile.
+- menampilkan biodata dan profil singkat
+- menampilkan service dan pengalaman kerja/pendidikan
+- menampilkan katalog skill
+- menampilkan project yang telah dibuat
+- menyediakan halaman detail project
+- menyiapkan form kontak untuk komunikasi
 
-### Tema dan tampilan
+Aplikasi dibuat dengan Next.js App Router, React, TypeScript, dan Tailwind CSS.
 
-- Dark mode sebagai tema utama dan light mode yang dapat diubah dari navbar.
-- Override warna, border, shadow, form, kartu, navbar, hero, dan sidebar pada
-	light mode melalui atribut `data-theme="light"`.
-- Transisi tema, hover state, kartu interaktif, gradient text, backdrop blur,
-	dan efek animasi saat komponen muncul.
-- Dukungan `prefers-reduced-motion` untuk mengurangi animasi bagi pengguna yang
-	membutuhkannya.
+## Fitur Utama
 
-### Project portfolio
+- Hero section dengan animasi, intro, dan dekorasi visual
+- Navigasi yang responsif untuk desktop dan mobile
+- Theme dark/light mode
+- Section About, Skills, Projects, dan Contact
+- Halaman project list dan detail project
+- Pencarian project berdasarkan kata kunci
+- Scroll to top button
+- Footer dan layout global yang konsisten
+- Notifikasi toast untuk feedback interaksi
+- Custom not found page
 
-- Daftar project dengan kartu berisi gambar, deskripsi, teknologi, dan link
-	project live.
-- Pencarian project menggunakan query URL `?search=` sehingga hasil dapat
-	dibagikan atau dibuka kembali.
-- Tombol untuk menghapus kata pencarian.
-- Halaman detail dinamis di `/projects/[id]` dengan gambar, deskripsi, tombol
-	project live, dan link kembali ke daftar project.
-- Static generation untuk route detail project dari data project yang tersedia.
+## Teknologi yang Digunakan
 
-### Kontak dan navigasi route
+- Next.js 16.3
+- React 19
+- TypeScript
+- Tailwind CSS 4
+- React Icons
+- AOS
+- OGL
+- React Hot Toast
+- Web3Forms
+- Supabase client
 
-- Halaman About, Skills, Projects, dan Contact dengan `PageLead` dan dekorasi
-	visual yang konsisten.
-- Form kontak yang mengirim data melalui Web3Forms.
-- Loading state pada tombol kirim dan notifikasi berhasil/gagal menggunakan
-	React Hot Toast.
-- Link email, lokasi Pasuruan, Instagram, TikTok, dan YouTube.
-- Custom not-found page dan global not-found page untuk URL yang tidak valid.
-- Navbar, splash screen, footer, toaster, dan scroll-to-top hanya ditampilkan
-	pada route portfolio yang valid.
+## Struktur Project
 
-## Tailwind CSS Yang Digunakan
-
-Tailwind CSS v4 diaktifkan melalui `@tailwindcss/postcss`. Import utamanya
-berada di `src/app/globals.css`:
-
-```css
-@import "tailwindcss";
+```bash
+portofolio-azmi/
+├─ layouts/
+│  └─ AnimationLayout.tsx
+├─ public/
+├─ src/
+│  ├─ app/
+│  │  ├─ globals.css
+│  │  ├─ layout.tsx
+│  │  ├─ not-found.tsx
+│  │  ├─ global-not-found.tsx
+│  │  ├─ page.tsx
+│  │  └─ projects/
+│  │     ├─ page.tsx
+│  │     └─ [id]/
+│  │        └─ page.tsx
+│  ├─ components/
+│  │  ├─ contact/
+│  │  │  └─ ContactSection.tsx
+│  │  ├─ general/
+│  │  │  ├─ Footer.tsx
+│  │  │  ├─ Header.tsx
+│  │  │  ├─ LinkButton.tsx
+│  │  │  ├─ PageLead.tsx
+│  │  │  ├─ ReturnHomeLink.tsx
+│  │  │  ├─ ScrollTopButton.tsx
+│  │  │  ├─ SiteChrome.tsx
+│  │  │  ├─ SpaceDecorations.tsx
+│  │  │  └─ navbar/
+│  │  │     ├─ Logo.tsx
+│  │  │     ├─ MobileNav.tsx
+│  │  │     ├─ Navbar.tsx
+│  │  │     ├─ navLinks.ts
+│  │  │     └─ useActiveSection.ts
+│  │  ├─ home/
+│  │  │  └─ hero/
+│  │  │     ├─ AnimatedIntro.tsx
+│  │  │     ├─ HeroSection.tsx
+│  │  │     └─ Particels.tsx
+│  │  ├─ projects/
+│  │  │  ├─ ProjectCard.tsx
+│  │  │  ├─ ProjectSearch.tsx
+│  │  │  ├─ ProjectSection.tsx
+│  │  │  └─ projectData.ts
+│  │  ├─ resume/
+│  │  │  └─ ResumeSection.tsx
+│  │  ├─ services/
+│  │  │  └─ ServiceSection.tsx
+│  │  └─ skills/
+│  │     └─ SkillSection.tsx
+│  └─ lib/
+│     └─ supabase.ts
+├─ AGENTS.md
+├─ CLAUDE.md
+├─ MODUL-PEMAHAMAN-PORTOFOLIO.md
+├─ next-env.d.ts
+├─ next.config.ts
+├─ package.json
+├─ postcss.config.mjs
+├─ README.md
+├─ tsconfig.json
+└─ ...
 ```
 
-Sebagian besar styling ditulis langsung pada `className` JSX. Utility Tailwind
-yang dipakai dan ditambahkan untuk fitur terbaru meliputi:
+## Alur Aplikasi
 
-- **Layout responsif:** `flex`, `grid`, `grid-cols-*`, `lg:grid-cols-*`,
-	`items-center`, `justify-center`, `max-w-*`, `w-[90%]`, `gap-*`, dan
-	`space-y-*`.
-- **Spacing dan ukuran:** `p-*`, `px-*`, `py-*`, `m-*`, `mt-*`, `mb-*`,
-	`w-full`, `min-w-0`, `h-*`, serta `min-h-screen`.
-- **Tema warna:** `bg-slate-*`, `bg-white/*`, `text-white`, `text-gray-*`,
-	`text-cyan-400`, `text-indigo-*`, dan `border-slate-*`.
-- **Responsive typography:** `text-sm`, `text-base`, `text-lg`, `text-3xl`,
-	`md:text-4xl`, `font-medium`, `font-semibold`, `font-bold`, dan
-	`leading-relaxed`.
-- **Visual modern:** `rounded-*`, `shadow-*`, `backdrop-blur-sm`,
-	`bg-linear-to-r`, `bg-clip-text`, `text-transparent`, dan opacity utilities.
-- **Interaksi:** `hover:*`, `focus:*`, `transition-*`, `hover:-translate-y-1`,
-	`hover:scale-105`, `outline-none`, serta `disabled:*`.
-- **Animasi:** `animate-spin`, class animasi intro, dan class `data-aos` untuk
-	mengatur kemunculan section dan kartu.
-- **Aksesibilitas dan kontrol tampilan:** `sr-only`, `aria-hidden`,
-	`cursor-pointer`, `select-none`, `isolate`, `relative`, `absolute`, dan
-	`z-*` untuk mengatur layer dekorasi.
+### 1. Akses pertama kali
+Saat aplikasi dibuka, request dari browser masuk ke root layout di [src/app/layout.tsx](src/app/layout.tsx). Di sini:
 
-### Styling tambahan di `globals.css`
+- metadata website dibentuk
+- font global di-load
+- stylesheet global di-import
+- cookie `skipSplash` dicek
+- app dibungkus dengan `SiteChrome`
 
-Utility Tailwind dilengkapi selector CSS khusus agar perubahan tema tetap
-konsisten pada komponen yang kompleks. Styling terbaru mencakup:
+### 2. Layout global
+File [src/components/general/SiteChrome.tsx](src/components/general/SiteChrome.tsx) berperan penting dalam menentukan apakah user sedang membuka halaman portfolio valid atau tidak.
 
-- `data-theme="light"` untuk mengganti `color-scheme`, background, teks,
-	border, shadow, input, kartu, hero, navbar, dan mobile sidebar.
-- `.theme-transition` untuk perpindahan warna yang halus.
-- `.project-search` dan `.project-detail-surface` untuk surface halaman project.
-- `.contact-form` dan `.contact-input` untuk tampilan form kontak dan focus ring.
-- `.skill-card`, `.service-card`, dan `.resume-card` untuk border, hover, dan
-	shadow yang sesuai pada kedua tema.
-- `scroll-behavior: smooth` dan `scroll-padding-top` agar navigasi anchor tidak
-	tertutup navbar.
-- Media query reduced motion agar animasi dapat dikurangi ketika diperlukan.
+Jika path valid, maka aplikasi menampilkan:
 
-Konfigurasi PostCSS berada di `postcss.config.mjs`.
+- navbar
+- animasi intro
+- footer
+- tombol scroll to top
+- notifikasi toast
 
-## Menjalankan Project
+Jika path tidak valid, aplikasi akan menampilkan halaman tanpa chrome portfolio tambahan.
 
-Pastikan Node.js dan npm sudah terpasang, lalu jalankan:
+### 3. Halaman utama
+File [src/app/page.tsx](src/app/page.tsx) adalah halaman landing page utama. Di sini beberapa section dipasang menjadi satu:
+
+- Hero
+- About / Services
+- Resume
+- Skills
+- Projects
+- Contact
+
+### 4. Halaman project
+Route project dikelola di:
+
+- [src/app/projects/page.tsx](src/app/projects/page.tsx) untuk list semua project
+- [src/app/projects/[id]/page.tsx](src/app/projects/[id]/page.tsx) untuk halaman detail per project
+
+Data project berasal dari [src/components/projects/projectData.ts](src/components/projects/projectData.ts). Jadi halaman list dan detail project mengambil data dari file ini.
+
+### 5. Search dan filter project
+Project search diatur oleh:
+
+- [src/components/projects/ProjectSearch.tsx](src/components/projects/ProjectSearch.tsx)
+- [src/components/projects/ProjectSection.tsx](src/components/projects/ProjectSection.tsx)
+
+Search term biasanya dibawa lewat query string `?search=...`, sehingga hasil pencarian bisa dibagikan atau dibuka kembali.
+
+### 6. Navbar aktif
+Navbar dan active section diproses oleh:
+
+- [src/components/general/navbar/navLinks.ts](src/components/general/navbar/navLinks.ts)
+- [src/components/general/navbar/useActiveSection.ts](src/components/general/navbar/useActiveSection.ts)
+
+File ini membantu menandai menu yang sedang aktif saat user scroll ke section tertentu.
+
+## Komponen Navbar dan File Terkait
+
+Berikut penjelasan singkat untuk file-file yang membentuk navigasi di bagian atas aplikasi.
+
+### [src/components/general/navbar/Navbar.tsx](src/components/general/navbar/Navbar.tsx)
+File utama navbar. Komponen ini menampilkan navigasi desktop dan tombol aksi di sisi kanan, seperti:
+
+- logo brand
+- daftar menu navigasi
+- tombol toggle dark/light mode
+- tombol download CV
+- tombol buka menu mobile
+
+Komponen ini juga memanggil `useActiveSection()` untuk memberi highlight pada menu yang sedang aktif. Selain itu, Navbar juga membaca theme dari `localStorage` dan mengubah atribut `data-theme` pada document.
+
+### [src/components/general/navbar/MobileNav.tsx](src/components/general/navbar/MobileNav.tsx)
+File ini menangani menu navigasi versi mobile. Fungsinya:
+
+- menampilkan sidebar dari sisi kanan
+- membuka dan menutup menu saat tombol hamburger ditekan
+- menutup body scroll saat menu terbuka
+- menampilkan daftar menu yang sama seperti navbar desktop
+- menyediakan tombol close dan tombol download CV
+
+Pada mobile, menu ini tampil sebagai overlay yang bergerak dari kanan ke kiri.
+
+### [src/components/general/navbar/Logo.tsx](src/components/general/navbar/Logo.tsx)
+Komponen logo brand di navbar. Berisi:
+
+- ikon brand dengan simbol code
+- teks "Portfolio Azmi"
+- link kembali ke halaman utama ketika diklik
+
+Fungsi utamanya adalah branding, agar navigasi di bagian atas tetap konsisten dan mudah dikenali.
+
+### [src/components/general/navbar/navLinks.ts](src/components/general/navbar/navLinks.ts)
+File konfigurasi isi menu navbar. Di sini disimpan data seperti:
+
+- nama menu
+- label yang tampil
+- url tujuan
+- section target untuk active link
+
+Contohnya:
+
+- Home -> /
+- About -> /#about
+- Skills -> /#skills
+- Projects -> /#projects
+- Contact -> /#contact
+
+File ini memisahkan data menu dari komponen UI agar lebih rapi dan mudah diubah.
+
+### [src/components/general/navbar/useActiveSection.ts](src/components/general/navbar/useActiveSection.ts)
+File logic untuk menentukan section yang sedang aktif berdasarkan scroll atau hash URL. Fungsinya:
+
+- memantau section seperti home, about, skills, projects, dan contact
+- memakai `IntersectionObserver` untuk melihat section yang paling terlihat
+- menghitung active section agar menu navbar sesuai dengan posisi user
+- juga menangani perubahan hash URL seperti `/#projects`
+
+Singkatnya, file ini adalah “otak” yang membuat navbar tahu section mana yang sedang aktif.
+
+## Cara Menjalankan Project
+
+Pastikan Node.js dan npm sudah terinstall di komputer Anda.
+
+### Install dependency
 
 ```bash
 npm install
+```
+
+### Jalankan development server
+
+```bash
 npm run dev
 ```
 
-Buka [http://localhost:3000](http://localhost:3000) di browser.
+Lalu buka browser ke:
 
-Perintah production:
+```bash
+http://localhost:3000
+```
+
+### Build untuk production
 
 ```bash
 npm run build
+```
+
+### Jalankan hasil build
+
+```bash
 npm run start
 ```
 
-## Teknologi
+## Catatan Penting
 
-- Next.js 16.3 dan React 19
-- TypeScript
-- Tailwind CSS 4 dan `@tailwindcss/postcss`
-- React Icons
-- AOS dan OGL untuk animasi/visual
-- React Hot Toast untuk notifikasi
-- Web3Forms untuk pengiriman form kontak
+- Project ini menggunakan App Router dari Next.js.
+- Styling umum dikelola di [src/app/globals.css](src/app/globals.css).
+- Theme dan interaksi visual didesain supaya tampil modern dan responsif.
+- Route portfolio tertentu didesain agar tidak menampilkan navbar/footer pada halaman non-portfolio.
+
+## Kesimpulan
+
+Project ini merupakan portfolio personal yang dibangun dengan struktur modul yang cukup rapi untuk dipelajari. Setiap komponen dipisah berdasarkan fungsinya, sehingga lebih mudah dikembangkan, diubah, atau ditambahkan fitur baru di masa depan.
+
+Jika Anda ingin, saya juga bisa bantu membuat:
+
+1. versi README yang lebih formal untuk GitHub
+2. versi README yang lebih singkat dan profesional
+3. diagram alur project dalam bentuk teks atau mermaid
+4. versi README untuk portfolio yang siap dijadikan portfolio pribadi di LinkedIn/GitHub

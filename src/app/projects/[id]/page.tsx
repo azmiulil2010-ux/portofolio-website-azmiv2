@@ -3,19 +3,17 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import PageLead from "@/components/general/PageLead";
 import SpaceDecorations from "@/components/general/SpaceDecorations";
-import { getProjectById, projects } from "@/components/projects/projectData";
+import { getProjectById } from "@/components/projects/projectData";
+
+export const dynamic = "force-dynamic";
 
 interface ProjectDetailProps {
   params: Promise<{ id: string }>;
 }
 
-export function generateStaticParams() {
-  return projects.map((project) => ({ id: project.id }));
-}
-
 export default async function ProjectDetail({ params }: ProjectDetailProps) {
   const { id } = await params;
-  const project = getProjectById(id);
+  const project = await getProjectById(id);
 
   if (!project) {
     notFound();
