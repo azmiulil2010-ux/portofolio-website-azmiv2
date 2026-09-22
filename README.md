@@ -41,6 +41,29 @@ Aplikasi dibuat dengan Next.js App Router, React, TypeScript, dan Tailwind CSS.
 - Web3Forms
 - Supabase client
 
+## Integrasi Supabase
+
+Project ini sudah terhubung dengan Supabase untuk mengambil data project secara dinamis. Koneksi Supabase dibuat melalui [src/lib/supabase.ts](src/lib/supabase.ts) menggunakan environment variable, sehingga URL dan key tidak ditulis langsung di dalam source code.
+
+### Fitur Supabase yang Digunakan
+
+- mengambil seluruh data project dari tabel `projects`
+- mengambil detail satu project berdasarkan `id`
+- menampilkan data project dari database pada halaman project list dan project detail
+- menangani kondisi ketika konfigurasi environment variable belum tersedia
+- menangani error saat proses pengambilan data dari Supabase
+
+### Konfigurasi Environment Variable
+
+Buat file `.env.local` di root project dan isi dengan kredensial project Supabase:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
+```
+
+Project juga mendukung `NEXT_PUBLIC_SUPABASE_ANON_KEY` sebagai fallback untuk key Supabase. Pastikan tabel `projects` sudah tersedia dan memiliki data yang sesuai dengan struktur project pada aplikasi.
+
 ## Struktur Project
 
 ```bash
