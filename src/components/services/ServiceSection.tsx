@@ -11,28 +11,28 @@ export default function ServiceSection() {
       <div className="w-[90%] sm:w-[80%] mx-auto grid grid-cols-1 md:grid-cols-2
             xl:grid-cols-4 gap-20"
       >
-        <div data-aos="fade-right">  
+        <div data-aos="fade-up" data-aos-delay="0">
         <ServiceCard
           name="UI and UX"
           icon={FiPenTool}
           description="Designing instuitive interfaces and seamless user experiences."
         />
         </div>
-        <div data-aos="fade-right"data-aos-delay="100">
+        <div data-aos="fade-up" data-aos-delay="100">
         <ServiceCard
           name="Web and Mobile App"
           icon={FiSmartphone}
           description="Developing responsive and user-friendly web and mobile applications."
         />
         </div>
-        <div data-aos="fade-right"data-aos-delay="200">
+        <div data-aos="fade-up" data-aos-delay="200">
         <ServiceCard
           name="Design and Creative"
           icon={FiLayers}
           description="Creating visually appealing designs and creative solutions."
         />
         </div>
-        <div data-aos="fade-right"data-aos-delay="300">
+        <div data-aos="fade-up" data-aos-delay="300">
         <ServiceCard
           name="Development"
           icon={FiCode}

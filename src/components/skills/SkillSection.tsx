@@ -54,7 +54,7 @@ export default function SkillSection() {
             <div
               key={index}
               data-aos="flip-right"
-              data-aos0delay={index * 100 }
+              data-aos-delay={index * 80}
               className="skill-card flex h-44 w-full max-w-40 flex-col items-center justify-center rounded-3xl bg-slate-900 text-center shadow-lg transition hover:scale-110 sm:h-48"
             >
               <div className="skill-icon text-5xl text-gray-300">{skill.icon}</div>

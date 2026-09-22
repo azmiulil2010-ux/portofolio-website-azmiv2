@@ -34,7 +34,8 @@ export default async function ProjectSection({
         {filteredProjects.map((project, index) => (
           <div
             key={project.id}
-            data-aos={index % 2 === 0 ? "fade-right" : "fade-left"}
+            data-aos="fade-up"
+            data-aos-delay={index * 100}
             className={filteredProjects.length === 1 ? "md:col-span-2 md:w-1/2 md:justify-self-center" : ""}
           >
             <ProjectCard project={project} />

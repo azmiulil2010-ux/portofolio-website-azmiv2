@@ -35,11 +35,12 @@ export default function MobileNav({navOpen, setNavOpen}:MobileNavProps) {
         <>
             <div
                 onClick={() => setNavOpen(false)}
-                className={`fixed inset-0 right-0 z-55 h-screen w-full bg-black transition-opacity duration-300 ease-in-out ${backdropVisibility} lg:hidden`}
+                className={`mobile-nav-backdrop fixed inset-0 right-0 z-55 h-screen w-full bg-black transition-opacity duration-500 ease-out ${backdropVisibility} lg:hidden`}
             />
             <ul
                 aria-label="Menu navigasi mobile"
-                className={`mobile-sidebar fixed right-0 top-0 z-60 flex h-dvh w-[80%] transform flex-col items-center justify-start gap-1 overflow-y-auto overscroll-contain bg-slate-800 px-5 pb-8 pt-24 text-white transition-transform duration-300 ease-in-out sm:w-[60%] ${panelTransform} lg:hidden`}
+                data-state={navOpen ? "open" : "closed"}
+                className={`mobile-sidebar fixed right-0 top-0 z-60 flex h-dvh w-[80%] transform flex-col items-center justify-start gap-1 overflow-y-auto overscroll-contain bg-slate-800 px-5 pb-8 pt-24 text-white transition-transform duration-500 ease-out sm:w-[60%] ${panelTransform} lg:hidden`}
             >
                 <button
                     type="button"
