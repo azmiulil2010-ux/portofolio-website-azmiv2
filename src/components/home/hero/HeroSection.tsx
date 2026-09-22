@@ -1,6 +1,5 @@
 "use client";
 import Particles from "./Particels";
-import Image from "next/image";
 import AnimatedIntro from "./AnimatedIntro";
 import LinkButton from "@/components/general/LinkButton";
 import { useRef } from "react";
@@ -156,13 +155,12 @@ export default function HeroSection() {
             <div className="absolute top-2 left-1/2 z-20 h-3 w-3 -translate-x-1/2 rounded-full border-2 border-slate-950 bg-cyan-300 shadow-[0_0_14px_rgba(103,232,249,0.9)]" />
             <div className="hero-photo-halo absolute -inset-5 rounded-4xl border border-cyan-300/20" />
             <div className="absolute inset-0 rounded-[1.75rem] bg-linear-to-r from-blue-500 to-purple-600 blur-xl animate-pulse opacity-50"></div>
-            <Image
-              src="/profil.png"
-              alt="Foto Azmi"
-              className="rounded-[1.75rem] border-4 border-slate-950/80 object-cover object-[center_65%] shadow-[0_20px_55px_rgba(79,70,229,0.35)]"
-              fill
-              sizes="(min-width: 768px) 288px, (min-width: 640px) 256px, 224px"
-              priority
+                <img
+                  src="/profil.png"
+                  alt="Foto Azmi"
+                  width={288}
+                  height={352}
+                  className="absolute inset-0 h-full w-full rounded-[1.75rem] border-4 border-slate-950/80 object-cover object-[center_65%] shadow-[0_20px_55px_rgba(79,70,229,0.35)]"
             />
             <div className="hero-photo-caption absolute inset-x-0 bottom-0 z-10 rounded-b-[1.75rem] bg-linear-to-t from-slate-950 via-slate-950/85 to-transparent px-5 pb-5 pt-20 text-left">
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-cyan-300">AZMI</p>
