@@ -1,10 +1,8 @@
 "use client";
 import Particles from "./Particels";
-import AnimatedIntro from "./AnimatedIntro";
-import LinkButton from "@/components/general/LinkButton";
 import { useRef } from "react";
 import { FaInstagram, FaTiktok, FaYoutube } from "react-icons/fa";
-import { LuArrowRight, LuCode, LuMapPin, LuSparkles } from "react-icons/lu";
+import { LuArrowDown, LuArrowRight } from "react-icons/lu";
 
 const socialLinks = [
   { name: "Instagram", icon: FaInstagram, url: "https://www.instagram.com/qzmiuu/" },
@@ -32,140 +30,56 @@ export default function HeroSection() {
   };
 
   return (
-    <section
-      className="hero-section relative flex min-h-screen items-center overflow-hidden px-5 py-28 sm:px-8 lg:h-screen lg:px-12 lg:py-20"
-    >
-      <div className="absolute inset-0 z-0">
-        <Particles
-          particleColors={["#ffffff"]}
-          particleCount={200}
-          particleSpread={10}
-          speed={0.1}
-          particleBaseSize={100}
-          moveParticlesOnHover
-          alphaParticles={false}
-          disableRotation={false}
-          pixelRatio={1}
-        />
-      </div>
-      <div className="relative z-10 mx-auto grid w-full max-w-6xl translate-y-5 items-center gap-12 lg:translate-y-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20">
-        <div className="text-center lg:text-left">
-          <p
-            data-aos="fade-up"
-            className="hero-eyebrow mb-5 text-xs font-semibold uppercase tracking-[0.3em] text-cyan-400"
-          >
-            Web Developer
-          </p>
-          <h1
-            data-aos="fade-up"
-            data-aos-delay="200"
-            className="hero-title text-4xl font-bold tracking-tight text-transparent bg-clip-text bg-linear-to-r from-indigo-200 to-gray-300 sm:text-5xl md:text-6xl lg:text-7xl"
-          >
-            Hi, I&apos;m Azmi.
+    <section className="hero-section relative flex min-h-[calc(100svh-4.5rem)] items-center overflow-hidden px-5 pb-12 pt-28 sm:px-8 lg:min-h-screen lg:px-12 lg:py-20">
+      <div className="hero-pattern absolute inset-0 z-0" />
+      <div className="relative z-10 mx-auto grid w-full max-w-[1400px] items-center gap-10 lg:grid-cols-[minmax(220px,0.85fr)_minmax(280px,1.2fr)_minmax(220px,0.75fr)] lg:gap-8">
+        <div className="order-2 text-center lg:order-1 lg:text-left" data-aos="fade-up">
+          <p className="hero-reference-label mb-4 text-[0.65rem] font-semibold uppercase tracking-[0.28em]">Web Developer · Open to Work</p>
+          <h1 className="hero-title max-w-md text-5xl font-black uppercase leading-[0.88] tracking-[-0.03em] sm:text-6xl lg:text-7xl xl:text-8xl">
+            Ulil Azmi
           </h1>
-          <div className="mx-auto max-w-xl lg:mx-0">
-            <AnimatedIntro />
-          </div>
-               <div className="mt-4 flex justify-center lg:justify-start">
-            <LinkButton
-              href="/projects"
-              text="See my work"
-              icon={LuArrowRight}
-              iconPosition={"right"}
-              rounded
-              aosType="fade-up"
-              aosDelay={700}
-              animate
-            />
-          </div>
-          <div
-            data-aos="fade-up"
-            data-aos-delay="500"
-            className="hero-stats mx-auto mt-4 grid w-full max-w-xl grid-cols-3 divide-x divide-transparent rounded-2xl border border-transparent bg-slate-900/45 px-2 py-3 backdrop-blur-sm lg:mx-0"
-          >
-            <div className="px-2 text-center sm:px-4">
-              <p className="text-xl font-bold text-cyan-300">2+</p>
-              <p className="text-[0.6rem] font-medium uppercase tracking-[0.12em] text-gray-500 sm:text-xs">Completed Projects</p>
-            </div>
-            <div className="px-2 text-center sm:px-4">
-              <p className="text-xl font-bold text-indigo-300">10+</p>
-              <p className="text-[0.6rem] font-medium uppercase tracking-[0.12em] text-gray-500 sm:text-xs">Commits</p>
-            </div>
-            <div className="px-2 text-center sm:px-4">
-              <p className="text-xl font-bold text-purple-300">RPL</p>
-              <p className="text-[0.6rem] font-medium uppercase tracking-[0.12em] text-gray-500 sm:text-xs">SMKN 1 Pasuruan</p>
-            </div>
-          </div>
-          <div
-            data-aos="fade-up"
-            data-aos-delay="600"
-            className="hero-status-panel mx-auto mt-4 grid w-full max-w-2xl grid-cols-1 divide-y divide-transparent rounded-2xl border border-transparent bg-slate-900/45 px-5 py-1 text-left backdrop-blur-sm sm:grid-cols-3 sm:divide-x sm:divide-y-0 lg:mx-0"
-          >
-            <div className="hero-status-item flex items-center gap-3 px-3 py-3 sm:justify-center sm:px-4">
-              <LuSparkles className="shrink-0 text-cyan-400" size={18} aria-hidden="true" />
-              <div>
-                <p className="hero-status-label text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-gray-500">Status</p>
-                <p className="hero-status-value text-sm font-medium text-gray-200">Open to collaborate</p>
-              </div>
-            </div>
-            <div className="hero-status-item flex items-center gap-3 px-3 py-3 sm:justify-center sm:px-4">
-              <LuCode className="shrink-0 text-indigo-400" size={18} aria-hidden="true" />
-              <div>
-                <p className="hero-status-label text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-gray-500">Focus</p>
-                <p className="hero-status-value text-sm font-medium text-gray-200">Web &amp; UI/UX</p>
-              </div>
-            </div>
-            <div className="hero-status-item flex items-center gap-3 px-3 py-3 sm:justify-center sm:px-4">
-              <LuMapPin className="shrink-0 text-purple-400" size={18} aria-hidden="true" />
-              <div>
-                <p className="hero-status-label text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-gray-500">Based in</p>
-                <p className="hero-status-value text-sm font-medium text-gray-200">Pasuruan, Indonesia</p>
-              </div>
-            </div>
-          </div>
-          <div
-            data-aos="fade-up"
-            data-aos-delay="800"
-            className="mt-4 flex justify-center gap-3 lg:justify-start"
-          >
-            {socialLinks.map(({ name, icon: Icon, url }) => (
-              <a
-                key={name}
-                href={url}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={`Open ${name}`}
-                title={name}
-                className="hero-social-link grid h-10 w-10 place-items-center rounded-full border border-transparent bg-slate-900/55 text-gray-300 transition-all hover:-translate-y-1 hover:border-cyan-400 hover:bg-cyan-400/10 hover:text-cyan-300"
-              >
-                <Icon size={17} aria-hidden="true" />
-              </a>
-            ))}
+          <p className="hero-intro mt-6 max-w-sm text-sm leading-relaxed sm:text-base">
+            Saya Muhammad Ulil Azmi seorang siswa Rekayasa Perangkat Lunak SMKN 1 Pasuruan yang membangun website modern, rapi, cepat, dan responsive.
+          </p>
+          <div className="mt-7 flex flex-wrap justify-center gap-3 lg:justify-start">
+            <a href="#projects" className="hero-primary-action inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-bold">
+              Lihat Project <LuArrowRight size={17} aria-hidden="true" />
+            </a>
+            <a href="#contact" className="hero-secondary-action inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-bold">
+              Hubungi Saya <LuArrowDown size={16} aria-hidden="true" />
+            </a>
           </div>
         </div>
 
-        <div className="flex justify-center lg:justify-end" data-aos="fade-left" data-aos-delay="300">
+        <div className="order-1 flex justify-center lg:order-2" data-aos="fade-up" data-aos-delay="150">
           <div
             ref={photoRef}
             onPointerMove={handlePhotoPointerMove}
             onPointerLeave={resetPhotoTilt}
-            className="hero-photo-float relative h-72 w-56 sm:h-80 sm:w-64 md:h-88 md:w-72"
+            className="hero-photo-float relative aspect-square w-[min(78vw,27rem)]"
           >
-            <div className="absolute -top-10 left-1/2 h-10 w-px -translate-x-1/2 bg-linear-to-b from-transparent via-cyan-300/70 to-indigo-400" />
-            <div className="absolute top-2 left-1/2 z-20 h-3 w-3 -translate-x-1/2 rounded-full border-2 border-slate-950 bg-cyan-300 shadow-[0_0_14px_rgba(103,232,249,0.9)]" />
-            <div className="hero-photo-halo absolute -inset-5 rounded-4xl border border-cyan-300/20" />
-            <div className="absolute inset-0 rounded-[1.75rem] bg-linear-to-r from-blue-500 to-purple-600 blur-xl animate-pulse opacity-50"></div>
-                <img
-                  src="/profil.png"
-                  alt="Foto Azmi"
-                  width={288}
-                  height={352}
-                  className="absolute inset-0 h-full w-full rounded-[1.75rem] border-4 border-slate-950/80 object-cover object-[center_65%] shadow-[0_20px_55px_rgba(79,70,229,0.35)]"
-            />
-            <div className="hero-photo-caption absolute inset-x-0 bottom-0 z-10 rounded-b-[1.75rem] bg-linear-to-t from-slate-950 via-slate-950/85 to-transparent px-5 pb-5 pt-20 text-left">
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-cyan-300">AZMI</p>
-              <p className="hero-photo-role mt-1 text-sm font-medium text-gray-200">Web Developer</p>
-            </div>
+            <div className="hero-photo-circle absolute inset-[4%] rounded-full" />
+            <div className="hero-photo-halo absolute inset-0 rounded-full border" />
+            <img src="/profil.png" alt="Foto Azmi" width={420} height={420} className="hero-photo-image absolute inset-[7%] h-[86%] w-[86%] rounded-full object-cover object-[center_25%]" />
+            <div className="hero-photo-tag absolute bottom-[10%] left-1/2 z-20 -translate-x-1/2 whitespace-nowrap rounded-full px-4 py-2 text-[0.65rem] font-bold uppercase tracking-[0.2em]">Web Developer</div>
+          </div>
+        </div>
+
+        <div className="order-3 text-center lg:text-left" data-aos="fade-up" data-aos-delay="300">
+          <p className="hero-open-label text-sm font-bold italic uppercase tracking-[0.2em]">Open to Work</p>
+          <p className="hero-year mt-1 text-6xl font-black leading-none sm:text-7xl">2026</p>
+          <p className="mt-2 text-sm font-bold uppercase tracking-[0.18em]">Fullstack Developer</p>
+          <div className="hero-detail-list mt-8 space-y-4 text-sm">
+            <p><strong>Focus</strong><span>Web &amp; UI/UX</span></p>
+            <p><strong>Based in</strong><span>Pasuruan, Indonesia</span></p>
+            <p><strong>School</strong><span>SMKN 1 Pasuruan</span></p>
+          </div>
+          <div className="mt-8 flex justify-center gap-3 lg:justify-start">
+            {socialLinks.map(({ name, icon: Icon, url }) => (
+              <a key={name} href={url} target="_blank" rel="noreferrer" aria-label={`Open ${name}`} title={name} className="hero-social-link grid h-10 w-10 place-items-center rounded-full border transition-all hover:-translate-y-1">
+                <Icon size={17} aria-hidden="true" />
+              </a>
+            ))}
           </div>
         </div>
       </div>

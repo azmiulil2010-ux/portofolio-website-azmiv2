@@ -1,16 +1,24 @@
-import { LuAward, LuBookOpen, LuGraduationCap, LuPackage, LuServer } from "react-icons/lu";
+import { LuAward, LuBookOpen, LuGraduationCap, LuLayers3, LuMail, LuMapPin } from "react-icons/lu";
 import Header from "../general/Header";
 import ResumeCard from "./ResumeCard";
-import { RiNextjsFill } from "react-icons/ri";
 
 export default function ResumeSection() {
   return (
-    <section className="my-12">
-      <div className="w-[90%] sm:w-[70%] mx-auto grid grid-cols-1 xl:grid-cols-2 gap-10">
-        {/* education section */}
-        <div data-aos="zoom-out">
-          <Header title="About Me" as="h2" />
-          <div className="space-y-6">
+    <section className="about-section my-12">
+      <div className="mx-auto w-[90%] max-w-7xl">
+        <Header title="About Me" as="h2" />
+        <div className="about-layout grid grid-cols-1 items-center gap-10 lg:grid-cols-[minmax(320px,1fr)_minmax(0,1.25fr)] lg:gap-16">
+          <div className="about-portrait-wrap mx-auto w-full max-w-lg">
+            <div className="about-portrait relative mx-auto aspect-square w-[min(100%,30rem)]">
+              <div className="about-portrait-circle absolute inset-0 rounded-full" />
+              <div className="about-portrait-image-frame absolute inset-[5%] overflow-hidden rounded-full border-8">
+                <img src="/profil.png" alt="Foto Muhammad Ulil Azmi" className="about-portrait-image h-full w-full object-cover object-[58%_27%]" />
+              </div>
+              <span className="about-portrait-status absolute bottom-[3%] left-[2%] whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold shadow-lg">● Open to work &amp; freelance</span>
+            </div>
+          </div>
+
+          <div className="space-y-5">
             <ResumeCard
               icon={LuGraduationCap}
               role="Student Smkn 1 Pasuruan"
@@ -27,28 +35,20 @@ export default function ResumeSection() {
               role="Future Goals"
               description="Future goals saya adalah terus mengembangkan kemampuan di bidang teknologi dan pemrograman, terutama dalam pengembangan website dan aplikasi. Saya ingin memperdalam skill seperti React, Next.js, JavaScript, Python, database, dan UI/UX. Ke depannya, saya berharap dapat menjadi seorang developer yang profesional, mampu membuat karya yang bermanfaat, serta terus belajar mengikuti perkembangan teknologi."
             />
-          </div>
-        </div>
-
-        {/* work experience */}
-        <div data-aos="zoom-in" data-aos-delay={200}>
-        <Header title="My Work Experience" as="h2" />
-          <div className="space-y-6">
-            <ResumeCard 
-            icon={RiNextjsFill}
-            role="FrontEnd Developer"
-            description="Membangun antarmuka yang responsif dan aksesibel menggunakan framework modern seperti React & Next.js, dengan fokus pada performa, UX, dan implementasi yang presisi hingga ke detail terkecil (pixel-perfect)."
-            />
-            <ResumeCard 
-            icon={LuServer}
-            role="Backend Developer"
-            description="Backend Developer yang berfokus pada pengembangan sistem di balik sebuah aplikasi, seperti pembuatan API, pengelolaan database, autentikasi, serta pengolahan dan keamanan data. Saya terus mengembangkan kemampuan menggunakan JavaScript, Next.js, Python, dan Supabase untuk membangun backend yang terstruktur, aman, dan dapat diandalkan."
-            />
-            <ResumeCard 
-            icon={LuPackage}
-            role="Fullstack Developer"
-            description="Fullstack Developer yang mempelajari dan mengembangkan aplikasi dari sisi frontend hingga backend. Saya memiliki ketertarikan dalam membangun website yang interaktif, mengelola database, membuat API, serta menghubungkan frontend dan backend menggunakan teknologi seperti JavaScript, React, Next.js, Python, dan Supabase."
-            />
+            <div className="about-facts grid grid-cols-1 gap-3 sm:grid-cols-3">
+              <a href="https://maps.google.com/?q=Pasuruan,+Jawa+Timur" target="_blank" rel="noreferrer" className="about-fact">
+                <LuMapPin aria-hidden="true" />
+                <span><small>Lokasi</small>Pasuruan, Jawa Timur</span>
+              </a>
+              <div className="about-fact">
+                <LuLayers3 aria-hidden="true" />
+                <span><small>Fokus</small>Web &amp; UI/UX</span>
+              </div>
+              <a href="mailto:azmiulil2010@gmail.com" className="about-fact">
+                <LuMail aria-hidden="true" />
+                <span><small>Email</small>azmiulil2010@gmail.com</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>

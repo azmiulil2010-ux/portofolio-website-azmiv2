@@ -1,4 +1,3 @@
-import React from "react";
 import { FiCode, FiLayers, FiPenTool, FiSmartphone } from "react-icons/fi";
 import Header from "@/components/general/Header";
 import ServiceCard from "./ServiceCard";
@@ -8,35 +7,34 @@ export default function ServiceSection() {
     <section>
       {/* Header */}
       <Header title="My Services" />
-      <div className="w-[90%] sm:w-[80%] mx-auto grid grid-cols-1 md:grid-cols-2
-            xl:grid-cols-4 gap-20"
+      <div className="service-grid mx-auto grid w-[90%] max-w-6xl grid-cols-1 gap-5 sm:w-[85%] md:grid-cols-2"
       >
         <div data-aos="fade-up" data-aos-delay="0">
         <ServiceCard
-          name="UI and UX"
+          name="UI/UX Website"
           icon={FiPenTool}
-          description="Designing instuitive interfaces and seamless user experiences."
+          description="Menyusun tampilan website yang jelas, rapi, dan mudah digunakan di berbagai ukuran layar."
         />
         </div>
         <div data-aos="fade-up" data-aos-delay="100">
         <ServiceCard
-          name="Web and Mobile App"
+          name="Frontend Web"
           icon={FiSmartphone}
-          description="Developing responsive and user-friendly web and mobile applications."
+          description="Membangun halaman web responsif menggunakan React, Next.js, dan Tailwind CSS."
         />
         </div>
         <div data-aos="fade-up" data-aos-delay="200">
         <ServiceCard
-          name="Design and Creative"
+          name="Backend & Database"
           icon={FiLayers}
-          description="Creating visually appealing designs and creative solutions."
+          description="Menghubungkan aplikasi dengan API, Supabase, MySQL, dan pengelolaan data yang terstruktur."
         />
         </div>
         <div data-aos="fade-up" data-aos-delay="300">
         <ServiceCard
-          name="Development"
+          name="Fullstack Project"
           icon={FiCode}
-          description="Full-stack development with modern frameworks and best practices."
+          description="Mengerjakan website dan aplikasi dari antarmuka sampai fungsi server sesuai kebutuhan proyek."
         />
         </div>
       </div>
