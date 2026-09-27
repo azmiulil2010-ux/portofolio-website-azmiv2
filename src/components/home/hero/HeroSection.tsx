@@ -32,7 +32,7 @@ export default function HeroSection() {
   return (
     <section className="hero-section relative flex min-h-[calc(100svh-4.5rem)] items-center overflow-hidden px-5 pb-12 pt-28 sm:px-8 lg:min-h-screen lg:px-12 lg:py-20">
       <div className="hero-pattern absolute inset-0 z-0" />
-      <div className="relative z-10 mx-auto grid w-full max-w-[1400px] items-center gap-10 lg:grid-cols-[minmax(220px,0.85fr)_minmax(280px,1.2fr)_minmax(220px,0.75fr)] lg:gap-8">
+      <div className="relative z-10 mx-auto grid w-full max-w-350 items-center gap-10 lg:grid-cols-[minmax(220px,0.85fr)_minmax(280px,1.2fr)_minmax(220px,0.75fr)] lg:gap-8">
         <div className="order-2 text-center lg:order-1 lg:text-left" data-aos="fade-up">
           <p className="hero-reference-label mb-4 text-[0.65rem] font-semibold uppercase tracking-[0.28em]">Web Developer · Open to Work</p>
           <h1 className="hero-title max-w-md text-5xl font-black uppercase leading-[0.88] tracking-[-0.03em] sm:text-6xl lg:text-7xl xl:text-8xl">

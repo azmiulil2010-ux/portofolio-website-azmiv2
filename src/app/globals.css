@@ -1204,6 +1204,23 @@ body:has(.not-found-page) .intro-screen {
   animation: intro-screen-in 700ms ease-out both;
 }
 
+.admin-shell:has(.admin-auth-page) {
+  display: block;
+}
+
+.admin-shell:has(.admin-auth-page) > aside,
+.admin-shell:has(.admin-auth-page) > div > header {
+  display: none;
+}
+
+.admin-shell:has(.admin-auth-page) > div {
+  min-height: 100vh;
+}
+
+.admin-shell:has(.admin-auth-page) main {
+  min-height: 100vh;
+}
+
 .intro-screen--leaving {
   pointer-events: none;
   animation: intro-screen-out 500ms ease-in forwards;

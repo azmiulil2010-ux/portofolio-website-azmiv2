@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   const cookieStore = await cookies();
-  const skipSplash = cookieStore.get("skipSplash")?.value === "1";
+  const skipSplash = cookieStore.get("portfolioIntroSeen")?.value === "1";
 
   return (
     <html lang="en" data-scroll-behavior="smooth">

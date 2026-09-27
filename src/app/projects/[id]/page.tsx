@@ -41,15 +41,39 @@ export default async function ProjectDetail({ params }: ProjectDetailProps) {
         </div>
         <div className="project-detail-surface rounded-2xl border border-slate-800 bg-slate-900/70 p-6 backdrop-blur-sm">
           <p className="text-lg leading-8 text-gray-300">{project.description}</p>
+          {project.tech_stack && project.tech_stack.length > 0 && (
+            <div className="mt-6 flex flex-wrap gap-2">
+              {project.tech_stack.map((tech) => (
+                <span
+                  key={tech}
+                  className="rounded-md border border-slate-700/60 bg-slate-800/80 px-2.5 py-1 text-xs font-medium text-cyan-300"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+          )}
           <div className="mt-8 flex flex-wrap gap-3">
-            <a
-              href={project.websiteUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="project-live-link rounded-xl bg-linear-to-r from-blue-900 to-purple-800 px-5 py-3 text-sm font-semibold text-white transition-colors hover:from-blue-800 hover:to-purple-700"
-            >
-              Visit live project
-            </a>
+            {project.websiteUrl && project.websiteUrl !== "#" && (
+              <a
+                href={project.websiteUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="project-live-link rounded-xl bg-linear-to-r from-blue-900 to-purple-800 px-5 py-3 text-sm font-semibold text-white transition-colors hover:from-blue-800 hover:to-purple-700"
+              >
+                Visit live project
+              </a>
+            )}
+            {project.github_url && (
+              <a
+                href={project.github_url}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-xl border border-slate-700 px-5 py-3 text-sm font-semibold text-slate-300 transition-colors hover:border-slate-500 hover:text-white"
+              >
+                GitHub Repository
+              </a>
+            )}
             <Link
               href="/#projects"
               className="rounded-xl border border-slate-700 px-5 py-3 text-sm font-semibold text-gray-300 transition-colors hover:border-cyan-400 hover:text-cyan-300"

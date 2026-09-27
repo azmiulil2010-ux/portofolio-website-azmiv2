@@ -33,23 +33,6 @@ export default function AnimationLayout({
     const pathname = usePathname();
 
     useEffect(() => {
-        if (skipIntro) {
-            document.cookie = 'skipSplash=; Max-Age=0; path=/';
-        }
-
-        const greetingTimer = window.setInterval(() => {
-            setGreetingIndex((currentIndex) => (currentIndex + 1) % greetings.length);
-        }, 300);
-        const greetingPhaseTimer = window.setTimeout(() => {
-            setSplashPhase('greeting');
-        }, 1500);
-        const introTimer = window.setTimeout(() => {
-            setIsIntroLeaving(true);
-        }, 4700);
-        const removeIntroTimer = window.setTimeout(() => {
-            setIsIntroVisible(false);
-        }, 5200);
-
         const initAOS = async () => {
             await import("aos");
             AOS.init({
@@ -62,6 +45,25 @@ export default function AnimationLayout({
         };
 
         initAOS();
+
+        // Splash boleh dilewati, tetapi AOS tetap harus aktif agar konten tidak tersembunyi.
+        if (skipIntro) return;
+
+        const greetingTimer = window.setInterval(() => {
+            setGreetingIndex((currentIndex) => (currentIndex + 1) % greetings.length);
+        }, 300);
+        const greetingPhaseTimer = window.setTimeout(() => {
+            setSplashPhase('greeting');
+        }, 1500);
+        const introTimer = window.setTimeout(() => {
+            setIsIntroLeaving(true);
+        }, 4700);
+        const removeIntroTimer = window.setTimeout(() => {
+            setIsIntroVisible(false);
+            // Setelah intro selesai, tandai agar tidak muncul lagi selama sesi ini
+            // Cookie sesi (tanpa Max-Age) — akan otomatis terhapus saat browser ditutup
+            document.cookie = 'portfolioIntroSeen=1; path=/; SameSite=Lax';
+        }, 5200);
 
         return () => {
             window.clearInterval(greetingTimer);
