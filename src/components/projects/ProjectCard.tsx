@@ -21,7 +21,18 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         <p className="my-4 text-xl font-semibold text-gray-200 sm:text-2xl">
           {project.title}
         </p>
-        <p className="font-medium text-gray-400">{project.description}</p>
+        {project.tech_stack.length > 0 && (
+          <div className="flex flex-wrap gap-2" aria-label="Tools used">
+            {project.tech_stack.map((tech) => (
+              <span
+                key={tech}
+                className="rounded-md border border-slate-700/60 bg-slate-800/80 px-2.5 py-1 text-xs font-medium text-cyan-300"
+              >
+                {tech}
+              </span>
+            ))}
+          </div>
+        )}
       </Link>
       <a
         href={project.websiteUrl}
