@@ -2,20 +2,25 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LuSearch, LuX } from "react-icons/lu";
+import type { ProjectCategory } from "@/types/project.types";
 
 interface ProjectSearchProps {
   searchTerm: string;
+  category?: ProjectCategory | "";
   basePath?: string;
 }
 
-export default function ProjectSearch({ searchTerm, basePath = "/projects" }: ProjectSearchProps) {
+export default function ProjectSearch({ searchTerm, category = "", basePath = "/projects" }: ProjectSearchProps) {
   const router = useRouter();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const nextSearchTerm = String(formData.get("search") ?? "").trim();
-    const query = nextSearchTerm ? `?search=${encodeURIComponent(nextSearchTerm)}` : "";
+    const params = new URLSearchParams();
+    if (nextSearchTerm) params.set("search", nextSearchTerm);
+    if (category) params.set("category", category);
+    const query = params.size ? `?${params.toString()}` : "";
 
     router.replace(`${basePath}${query}`, { scroll: false });
   };
@@ -37,9 +42,10 @@ export default function ProjectSearch({ searchTerm, basePath = "/projects" }: Pr
         placeholder="Search projects..."
         className="min-w-0 flex-1 bg-transparent px-2 py-3 text-sm text-gray-100 outline-none placeholder:text-gray-500"
       />
+      {category && <input type="hidden" name="category" value={category} />}
       {searchTerm && (
         <Link
-          href={basePath}
+          href={category ? `${basePath}?category=${category}` : basePath}
           aria-label="Clear project search"
           title="Clear search"
           className="grid h-9 w-9 shrink-0 place-items-center rounded-full text-gray-400 transition-colors hover:bg-white/10 hover:text-white"

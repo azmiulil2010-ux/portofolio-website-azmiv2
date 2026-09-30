@@ -27,7 +27,7 @@ export default async function ProjectDetail({ params }: ProjectDetailProps) {
         title={project.title}
         description="A closer look at the idea, technology, and lessons behind this project."
       />
-      <section className="relative z-10 mx-auto mt-8 grid w-[90%] max-w-6xl items-start gap-10 pb-24 lg:mt-12 lg:grid-cols-[1.2fr_0.8fr] lg:gap-16">
+      <section className="relative z-10 mx-auto mt-8 grid w-[90%] max-w-7xl items-start gap-8 pb-24 lg:mt-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-10">
         <div className="relative flex items-start justify-center lg:-my-6">
           <Image
             src={project.imagePath}

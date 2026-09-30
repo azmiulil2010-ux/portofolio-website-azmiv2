@@ -2,6 +2,7 @@
 
 import { useState, useActionState, useRef } from "react";
 import { createProjectAction, type ActionState } from "@/app/admin/actions";
+import { PROJECT_CATEGORIES } from "@/types/project.types";
 import {
   LuPlus,
   LuX,
@@ -112,6 +113,24 @@ export default function ProjectCreateModal() {
                   placeholder="Ceritakan tentang project ini, fitur utama, dan tujuan pembuatannya..."
                   className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
                 />
+              </div>
+
+              <div>
+                <label htmlFor="project-category-create" className="mb-1.5 block text-xs font-semibold text-slate-300">
+                  Kategori Project
+                </label>
+                <select
+                  id="project-category-create"
+                  name="category"
+                  defaultValue="website"
+                  className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3.5 py-2.5 text-sm text-white focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                >
+                  {PROJECT_CATEGORIES.map((category) => (
+                    <option key={category.value} value={category.value}>
+                      {category.label}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               {/* Upload Gambar */}

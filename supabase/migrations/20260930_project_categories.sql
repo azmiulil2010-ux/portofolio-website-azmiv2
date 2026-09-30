@@ -1,0 +1,2 @@
+ALTER TABLE public.projects
+ADD COLUMN IF NOT EXISTS category TEXT NOT NULL DEFAULT 'website';

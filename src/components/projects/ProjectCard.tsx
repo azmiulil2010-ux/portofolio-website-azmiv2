@@ -9,7 +9,7 @@ interface ProjectCardProps {
 
 export default function ProjectCard({ project }: ProjectCardProps) {
   return (
-    <article className="group">
+    <article className="project-card group rounded-2xl border border-cyan-300/15 bg-linear-to-br from-slate-900/95 via-slate-900/85 to-cyan-950/70 p-4 shadow-lg shadow-slate-950/20 transition-all duration-300 hover:-translate-y-1 hover:border-cyan-300/35 hover:shadow-cyan-950/30 sm:p-5">
       <Link href={`/projects/${project.id}`} className="block">
         <Image
           src={project.imagePath}
@@ -20,6 +20,9 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         />
         <p className="my-4 text-xl font-semibold text-gray-200 sm:text-2xl">
           {project.title}
+        </p>
+        <p className="mb-4 line-clamp-3 text-sm leading-6 text-gray-400">
+          {project.description}
         </p>
         {project.tech_stack.length > 0 && (
           <div className="flex flex-wrap gap-2" aria-label="Tools used">

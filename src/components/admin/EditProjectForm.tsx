@@ -4,6 +4,7 @@ import { useActionState, useRef, useState } from "react";
 import Link from "next/link";
 import { updateProjectAction, type ActionState } from "@/app/admin/actions";
 import type { Project } from "@/types/project.types";
+import { PROJECT_CATEGORIES } from "@/types/project.types";
 import {
   LuUpload,
   LuImage,
@@ -105,6 +106,24 @@ export default function EditProjectForm({ project }: EditProjectFormProps) {
             defaultValue={project.description}
             className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
           />
+        </div>
+
+        <div>
+          <label htmlFor="project-category-edit" className="mb-1.5 block text-xs font-semibold text-slate-300">
+            Kategori Project
+          </label>
+          <select
+            id="project-category-edit"
+            name="category"
+            defaultValue={project.category || "website"}
+            className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3.5 py-2.5 text-sm text-white focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+          >
+            {PROJECT_CATEGORIES.map((category) => (
+              <option key={category.value} value={category.value}>
+                {category.label}
+              </option>
+            ))}
+          </select>
         </div>
 
         {/* Upload Gambar */}

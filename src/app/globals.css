@@ -31,6 +31,12 @@ body:has(.not-found-page) .intro-screen {
   background-color: #e9eef6 !important;
 }
 
+[data-theme="light"] .project-card {
+  background: linear-gradient(135deg, #ffffff, #ecfeff) !important;
+  border-color: #cce9ed !important;
+  box-shadow: 0 14px 32px rgb(30 49 80 / 0.08);
+}
+
 [data-theme="light"] .project-search,
 [data-theme="light"] .project-detail-surface {
   background-color: #ffffff !important;

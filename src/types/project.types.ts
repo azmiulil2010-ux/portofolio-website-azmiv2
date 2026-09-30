@@ -1,3 +1,12 @@
+export const PROJECT_CATEGORIES = [
+  { value: "website", label: "Website" },
+  { value: "iot", label: "IoT" },
+  { value: "mobile-app", label: "Mobile App" },
+  { value: "UI/UX", label: "Design" },
+] as const;
+
+export type ProjectCategory = (typeof PROJECT_CATEGORIES)[number]["value"];
+
 export interface Project {
   id: string;
   title: string;
@@ -12,6 +21,7 @@ export interface Project {
   website_url?: string; // Supabase DB column
   is_published?: boolean;
   display_order?: number;
+  category: ProjectCategory;
   created_at?: string;
 }
 
@@ -27,6 +37,7 @@ export type ProjectInput = {
   website_url?: string;
   is_published?: boolean;
   display_order?: number;
+  category: ProjectCategory;
 };
 
 export type ProjectRow = {
@@ -41,5 +52,6 @@ export type ProjectRow = {
   website_url?: string | null;
   is_published?: boolean | null;
   display_order?: number | null;
+  category?: ProjectCategory | null;
   created_at?: string | null;
 };

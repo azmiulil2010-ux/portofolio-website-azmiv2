@@ -25,6 +25,7 @@ export function mapProject(row: ProjectRow | any): Project {
     website_url: webVal,
     is_published: row.is_published ?? true,
     display_order: row.display_order ?? 0,
+    category: row.category || "website",
     created_at: row.created_at || new Date().toISOString(),
   };
 }
@@ -125,6 +126,7 @@ export async function createProject(
     github_url: (data.github_url || "").trim(),
     is_published: data.is_published ?? true,
     display_order: Number(data.display_order) || 0,
+    category: data.category,
   };
 
   // Attempt insert with extended fields
@@ -144,6 +146,7 @@ export async function createProject(
       website_url: webVal,
       is_published: data.is_published ?? true,
       display_order: Number(data.display_order) || 0,
+      category: data.category,
     };
 
     const retry = await activeClient
@@ -202,6 +205,7 @@ export async function updateProject(
   if (data.github_url !== undefined) fullUpdate.github_url = data.github_url.trim();
   if (data.is_published !== undefined) fullUpdate.is_published = data.is_published;
   if (data.display_order !== undefined) fullUpdate.display_order = Number(data.display_order);
+  if (data.category !== undefined) fullUpdate.category = data.category;
 
   let { data: updated, error } = await activeClient
     .from("projects")
@@ -221,6 +225,7 @@ export async function updateProject(
     if (webVal) baseUpdate.website_url = webVal;
     if (data.is_published !== undefined) baseUpdate.is_published = data.is_published;
     if (data.display_order !== undefined) baseUpdate.display_order = Number(data.display_order);
+    if (data.category !== undefined) baseUpdate.category = data.category;
 
     const retry = await activeClient
       .from("projects")

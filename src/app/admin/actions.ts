@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase-server";
+import { PROJECT_CATEGORIES, type ProjectCategory } from "@/types/project.types";
 import {
   createDoorpassToken,
   verifyDoorpassToken,
@@ -122,6 +123,7 @@ export async function createProjectAction(
 
     const title = (formData.get("title") as string)?.trim();
     const description = (formData.get("description") as string)?.trim();
+    const category = formData.get("category") as ProjectCategory;
     const imageFile = formData.get("image_file") as File | null;
     const imageUrl = (formData.get("image_url") as string)?.trim();
     const techStackRaw = (formData.get("tech_stack") as string)?.trim();
@@ -135,6 +137,9 @@ export async function createProjectAction(
     }
     if (!description) {
       return { success: false, error: "Deskripsi project wajib diisi." };
+    }
+    if (!PROJECT_CATEGORIES.some((item) => item.value === category)) {
+      return { success: false, error: "Kategori project tidak valid." };
     }
 
     // Upload gambar ke Supabase Storage jika ada file yang dikirim
@@ -157,6 +162,7 @@ export async function createProjectAction(
       {
         title,
         description,
+        category,
         image: resolvedImageUrl,
         image_path: resolvedImageUrl,
         tech_stack: techStack,
@@ -201,6 +207,7 @@ export async function updateProjectAction(
 
     const title = (formData.get("title") as string)?.trim();
     const description = (formData.get("description") as string)?.trim();
+    const category = formData.get("category") as ProjectCategory;
     const imageFile = formData.get("image_file") as File | null;
     const imageUrl = (formData.get("image_url") as string)?.trim();
     const techStackRaw = (formData.get("tech_stack") as string)?.trim();
@@ -214,6 +221,9 @@ export async function updateProjectAction(
     }
     if (!description) {
       return { success: false, error: "Deskripsi project wajib diisi." };
+    }
+    if (!PROJECT_CATEGORIES.some((item) => item.value === category)) {
+      return { success: false, error: "Kategori project tidak valid." };
     }
 
     // Upload gambar baru ke Supabase Storage jika ada file yang dikirim
@@ -235,6 +245,7 @@ export async function updateProjectAction(
     const updatePayload: Record<string, any> = {
       title,
       description,
+      category,
       tech_stack: techStack,
       github_url: githubUrl,
       demo_url: demoUrl,
