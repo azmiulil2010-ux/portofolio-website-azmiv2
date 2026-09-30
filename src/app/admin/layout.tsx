@@ -18,6 +18,8 @@ import {
   LuShieldCheck,
 } from "react-icons/lu";
 import { Toaster } from "react-hot-toast";
+import AdminThemeToggle from "@/components/general/AdminThemeToggle";
+import Footer from "@/components/general/Footer";
 
 export const metadata: Metadata = {
   title: "Admin Panel | Portofolio Azmi",
@@ -44,9 +46,13 @@ export default async function AdminLayout({
   // Jika belum login atau belum melewati Doorpass, tampilkan tampilan terpusat tanpa sidebar
   if (!user || !isDoorpassValid) {
     return (
-      <div className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center p-4">
-        <Toaster position="top-right" />
-        {children}
+      <div className="admin-auth-shell flex min-h-screen flex-col bg-slate-950 p-4 text-slate-100">
+        <AdminThemeToggle className="fixed right-4 top-4 z-50" />
+        <main className="flex flex-1 items-center justify-center">
+          <Toaster position="top-right" />
+          {children}
+        </main>
+        <Footer />
       </div>
     );
   }
@@ -126,9 +132,9 @@ export default async function AdminLayout({
                     <li key={sec.name}>
                       <Link
                         href={sec.href}
-                        className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
+                        className={`admin-nav-link flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
                           isCurrent
-                            ? "bg-slate-800/90 text-white font-semibold border-l-2 border-cyan-400"
+                            ? "admin-nav-current bg-slate-800/90 text-white font-semibold border-l-2 border-cyan-400"
                             : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
                         }`}
                       >
@@ -188,6 +194,7 @@ export default async function AdminLayout({
             <span className="text-slate-200 font-medium">Pengelolaan Proyek</span>
           </div>
           <div className="flex items-center gap-4">
+            <AdminThemeToggle />
             <Link
               href="/"
               target="_blank"
@@ -201,6 +208,7 @@ export default async function AdminLayout({
 
         {/* Page Content */}
         <main className="flex-1 p-6 md:p-8 overflow-y-auto">{children}</main>
+        <Footer />
       </div>
     </div>
   );

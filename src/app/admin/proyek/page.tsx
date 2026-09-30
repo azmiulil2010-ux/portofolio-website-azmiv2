@@ -39,24 +39,24 @@ export default async function AdminProjectsPage() {
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
+        <div className="admin-stat-card rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
           <p className="text-xs font-medium text-slate-400">Total Proyek</p>
           <p className="text-2xl font-bold text-white mt-1">{projects.length}</p>
         </div>
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
+        <div className="admin-stat-card rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
           <p className="text-xs font-medium text-slate-400">Status Terbit</p>
           <p className="text-2xl font-bold text-emerald-400 mt-1">
             {publishedCount}
           </p>
         </div>
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
+        <div className="admin-stat-card rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
           <p className="text-xs font-medium text-slate-400">Draft / Nonaktif</p>
           <p className="text-2xl font-bold text-amber-400 mt-1">{draftCount}</p>
         </div>
       </div>
 
       {/* Projects List */}
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/60 overflow-hidden shadow-xl">
+      <div className="admin-project-list rounded-2xl border border-slate-800 bg-slate-900/60 overflow-hidden shadow-xl">
         <div className="p-4 sm:p-5 border-b border-slate-800 flex items-center justify-between">
           <h3 className="text-sm font-semibold text-white">Daftar Seluruh Proyek</h3>
           <span className="text-xs text-slate-400">
@@ -75,11 +75,11 @@ export default async function AdminProjectsPage() {
             </p>
           </div>
         ) : (
-          <div className="divide-y divide-slate-800/80">
+          <div className="admin-project-rows">
             {projects.map((project) => (
               <div
                 key={project.id}
-                className="p-4 sm:p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 hover:bg-slate-800/30 transition-colors"
+                className="admin-project-row border-t border-slate-800/80 first:border-t-0 p-4 sm:p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 hover:bg-slate-800/30 transition-colors"
               >
                 <div className="flex items-start gap-4">
                   {/* Thumbnail */}

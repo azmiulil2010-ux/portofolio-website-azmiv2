@@ -15,7 +15,7 @@ export default function ProjectCategoryFilter({
   return (
     <nav
       aria-label="Filter projects by category"
-      className="mx-auto mt-5 flex w-[90%] max-w-5xl flex-wrap gap-2"
+      className="project-category-filter mx-auto mt-5 flex w-[90%] max-w-5xl flex-wrap gap-2"
     >
       {filters.map((filter) => {
         const params = new URLSearchParams();
