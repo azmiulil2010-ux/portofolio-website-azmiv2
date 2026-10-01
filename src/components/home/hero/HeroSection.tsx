@@ -30,13 +30,14 @@ export default function HeroSection() {
   };
 
   return (
-    <section className="hero-section relative flex min-h-[calc(100svh-4.5rem)] items-center overflow-hidden px-5 pb-12 pt-28 sm:px-8 lg:min-h-screen lg:px-12 lg:py-20">
+    <section className="hero-section relative isolate flex min-h-[calc(100svh-4.5rem)] items-center overflow-hidden px-5 pb-12 pt-28 sm:px-8 lg:min-h-screen lg:px-12 lg:py-20">
       <div className="hero-pattern absolute inset-0 z-0" />
-      <div className="relative z-10 mx-auto grid w-full max-w-350 items-center gap-10 lg:grid-cols-[minmax(220px,0.85fr)_minmax(280px,1.2fr)_minmax(220px,0.75fr)] lg:gap-8">
+      <div className="hero-layout relative z-10 mx-auto grid w-full max-w-350 items-center gap-10 lg:grid-cols-[minmax(220px,0.85fr)_minmax(280px,1.3fr)_minmax(220px,0.75fr)] lg:gap-8">
         <div className="order-2 text-center lg:order-1 lg:text-left" data-aos="fade-up">
-          <p className="hero-reference-label mb-4 text-[0.65rem] font-semibold uppercase tracking-[0.28em]">Web Developer · Open to Work</p>
-          <h1 className="hero-title max-w-md text-5xl font-black uppercase leading-[0.88] tracking-[-0.03em] sm:text-6xl lg:text-7xl xl:text-8xl">
-            Ulil Azmi
+          <p className="hero-reference-label mb-4 text-[0.65rem] font-semibold uppercase tracking-[0.2em]">Web Developer <span aria-hidden="true">•</span> Open to Work</p>
+          <h1 className="hero-title flex max-w-md flex-col text-6xl font-black uppercase leading-[0.82] tracking-normal sm:text-7xl lg:text-7xl xl:text-8xl">
+            <span>M. Ulil</span>
+            <span>Azmi</span>
           </h1>
           <p className="hero-intro mt-6 max-w-sm text-sm leading-relaxed sm:text-base">
             Saya Muhammad Ulil Azmi seorang siswa Rekayasa Perangkat Lunak SMKN 1 Pasuruan yang membangun website modern, rapi, cepat, dan responsive.
@@ -56,12 +57,16 @@ export default function HeroSection() {
             ref={photoRef}
             onPointerMove={handlePhotoPointerMove}
             onPointerLeave={resetPhotoTilt}
-            className="hero-photo-float relative aspect-square w-[min(78vw,27rem)]"
+            className="hero-photo-float relative aspect-square w-[min(78vw,32rem)]"
           >
+            <div className="hero-photo-orbit hero-photo-orbit--outer absolute inset-[-8%] rounded-full" aria-hidden="true" />
+            <div className="hero-photo-orbit hero-photo-orbit--inner absolute inset-[-2%] rounded-full" aria-hidden="true" />
             <div className="hero-photo-circle absolute inset-[4%] rounded-full" />
             <div className="hero-photo-halo absolute inset-0 rounded-full border" />
             <img src="/profil.png" alt="Foto Azmi" width={420} height={420} className="hero-photo-image absolute inset-[7%] h-[86%] w-[86%] rounded-full object-cover object-[center_25%]" />
             <div className="hero-photo-tag absolute bottom-[10%] left-1/2 z-20 -translate-x-1/2 whitespace-nowrap rounded-full px-4 py-2 text-[0.65rem] font-bold uppercase tracking-[0.2em]">Web Developer</div>
+            <span className="hero-photo-marker hero-photo-marker--top absolute left-[17%] top-[15%]" aria-hidden="true" />
+            <span className="hero-photo-marker hero-photo-marker--bottom absolute bottom-[18%] right-[13%]" aria-hidden="true" />
           </div>
         </div>
 
