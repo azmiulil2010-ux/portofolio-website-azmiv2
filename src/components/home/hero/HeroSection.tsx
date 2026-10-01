@@ -1,6 +1,7 @@
 "use client";
 import Particles from "./Particels";
 import { useRef } from "react";
+import Typewriter from "typewriter-effect";
 import { FaInstagram, FaTiktok, FaYoutube } from "react-icons/fa";
 import { LuArrowDown, LuArrowRight } from "react-icons/lu";
 
@@ -36,11 +37,22 @@ export default function HeroSection() {
         <div className="order-2 text-center lg:order-1 lg:text-left" data-aos="fade-up">
           <p className="hero-reference-label mb-4 text-[0.65rem] font-semibold uppercase tracking-[0.2em]">Web Developer <span aria-hidden="true">•</span> Open to Work</p>
           <h1 className="hero-title flex max-w-md flex-col text-6xl font-black uppercase leading-[0.82] tracking-normal sm:text-7xl lg:text-7xl xl:text-8xl">
-            <span>M. Ulil</span>
-            <span>Azmi</span>
+            <span className="sr-only">M. Ulil Azmi</span>
+            <span aria-hidden="true" className="min-h-[1.64em]">
+              <Typewriter
+                options={{
+                  strings: ["M. Ulil<br/>Azmi"],
+                  autoStart: true,
+                  loop: true,
+                  delay: 90,
+                  deleteSpeed: 110,
+                  cursor: "|",
+                }}
+              />
+            </span>
           </h1>
           <p className="hero-intro mt-6 max-w-sm text-sm leading-relaxed sm:text-base">
-            Saya Muhammad Ulil Azmi seorang siswa Rekayasa Perangkat Lunak SMKN 1 Pasuruan yang membangun website modern, rapi, cepat, dan responsive.
+            Saya Muhammad Ulil Azmi, siswa Rekayasa Perangkat Lunak di SMKN 1 Pasuruan yang berfokus membangun website modern, rapi, cepat, dan responsif.
           </p>
           <div className="mt-7 flex flex-wrap justify-center gap-3 lg:justify-start">
             <a href="#projects" className="hero-primary-action inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-bold">
