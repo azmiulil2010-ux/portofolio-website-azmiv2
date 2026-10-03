@@ -64,7 +64,7 @@ NEXT_PUBLIC_SITE_URL=https://your-domain.com
 ```
 
 Project juga mendukung `NEXT_PUBLIC_SUPABASE_ANON_KEY` sebagai fallback untuk key Supabase. Pastikan tabel `projects` sudah tersedia dan memiliki data yang sesuai dengan struktur project pada aplikasi.
-`NEXT_PUBLIC_SITE_URL` digunakan untuk metadata canonical, Open Graph, robots.txt, dan sitemap.xml. Isi dengan origin website production tanpa path; Vercel akan memakai `VERCEL_URL` secara otomatis jika variabel ini tidak diatur.
+`NEXT_PUBLIC_SITE_URL` digunakan untuk metadata canonical, Open Graph, robots.txt, dan sitemap.xml. Isi dengan origin website production tanpa path. Jika variabel ini tidak diatur, Vercel akan memakai `VERCEL_PROJECT_PRODUCTION_URL` agar tautan crawler mengarah ke domain produksi, bukan deployment preview; `VERCEL_URL` menjadi fallback berikutnya.
 
 ## Struktur Project
 
