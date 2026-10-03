@@ -3,17 +3,16 @@ import { navLinks } from "./navLinks"
 import LinkButton from"../LinkButton"
 import { LuDownload, LuX } from "react-icons/lu"
 import { usePathname } from "next/navigation"
-import { useActiveSection } from "./useActiveSection"
 import { useEffect } from "react"
 
 interface MobileNavProps {
     navOpen:boolean
     setNavOpen:React.Dispatch<React.SetStateAction<boolean>>;
+    activeSection: string;
 }
 
-export default function MobileNav({navOpen, setNavOpen}:MobileNavProps) {
+export default function MobileNav({navOpen, setNavOpen, activeSection}:MobileNavProps) {
     const pathname = usePathname();
-    const activeSection = useActiveSection();
     const isLinkActive = (section: string) => pathname === "/" ? activeSection === section : pathname.startsWith(`/${section}`);
 
     useEffect(() => {

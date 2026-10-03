@@ -1,9 +1,6 @@
-"use client";
-import Particles from "./Particels";
-import { useRef } from "react";
-import Typewriter from "typewriter-effect";
 import { FaInstagram, FaTiktok, FaYoutube } from "react-icons/fa";
 import { LuArrowDown, LuArrowRight } from "react-icons/lu";
+import HeroPhoto from "./HeroPhoto";
 
 const socialLinks = [
   { name: "Instagram", icon: FaInstagram, url: "https://www.instagram.com/qzmiuu/" },
@@ -12,24 +9,6 @@ const socialLinks = [
 ];
 
 export default function HeroSection() {
-  const photoRef = useRef<HTMLDivElement>(null);
-
-  const handlePhotoPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
-    const photo = photoRef.current;
-    if (!photo || event.pointerType !== "mouse") return;
-
-    const bounds = photo.getBoundingClientRect();
-    const rotateY = ((event.clientX - bounds.left) / bounds.width - 0.5) * 12;
-    const rotateX = ((event.clientY - bounds.top) / bounds.height - 0.5) * -12;
-    photo.style.setProperty("--tilt-x", `${rotateX.toFixed(2)}deg`);
-    photo.style.setProperty("--tilt-y", `${rotateY.toFixed(2)}deg`);
-  };
-
-  const resetPhotoTilt = () => {
-    photoRef.current?.style.setProperty("--tilt-x", "0deg");
-    photoRef.current?.style.setProperty("--tilt-y", "0deg");
-  };
-
   return (
     <section className="hero-section relative isolate flex min-h-[calc(100svh-4.5rem)] items-center overflow-hidden px-5 pb-12 pt-28 sm:px-8 lg:min-h-screen lg:px-12 lg:py-20">
       <div className="hero-pattern absolute inset-0 z-0" />
@@ -37,19 +16,8 @@ export default function HeroSection() {
         <div className="order-2 text-center lg:order-1 lg:text-left" data-aos="fade-up">
           <p className="hero-reference-label mb-4 text-[0.65rem] font-semibold uppercase tracking-[0.2em]">Web Developer <span aria-hidden="true">•</span> Open to Work</p>
           <h1 className="hero-title flex max-w-md flex-col text-6xl font-black uppercase leading-[0.82] tracking-normal sm:text-7xl lg:text-7xl xl:text-8xl">
-            <span className="sr-only">M. Ulil Azmi</span>
-            <span aria-hidden="true" className="min-h-[1.64em]">
-              <Typewriter
-                options={{
-                  strings: ["M. Ulil<br/>Azmi"],
-                  autoStart: true,
-                  loop: true,
-                  delay: 90,
-                  deleteSpeed: 110,
-                  cursor: "|",
-                }}
-              />
-            </span>
+            <span>Ulil</span>
+            <span>Azmi</span>
           </h1>
           <p className="hero-intro mt-6 max-w-sm text-sm leading-relaxed sm:text-base">
             Saya Muhammad Ulil Azmi, siswa Rekayasa Perangkat Lunak di SMKN 1 Pasuruan yang berfokus membangun website modern, rapi, cepat, dan responsif.
@@ -65,21 +33,7 @@ export default function HeroSection() {
         </div>
 
         <div className="order-1 flex justify-center lg:order-2" data-aos="fade-up" data-aos-delay="150">
-          <div
-            ref={photoRef}
-            onPointerMove={handlePhotoPointerMove}
-            onPointerLeave={resetPhotoTilt}
-            className="hero-photo-float relative aspect-square w-[min(78vw,32rem)]"
-          >
-            <div className="hero-photo-orbit hero-photo-orbit--outer absolute inset-[-8%] rounded-full" aria-hidden="true" />
-            <div className="hero-photo-orbit hero-photo-orbit--inner absolute inset-[-2%] rounded-full" aria-hidden="true" />
-            <div className="hero-photo-circle absolute inset-[4%] rounded-full" />
-            <div className="hero-photo-halo absolute inset-0 rounded-full border" />
-            <img src="/profil.png" alt="Foto Azmi" width={420} height={420} className="hero-photo-image absolute inset-[7%] h-[86%] w-[86%] rounded-full object-cover object-[center_25%]" />
-            <div className="hero-photo-tag absolute bottom-[10%] left-1/2 z-20 -translate-x-1/2 whitespace-nowrap rounded-full px-4 py-2 text-[0.65rem] font-bold uppercase tracking-[0.2em]">Web Developer</div>
-            <span className="hero-photo-marker hero-photo-marker--top absolute left-[17%] top-[15%]" aria-hidden="true" />
-            <span className="hero-photo-marker hero-photo-marker--bottom absolute bottom-[18%] right-[13%]" aria-hidden="true" />
-          </div>
+          <HeroPhoto />
         </div>
 
         <div className="order-3 text-center lg:text-left" data-aos="fade-up" data-aos-delay="300">

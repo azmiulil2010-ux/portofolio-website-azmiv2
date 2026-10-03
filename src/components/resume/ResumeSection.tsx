@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { LuAward, LuBookOpen, LuGraduationCap, LuLayers3, LuMail, LuMapPin } from "react-icons/lu";
 import Header from "../general/Header";
 import ResumeCard from "./ResumeCard";
@@ -12,7 +13,7 @@ export default function ResumeSection() {
             <div className="about-portrait relative mx-auto aspect-square w-[min(100%,30rem)]">
               <div className="about-portrait-circle absolute inset-0 rounded-full" />
               <div className="about-portrait-image-frame absolute inset-[5%] overflow-hidden rounded-full border-8">
-                <img src="/profil2.png" alt="Foto Muhammad Ulil Azmi" className="about-portrait-image h-full w-full object-cover object-[58%_27%]" />
+                <Image src="/profil2.png" alt="Foto Muhammad Ulil Azmi" fill sizes="(max-width: 1024px) 90vw, 40vw" className="about-portrait-image h-full w-full object-cover object-[58%_27%]" />
               </div>
               <span className="about-portrait-status absolute bottom-[3%] left-[2%] whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold shadow-lg">● Open to work &amp; freelance</span>
             </div>

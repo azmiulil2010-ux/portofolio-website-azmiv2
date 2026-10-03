@@ -16,6 +16,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           alt={project.title}
           width={800}
           height={600}
+          sizes="(max-width: 767px) 90vw, (max-width: 1023px) 45vw, 40vw"
           className="rounded-lg transition-transform duration-500 group-hover:scale-[1.01]"
         />
         <p className="my-4 text-xl font-semibold text-gray-200 sm:text-2xl">

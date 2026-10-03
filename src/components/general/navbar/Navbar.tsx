@@ -91,7 +91,7 @@ export default function Navbar() {
                         <LuMenu size={30} />
                     </button>
                 </div>
-                <MobileNav navOpen={navOpen} setNavOpen={setNavOpen} />
+                <MobileNav navOpen={navOpen} setNavOpen={setNavOpen} activeSection={activeSection} />
             </div>
         </nav>
     )

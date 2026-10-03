@@ -7,15 +7,25 @@ export default function ScrollTopButton() {
   const [showButton, setShowButton] = useState(false);
 
   useEffect(() => {
+    let animationFrame = 0;
+
     const toggleVisibility = () => {
-      if (window.scrollY > 300) {
-        setShowButton(true);
-      } else {
-        setShowButton(false);
-      }
+      if (animationFrame) return;
+
+      animationFrame = window.requestAnimationFrame(() => {
+        animationFrame = 0;
+        const shouldShow = window.scrollY > 300;
+        setShowButton((current) => current === shouldShow ? current : shouldShow);
+      });
     };
 
-    window.addEventListener("scroll", toggleVisibility);
+    window.addEventListener("scroll", toggleVisibility, { passive: true });
+    toggleVisibility();
+
+    return () => {
+      window.removeEventListener("scroll", toggleVisibility);
+      window.cancelAnimationFrame(animationFrame);
+    };
   }, []);
 
   const scrollToTop = () => {
