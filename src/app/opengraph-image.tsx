@@ -6,12 +6,5 @@ export const size = ogImageSize;
 export const contentType = "image/png";
 
 export default function OpenGraphImage() {
-  return new ImageResponse(
-    <PortfolioOgImage
-      label="PERSONAL WEBSITE"
-      title="Portofolio Muhammad Ulil Azmi"
-      description="Project, skill, dan pengalaman dalam pengembangan website dan aplikasi."
-    />,
-    size
-  );
+  return new ImageResponse(<PortfolioOgImage />, size);
 }
