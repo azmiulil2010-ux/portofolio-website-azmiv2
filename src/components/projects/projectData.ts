@@ -1,3 +1,4 @@
+import { cache } from "react";
 import {
   getProjects as fetchProjects,
   getProjectById as fetchProjectById,
@@ -10,7 +11,7 @@ export async function getProjects(): Promise<Project[]> {
   return fetchProjects();
 }
 
-export async function getProjectById(id: string): Promise<Project | undefined> {
+export const getProjectById = cache(async (id: string): Promise<Project | undefined> => {
   const project = await fetchProjectById(id);
   return project ?? undefined;
-}
+});

@@ -44,11 +44,10 @@ export default function HeroPhoto() {
       <div className="hero-photo-halo absolute inset-0 rounded-full border" />
       <Image
         src="/profil.png"
-        alt="Foto Azmi"
+        alt="Foto Muhammad Ulil Azmi"
         width={420}
         height={420}
-        quality={70}
-        priority
+        preload
         sizes="(max-width: 640px) 67vw, (max-width: 1024px) 36vw, 28vw"
         className="hero-photo-image absolute inset-[7%] h-[86%] w-[86%] rounded-full object-cover object-[center_25%]"
       />

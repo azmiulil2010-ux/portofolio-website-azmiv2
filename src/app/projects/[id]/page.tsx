@@ -1,14 +1,56 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import PageLead from "@/components/general/PageLead";
 import SpaceDecorations from "@/components/general/SpaceDecorations";
 import { getProjectById } from "@/components/projects/projectData";
+import { absoluteSiteUrl, getAbsoluteImageUrl, getSeoDescription } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
 interface ProjectDetailProps {
   params: Promise<{ id: string }>;
+}
+
+const fallbackDescription =
+  "Lihat project dan karya pengembangan website Muhammad Ulil Azmi.";
+
+export async function generateMetadata({
+  params,
+}: ProjectDetailProps): Promise<Metadata> {
+  const { id } = await params;
+  const project = await getProjectById(id);
+  const title = project?.title || "Project tidak ditemukan";
+  const description = project?.description
+    ? getSeoDescription(project.description)
+    : fallbackDescription;
+  const projectUrl = absoluteSiteUrl(`/projects/${encodeURIComponent(id)}`);
+  const imageUrl =
+    getAbsoluteImageUrl(project?.imagePath) ||
+    absoluteSiteUrl(`/projects/${encodeURIComponent(id)}/opengraph-image`);
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: projectUrl,
+    },
+    openGraph: {
+      type: "article",
+      url: projectUrl,
+      siteName: "Portofolio Muhammad Ulil Azmi",
+      title,
+      description,
+      images: [{ url: imageUrl, width: 1200, height: 630, alt: `Project ${title}` }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [imageUrl],
+    },
+  };
 }
 
 export default async function ProjectDetail({ params }: ProjectDetailProps) {
@@ -31,12 +73,12 @@ export default async function ProjectDetail({ params }: ProjectDetailProps) {
         <div className="relative flex items-start justify-center lg:-my-6">
           <Image
             src={project.imagePath}
-            alt={project.title}
+            alt={`Pratinjau project ${project.title}`}
             width={1000}
             height={750}
             sizes="(min-width: 1024px) 60vw, 90vw"
             className="block h-auto w-full rounded-2xl shadow-2xl shadow-slate-950/40 lg:w-[115%] lg:translate-x-[-7.5%]"
-            priority
+            preload
           />
         </div>
         <div className="project-detail-surface rounded-2xl border border-slate-800 bg-slate-900/70 p-6 backdrop-blur-sm">

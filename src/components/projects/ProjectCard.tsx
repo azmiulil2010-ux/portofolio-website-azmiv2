@@ -13,7 +13,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
       <Link href={`/projects/${project.id}`} className="block">
         <Image
           src={project.imagePath}
-          alt={project.title}
+          alt={`Pratinjau project ${project.title}`}
           width={800}
           height={600}
           sizes="(max-width: 767px) 90vw, (max-width: 1023px) 45vw, 40vw"

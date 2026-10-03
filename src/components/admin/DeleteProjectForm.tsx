@@ -62,7 +62,7 @@ export default function DeleteProjectForm({ project }: DeleteProjectFormProps) {
         <div className="relative h-16 w-20 rounded-lg overflow-hidden bg-slate-800 shrink-0 border border-slate-700/60">
           <Image
             src={project.imagePath || "/project1.png"}
-            alt={project.title}
+            alt={`Pratinjau project ${project.title}`}
             fill
             className="object-cover"
             sizes="80px"

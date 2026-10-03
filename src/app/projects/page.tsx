@@ -1,11 +1,45 @@
+import type { Metadata } from "next";
 import ProjectSection from "@/components/projects/ProjectSection";
 import ProjectSearch from "@/components/projects/ProjectSearch";
 import PageLead from "@/components/general/PageLead";
 import SpaceDecorations from "@/components/general/SpaceDecorations";
 import ProjectCategoryFilter from "@/components/projects/ProjectCategoryFilter";
 import { PROJECT_CATEGORIES, type ProjectCategory } from "@/types/project.types";
+import { absoluteSiteUrl } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
+
+const projectsDescription =
+  "Jelajahi project website dan aplikasi yang dibuat Muhammad Ulil Azmi menggunakan teknologi web modern.";
+
+export const metadata: Metadata = {
+  title: "Projects",
+  description: projectsDescription,
+  alternates: {
+    canonical: "/projects",
+  },
+  openGraph: {
+    type: "website",
+    url: absoluteSiteUrl("/projects"),
+    siteName: "Portofolio Muhammad Ulil Azmi",
+    title: "Projects | Portofolio Muhammad Ulil Azmi",
+    description: projectsDescription,
+    images: [
+      {
+        url: absoluteSiteUrl("/opengraph-image"),
+        width: 1200,
+        height: 630,
+        alt: "Project Muhammad Ulil Azmi",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Projects | Portofolio Muhammad Ulil Azmi",
+    description: projectsDescription,
+    images: [absoluteSiteUrl("/opengraph-image")],
+  },
+};
 
 interface ProjectsPageProps {
   searchParams: Promise<{ search?: string; category?: string }>;

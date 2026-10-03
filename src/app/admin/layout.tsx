@@ -24,6 +24,10 @@ import Footer from "@/components/general/Footer";
 export const metadata: Metadata = {
   title: "Admin Panel | Portofolio Azmi",
   description: "Area Pengelolaan Portofolio Azmi",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default async function AdminLayout({

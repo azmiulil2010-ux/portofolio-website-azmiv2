@@ -158,7 +158,7 @@ export default function ProjectCreateModal() {
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={previewUrl}
-                          alt="Preview"
+                          alt="Pratinjau gambar project yang dipilih"
                           className="h-20 w-28 object-cover rounded-lg border border-slate-700"
                         />
                         <div className="min-w-0">

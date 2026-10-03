@@ -139,7 +139,7 @@ export default function EditProjectForm({ project }: EditProjectFormProps) {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={existingImage}
-                alt="Gambar saat ini"
+                alt={`Gambar project tersimpan: ${project.title}`}
                 className="h-16 w-24 object-cover rounded-lg border border-slate-700 shrink-0"
                 onError={(e) => { (e.target as HTMLImageElement).src = "/project1.png"; }}
               />
@@ -169,7 +169,7 @@ export default function EditProjectForm({ project }: EditProjectFormProps) {
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={previewUrl}
-                    alt="Preview baru"
+                    alt="Pratinjau gambar project baru yang dipilih"
                     className="h-16 w-24 object-cover rounded-lg border border-cyan-700"
                   />
                   <div className="min-w-0">
