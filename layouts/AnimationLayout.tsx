@@ -3,6 +3,9 @@ import 'aos/dist/aos.css';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+const shouldUseScrollAnimations = () =>
+    !window.matchMedia('(max-width: 767px), (prefers-reduced-motion: reduce)').matches;
+
 export default function AnimationLayout({
     children,
     skipIntro = false,
@@ -16,16 +19,19 @@ export default function AnimationLayout({
 
     useEffect(() => {
         let cancelled = false;
-        void import("aos").then(({ default: AOS }) => {
-            if (cancelled) return;
-            AOS.init({
-                duration: 900,
-                easing: "ease-out-cubic",
-                offset: 80,
-                once: true,
-                anchorPlacement: "top-center",
+
+        if (shouldUseScrollAnimations()) {
+            void import("aos").then(({ default: AOS }) => {
+                if (cancelled) return;
+                AOS.init({
+                    duration: 900,
+                    easing: "ease-out-cubic",
+                    offset: 80,
+                    once: true,
+                    anchorPlacement: "top-center",
+                });
             });
-        });
+        }
 
         // Splash boleh dilewati, tetapi AOS tetap harus aktif agar konten tidak tersembunyi.
         if (skipIntro) return () => { cancelled = true; };
@@ -48,6 +54,8 @@ export default function AnimationLayout({
     }, [skipIntro]);
 
     useEffect(() => {
+        if (!shouldUseScrollAnimations()) return;
+
         void import("aos").then(({ default: AOS }) => AOS.refreshHard());
     }, [pathname]);
 

@@ -911,12 +911,6 @@ body:has(.not-found-page) .intro-screen {
   }
 }
 
-.particles-container {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
 .space-decorations {
   position: absolute;
   inset: 0;
@@ -925,49 +919,18 @@ body:has(.not-found-page) .intro-screen {
   pointer-events: none;
 }
 
-.space-decorations:not(.is-active) .space-star,
-.space-decorations:not(.is-active) .space-planet,
-.space-decorations:not(.is-active) .space-plane {
-  animation-play-state: paused;
-}
-
 .space-stars {
   position: absolute;
   inset: 0;
-}
-
-.space-particle-field {
-  position: absolute !important;
-  inset: 0;
-  opacity: 0.72;
-}
-
-.space-star {
-  position: absolute;
-  width: 0.2rem;
-  height: 0.2rem;
-  border-radius: 999px;
-  background: rgb(255 255 255 / 0.8);
-  box-shadow: 0 0 8px rgb(255 255 255 / 0.45);
-  animation: space-star-twinkle 3.5s ease-in-out infinite;
-  animation-delay: calc(var(--star-index) * -140ms);
-}
-
-.space-star:nth-child(3n) {
-  width: 0.3rem;
-  height: 0.3rem;
-}
-
-.space-star:nth-child(4n) {
-  opacity: 0.45;
-}
-
-.space-star:nth-child(5n) {
-  top: 72%;
-}
-
-.space-star:nth-child(7n) {
-  left: 82%;
+  background-image:
+    radial-gradient(circle at 8% 14%, rgb(255 255 255 / 0.8) 1px, transparent 1.5px),
+    radial-gradient(circle at 19% 68%, rgb(103 232 249 / 0.8) 1px, transparent 1.5px),
+    radial-gradient(circle at 33% 37%, rgb(255 255 255 / 0.7) 1px, transparent 1.5px),
+    radial-gradient(circle at 47% 82%, rgb(165 180 252 / 0.7) 1px, transparent 1.5px),
+    radial-gradient(circle at 61% 22%, rgb(255 255 255 / 0.8) 1px, transparent 1.5px),
+    radial-gradient(circle at 76% 58%, rgb(103 232 249 / 0.7) 1px, transparent 1.5px),
+    radial-gradient(circle at 91% 31%, rgb(255 255 255 / 0.8) 1px, transparent 1.5px);
+  opacity: 0.7;
 }
 
 .space-planet,
@@ -996,7 +959,6 @@ body:has(.not-found-page) .intro-screen {
   left: 6%;
   width: 4.5rem;
   height: 4.5rem;
-  animation: space-drift-one 8s ease-in-out infinite;
 }
 
 .space-planet-two {
@@ -1006,7 +968,6 @@ body:has(.not-found-page) .intro-screen {
   height: 3rem;
   color: rgb(103 232 249 / 0.65);
   border-color: rgb(103 232 249 / 0.25);
-  animation: space-drift-two 7s ease-in-out infinite;
 }
 
 .space-plane {
@@ -1020,7 +981,6 @@ body:has(.not-found-page) .intro-screen {
   width: 1.5rem;
   height: 1.5rem;
   transform: rotate(-24deg);
-  animation: space-plane-one 11s ease-in-out infinite;
 }
 
 .space-plane-two {
@@ -1030,7 +990,6 @@ body:has(.not-found-page) .intro-screen {
   height: 1.15rem;
   color: rgb(196 181 253 / 0.65);
   transform: rotate(18deg);
-  animation: space-plane-two 13s ease-in-out infinite;
 }
 
 .space-flight-path {
@@ -1051,58 +1010,6 @@ body:has(.not-found-page) .intro-screen {
   left: 5%;
   border-color: rgb(196 181 253 / 0.17);
   transform: rotate(22deg);
-}
-
-@keyframes space-drift-one {
-  0%,
-  100% {
-    transform: translate(0, 0) rotate(-12deg);
-  }
-  50% {
-    transform: translate(14px, -18px) rotate(8deg);
-  }
-}
-
-@keyframes space-drift-two {
-  0%,
-  100% {
-    transform: translate(0, 0) rotate(14deg);
-  }
-  50% {
-    transform: translate(-12px, 12px) rotate(-8deg);
-  }
-}
-
-@keyframes space-star-twinkle {
-  0%,
-  100% {
-    opacity: 0.25;
-    transform: scale(0.7);
-  }
-  50% {
-    opacity: 0.95;
-    transform: scale(1.25);
-  }
-}
-
-@keyframes space-plane-one {
-  0%,
-  100% {
-    transform: translate(0, 0) rotate(-24deg);
-  }
-  50% {
-    transform: translate(-38px, 20px) rotate(-12deg);
-  }
-}
-
-@keyframes space-plane-two {
-  0%,
-  100% {
-    transform: translate(0, 0) rotate(18deg);
-  }
-  50% {
-    transform: translate(36px, -17px) rotate(30deg);
-  }
 }
 
 .hero-photo-float {
@@ -1448,11 +1355,32 @@ body:has(.not-found-page) .intro-screen {
   .hero-photo-halo,
   .hero-photo-orbit,
   .hero-pattern,
-  .space-planet,
-  .space-plane,
-  .space-star,
   .hero-photo-float {
     animation: none;
+  }
+
+  [data-aos] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .hero-photo-float {
+    animation: none;
+    will-change: auto;
+  }
+
+  .hero-photo-halo,
+  .hero-pattern {
+    animation: none;
+  }
+
+  [data-aos] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
   }
 }
 

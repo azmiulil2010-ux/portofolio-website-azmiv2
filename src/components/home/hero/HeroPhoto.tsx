@@ -43,7 +43,7 @@ export default function HeroPhoto() {
       <div className="hero-photo-circle absolute inset-[4%] rounded-full" />
       <div className="hero-photo-halo absolute inset-0 rounded-full border" />
       <Image
-        src="/profil.png"
+        src="/profil.webp"
         alt="Foto Muhammad Ulil Azmi"
         width={420}
         height={420}
