@@ -1,41 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useRef } from "react";
 
 export default function HeroPhoto() {
-  const photoRef = useRef<HTMLDivElement>(null);
-  const boundsRef = useRef<DOMRect | null>(null);
-
-  const cachePhotoBounds = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (event.pointerType === "mouse") {
-      boundsRef.current = photoRef.current?.getBoundingClientRect() ?? null;
-    }
-  };
-
-  const handlePhotoPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
-    const photo = photoRef.current;
-    const bounds = boundsRef.current;
-    if (!photo || !bounds || event.pointerType !== "mouse") return;
-
-    const rotateY = ((event.clientX - bounds.left) / bounds.width - 0.5) * 12;
-    const rotateX = ((event.clientY - bounds.top) / bounds.height - 0.5) * -12;
-    photo.style.setProperty("--tilt-x", `${rotateX.toFixed(2)}deg`);
-    photo.style.setProperty("--tilt-y", `${rotateY.toFixed(2)}deg`);
-  };
-
-  const resetPhotoTilt = () => {
-    boundsRef.current = null;
-    photoRef.current?.style.setProperty("--tilt-x", "0deg");
-    photoRef.current?.style.setProperty("--tilt-y", "0deg");
-  };
-
   return (
     <div
-      ref={photoRef}
-      onPointerEnter={cachePhotoBounds}
-      onPointerMove={handlePhotoPointerMove}
-      onPointerLeave={resetPhotoTilt}
       className="hero-photo-float relative aspect-square w-[min(78vw,32rem)]"
     >
       <div className="hero-photo-orbit hero-photo-orbit--outer absolute inset-[-8%] rounded-full" aria-hidden="true" />
@@ -48,6 +17,7 @@ export default function HeroPhoto() {
         width={420}
         height={420}
         preload
+        fetchPriority="high"
         sizes="(max-width: 640px) 67vw, (max-width: 1024px) 36vw, 28vw"
         className="hero-photo-image absolute inset-[7%] h-[86%] w-[86%] rounded-full object-cover object-[center_25%]"
       />

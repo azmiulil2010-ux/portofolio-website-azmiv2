@@ -1013,8 +1013,6 @@ body:has(.not-found-page) .intro-screen {
 }
 
 .hero-photo-float {
-  --tilt-x: 0deg;
-  --tilt-y: 0deg;
   transform-origin: 50% 8%;
   animation: hero-photo-sway 8s ease-in-out infinite;
   will-change: transform;
@@ -1022,7 +1020,7 @@ body:has(.not-found-page) .intro-screen {
 
 .hero-photo-float:hover {
   animation-play-state: paused;
-  transform: perspective(900px) translateY(-8px) rotate(2deg) rotateX(var(--tilt-x)) rotateY(var(--tilt-y)) scale(1.025);
+  transform: perspective(900px) translateY(-8px) rotate(2deg) scale(1.025);
 }
 
 .hero-photo-float {

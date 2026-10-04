@@ -38,7 +38,12 @@ export function useActiveSection() {
         const hashTarget = hashNavigationActive ? document.getElementById(currentHashSection) : null;
 
         if (hashNavigationActive && hashTarget) {
-          const targetBounds = hashTarget.getBoundingClientRect();
+          const targetEntry = entries.find((entry) => entry.target === hashTarget);
+          if (!targetEntry) {
+            return;
+          }
+
+          const targetBounds = targetEntry.boundingClientRect;
           const targetIsVisible = targetBounds.top < window.innerHeight * 0.72 && targetBounds.bottom > window.innerHeight * 0.18;
 
           if (!targetIsVisible) {
