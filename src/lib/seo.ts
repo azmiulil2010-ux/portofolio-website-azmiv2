@@ -1,6 +1,8 @@
 const configuredSiteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL?.trim() ||
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim()
+  process.env.SITE_URL?.trim() ||
+  (process.env.VERCEL_ENV === "production"
+    ? "https://www.ulil-azmi.my.id"
+    : process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim()
     ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL.trim()}`
     : process.env.VERCEL_URL?.trim()
       ? `https://${process.env.VERCEL_URL.trim()}`

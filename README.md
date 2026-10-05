@@ -60,11 +60,11 @@ Buat file `.env.local` di root project dan isi dengan kredensial project Supabas
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
-NEXT_PUBLIC_SITE_URL=https://your-domain.com
+SITE_URL=https://your-domain.com
 ```
 
 Project juga mendukung `NEXT_PUBLIC_SUPABASE_ANON_KEY` sebagai fallback untuk key Supabase. Pastikan tabel `projects` sudah tersedia dan memiliki data yang sesuai dengan struktur project pada aplikasi.
-`NEXT_PUBLIC_SITE_URL` digunakan untuk metadata canonical, Open Graph, robots.txt, dan sitemap.xml. Isi dengan origin website production tanpa path. Jika variabel ini tidak diatur, Vercel akan memakai `VERCEL_PROJECT_PRODUCTION_URL` agar tautan crawler mengarah ke domain produksi, bukan deployment preview; `VERCEL_URL` menjadi fallback berikutnya.
+`SITE_URL` digunakan di server untuk metadata canonical, Open Graph, robots.txt, dan sitemap.xml, sehingga tidak perlu memakai prefix `NEXT_PUBLIC_`. Isi dengan origin website production tanpa path. Jika variabel ini tidak diatur pada deployment production Vercel, situs memakai `https://www.ulil-azmi.my.id` sebagai domain canonical. Pada deployment preview, Vercel memakai `VERCEL_PROJECT_PRODUCTION_URL` agar tautan crawler mengarah ke domain produksi, bukan deployment preview; `VERCEL_URL` menjadi fallback berikutnya.
 
 ## Struktur Project
 
