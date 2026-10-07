@@ -69,15 +69,15 @@ export default async function ProjectDetail({ params }: ProjectDetailProps) {
         title={project.title}
         description="A closer look at the idea, technology, and lessons behind this project."
       />
-      <section className="relative z-10 mx-auto mt-8 grid w-[90%] max-w-7xl items-start gap-8 pb-24 lg:mt-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-10">
-        <div className="relative flex items-start justify-center lg:-my-6">
+      <section className="relative z-10 mx-auto mt-8 flex w-[90%] max-w-5xl flex-col gap-6 pb-24 lg:mt-12 lg:gap-8">
+        <div className="relative flex w-full items-start justify-center">
           <Image
             src={project.imagePath}
             alt={`Pratinjau project ${project.title}`}
             width={1000}
             height={750}
             sizes="(min-width: 1024px) 60vw, 90vw"
-            className="block h-auto w-full rounded-2xl shadow-2xl shadow-slate-950/40 lg:w-[115%] lg:translate-x-[-7.5%]"
+            className="block h-auto w-full rounded-2xl shadow-2xl shadow-slate-950/40"
             preload
           />
         </div>

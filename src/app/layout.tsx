@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     template: "%s | Muhammad Ulil Azmi",
   },
   description:
-    "Website portofolio Muhammad Ulil Azmi yang menampilkan project, skill, dan pengalaman dalam pengembangan website dan aplikasi.",
+    "Portofolio Muhammad Ulil Azmi, siswa Rekayasa Perangkat Lunak (RPL) yang membangun website modern dengan React dan Next.js.",
   keywords: [
     "Muhammad Ulil Azmi",
     "portofolio",
@@ -37,9 +37,9 @@ export const metadata: Metadata = {
     type: "website",
     url: absoluteSiteUrl("/"),
     siteName: "Portofolio Muhammad Ulil Azmi",
-    title: "Portofolio Muhammad Ulil Azmi",
+    title: "Muhammad Ulil Azmi | Portofolio & Web Developer",
     description:
-      "Website portofolio Muhammad Ulil Azmi yang menampilkan project, skill, dan pengalaman dalam pengembangan website dan aplikasi.",
+      "Portofolio Muhammad Ulil Azmi, siswa Rekayasa Perangkat Lunak (RPL) yang membangun website modern dengan React dan Next.js.",
     images: [
       {
         url: absoluteSiteUrl("/opengraph-image"),
@@ -51,9 +51,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Portofolio Muhammad Ulil Azmi",
+    title: "Muhammad Ulil Azmi | Portofolio & Web Developer",
     description:
-      "Website portofolio Muhammad Ulil Azmi yang menampilkan project, skill, dan pengalaman dalam pengembangan website dan aplikasi.",
+      "Portofolio Muhammad Ulil Azmi, siswa Rekayasa Perangkat Lunak (RPL) yang membangun website modern dengan React dan Next.js.",
     images: [absoluteSiteUrl("/opengraph-image")],
   },
   icons: {
