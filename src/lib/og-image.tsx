@@ -13,6 +13,7 @@ export function PortfolioOgImage() {
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
+        alignItems: "center",
         padding: "58px 72px",
         overflow: "hidden",
         background:
@@ -126,11 +127,10 @@ export function PortfolioOgImage() {
         style={{
           position: "relative",
           display: "flex",
+          width: "100%",
           flexDirection: "column",
-          gap: 18,
-          maxWidth: 790,
-          marginTop: 54,
-          marginBottom: 4,
+          alignItems: "center",
+          gap: 16,
         }}
       >
         <div
@@ -157,25 +157,26 @@ export function PortfolioOgImage() {
         <div
           style={{
             display: "flex",
-            flexDirection: "column",
+            flexDirection: "row",
             color: "#f5f5f0",
             fontFamily: "Arial, sans-serif",
-            fontSize: 72,
-            fontWeight: 400,
-            letterSpacing: -3,
-            lineHeight: 1.08,
+            fontSize: 58,
+            fontWeight: 500,
+            letterSpacing: -1.5,
+            lineHeight: 1.1,
+            whiteSpace: "nowrap",
           }}
         >
-          <span>Muhammad Ulil</span>
-          <span>Azmi</span>
+          Muhammad Ulil Azmi
         </div>
         <div
           style={{
-            maxWidth: 630,
+            maxWidth: 560,
             color: "#b2b3aa",
             fontFamily: "Arial, sans-serif",
-            fontSize: 20,
+            fontSize: 18,
             lineHeight: 1.45,
+            textAlign: "center",
           }}
         >
           Membangun website modern yang rapi, cepat, dan bermakna.
