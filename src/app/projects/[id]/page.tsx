@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import PageLead from "@/components/general/PageLead";
-import SpaceDecorations from "@/components/general/SpaceDecorations";
+import FuturisticBackground from "@/components/general/FuturisticBackground";
 import { getProjectById } from "@/components/projects/projectData";
 import { absoluteSiteUrl, getAbsoluteImageUrl, getSeoDescription } from "@/lib/seo";
 
@@ -62,8 +62,8 @@ export default async function ProjectDetail({ params }: ProjectDetailProps) {
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden pt-18">
-      <SpaceDecorations />
+    <main className="relative min-h-screen overflow-hidden pt-18 bg-slate-950 text-slate-100">
+      <FuturisticBackground show3D={false} />
       <PageLead
         eyebrow="Project detail"
         title={project.title}

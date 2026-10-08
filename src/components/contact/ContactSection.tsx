@@ -5,18 +5,19 @@ import {
   FaTiktok,
   FaYoutube,
 } from "react-icons/fa";
+import { LuSparkles, LuSend, LuArrowUpRight } from "react-icons/lu";
 import Link from "next/link";
 import ContactForm from "./ContactForm";
 
 const contactInfo = [
   {
-    icon: <FaEnvelope className="w-6 h-6" />,
+    icon: <FaEnvelope className="w-5 h-5" />,
     title: "Email",
     value: "azmiulil2010@gmail.com",
     link: "mailto:azmiulil2010@gmail.com",
   },
   {
-    icon: <FaMapMarkedAlt className="w-6 h-6" />,
+    icon: <FaMapMarkedAlt className="w-5 h-5" />,
     title: "Lokasi",
     value: "Indonesia, Jawa Timur, Kota Pasuruan",
     link: "https://maps.google.com/?q=Pasuruan,+Jawa+Timur",
@@ -29,84 +30,109 @@ const socialLinks = [
     icon: <FaInstagram />,
     value: "qzmiuu",
     link: "https://www.instagram.com/qzmiuu/",
+    color: "group-hover:text-pink-400 group-hover:border-pink-400/40",
+    glow: "group-hover:shadow-[0_0_20px_rgba(236,72,153,0.2)]",
   },
   {
     name: "TikTok",
     icon: <FaTiktok />,
     value: "44zmii",
     link: "https://www.tiktok.com/@azmii.hh",
+    color: "group-hover:text-cyan-400 group-hover:border-cyan-400/40",
+    glow: "group-hover:shadow-[0_0_20px_rgba(6,182,212,0.2)]",
   },
   {
     name: "YouTube",
     icon: <FaYoutube />,
     value: "Azmi Tech",
     link: "https://www.youtube.com/channel/UConwuD3udrqXVXSU_BiB8Jg",
+    color: "group-hover:text-red-400 group-hover:border-red-400/40",
+    glow: "group-hover:shadow-[0_0_20px_rgba(248,113,113,0.2)]",
   },
 ];
 
 export default function ContactSection() {
   return (
-    <section className="py-10 lg:py-16">
-      <div
-        className="w-[90%] md:w-[80%] lg:[70%] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12"
-      >
-        <div data-aos="fade-right">
-          <h2
-            className="py-3 text-3xl md:text-4xl font-bold tracking-wide text-transparent bg-clip-text bg-linear-to-r from-indigo-200 to-gray-300"
-          >
-            Beri Kritik Atau Saran Anda Disini
-          </h2>
-          <p className="text-gray-400 mb-10 text-base lg:text-lg leading-relaxed">
-            Punya pertanyaan, ide, atau ingin bekerja sama? Jangan ragu untuk
-            menghubungi saya. Saya siap berdiskusi dan terhubung untuk berbagai
-            kesempatan di bidang teknologi dan pengembangan web.
-          </p>
+    <section className="relative py-14 sm:py-20">
+      {/* Ambient background glow */}
+      <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[400px] h-[400px] bg-cyan-500/5 rounded-full blur-[120px] pointer-events-none" aria-hidden="true" />
+      <div className="absolute top-1/3 right-1/4 w-[350px] h-[350px] bg-indigo-500/5 rounded-full blur-[120px] pointer-events-none" aria-hidden="true" />
 
-          <div className="space-y-5 mg-12">
-            {contactInfo.map((items, index) => {
-              return (
-                <Link
-                  href={items.link}
-                  key={index}
-                  className="group flex item-center gap-4 px-2 py-3 transition-colors hover:bg-white/5 rounded-lg"
-                >
-                  <div className="h-15 w-15 rounded-full bg-white/5 text-white transition-transform group-hover:scale-105 grid place-items-center">
-                    {items.icon}
-                  </div>
-                  <div className="">
-                    <h4 className="text-md font-medium text-white">
-                      {items.title}
-                    </h4>
-                    <p className="text-md text-gray-400">{items.value}</p>
-                  </div>
-                </Link>
-              );
-            })}
+      <div className="mx-auto w-[90%] md:w-[85%] lg:w-[80%] max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
+        {/* Left Column */}
+        <div data-aos="fade-right">
+          <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-950/40 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-cyan-300 backdrop-blur-md">
+            <LuSend size={12} />
+            <span>Get in Touch</span>
           </div>
 
-          <div className="mt-8 flex flex-wrap items-start gap-5">
-            {socialLinks.map((social) => (
+          <h2 className="py-4 text-3xl md:text-5xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-100 to-indigo-300">
+            Beri Kritik Atau Saran Anda Disini
+          </h2>
+
+          <p className="text-slate-300 mb-8 text-sm md:text-base leading-relaxed">
+            Punya pertanyaan, ide kolaborasi, atau ingin berdiskusi mengenai proyek web modern? Jangan ragu untuk menghubungi saya. Saya siap merespons dan terhubung untuk berbagai kesempatan.
+          </p>
+
+          {/* Contact Methods */}
+          <div className="space-y-4 mb-8">
+            {contactInfo.map((items, index) => (
               <Link
-                href={social.link}
-                key={social.name}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={social.name}
-                title={social.name}
-                className="group flex min-w-24 flex-col items-center gap-2 text-center text-gray-300 transition-all hover:-translate-y-1 hover:text-indigo-400"
+                href={items.link}
+                key={index}
+                className="group flex items-center gap-4 p-3.5 rounded-xl border border-slate-800/80 bg-slate-900/50 backdrop-blur-md transition-all duration-300 hover:border-cyan-400/40 hover:bg-slate-900/80 hover:shadow-[0_0_20px_rgba(6,182,212,0.15)]"
               >
-                <span className="grid h-11 w-11 place-items-center rounded-full bg-white/5 text-xl transition-colors group-hover:bg-indigo-500 group-hover:text-white">
-                  {social.icon}
-                </span>
-                <span className="text-xs font-medium text-gray-400 group-hover:text-indigo-400">
-                  {social.name} : {social.value}
-                </span>
+                <div className="h-12 w-12 rounded-xl border border-cyan-400/30 bg-cyan-950/40 text-cyan-300 transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(6,182,212,0.3)] grid place-items-center shrink-0">
+                  {items.icon}
+                </div>
+                <div className="overflow-hidden flex-1">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                    {items.title}
+                  </h3>
+                  <p className="text-sm font-semibold text-white truncate">
+                    {items.value}
+                  </p>
+                </div>
+                <LuArrowUpRight size={16} className="text-slate-600 transition-all duration-300 group-hover:text-cyan-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 shrink-0" />
               </Link>
             ))}
           </div>
+
+          {/* Social Channels */}
+          <div>
+            <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">
+              Social Channels
+            </p>
+            <div className="flex flex-wrap items-center gap-3">
+              {socialLinks.map((social) => (
+                <Link
+                  href={social.link}
+                  key={social.name}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={social.name}
+                  title={social.name}
+                  className={`group flex items-center gap-2.5 rounded-xl border border-slate-800 bg-slate-900/60 px-4 py-2.5 text-slate-300 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:bg-slate-900 ${social.color} ${social.glow}`}
+                >
+                  <span className="text-lg transition-transform group-hover:scale-110">
+                    {social.icon}
+                  </span>
+                  <div className="flex flex-col text-left">
+                    <span className="text-xs font-bold text-white leading-none">
+                      {social.name}
+                    </span>
+                    <span className="text-[0.65rem] text-slate-400 leading-tight">
+                      @{social.value}
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
         </div>
 
-        <div data-aos="zoom-in">
+        {/* Right Column: Contact Form */}
+        <div data-aos="fade-left">
           <ContactForm />
         </div>
       </div>

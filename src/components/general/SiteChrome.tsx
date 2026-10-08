@@ -6,8 +6,9 @@ import Footer from "./Footer";
 import ScrollTopButton from "./ScrollTopButton";
 import Navbar from "./navbar/Navbar";
 import { Toaster } from "react-hot-toast";
+import CustomCursor from "./CustomCursor";
 
-const staticRoutes = new Set(["/", "/about", "/contact", "/projects", "/skills"]);
+const staticRoutes = new Set(["/", "/about", "/services", "/contact", "/projects", "/skills"]);
 
 function isValidPortfolioRoute(pathname: string) {
   const normalizedPath = pathname.replace(/\/$/, "") || "/";
@@ -35,10 +36,13 @@ export default function SiteChrome({
 
   return (
     <>
-      <Navbar />
-      <AnimationLayout skipIntro={skipSplash}>{children}</AnimationLayout>
-      <Footer />
-      <ScrollTopButton />
+      <CustomCursor />
+      <AnimationLayout skipIntro={skipSplash}>
+        <Navbar />
+        {children}
+        <Footer />
+        <ScrollTopButton />
+      </AnimationLayout>
       <Toaster />
     </>
   );

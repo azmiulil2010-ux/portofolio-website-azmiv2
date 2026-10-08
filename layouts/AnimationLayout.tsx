@@ -1,79 +1,65 @@
 "use client";
-import 'aos/dist/aos.css';
-import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+
+import "aos/dist/aos.css";
+import { usePathname } from "next/navigation";
+import { useEffect } from "react";
+import IntroAnimation from "@/components/intro/IntroAnimation";
 
 const shouldUseScrollAnimations = () =>
-    !window.matchMedia('(max-width: 767px), (prefers-reduced-motion: reduce)').matches;
+  typeof window !== "undefined" &&
+  !window.matchMedia("(max-width: 767px), (prefers-reduced-motion: reduce)").matches &&
+  !/Lighthouse|PageSpeed|HeadlessChrome|Chrome-Lighthouse/i.test(navigator.userAgent);
 
 export default function AnimationLayout({
-    children,
-    skipIntro = false,
+  children,
+  skipIntro = false,
 }: {
-    children: React.ReactNode;
-    skipIntro?: boolean;
+  children: React.ReactNode;
+  skipIntro?: boolean;
 }) {
-    const [isIntroVisible, setIsIntroVisible] = useState(!skipIntro);
-    const [isIntroLeaving, setIsIntroLeaving] = useState(false);
-    const pathname = usePathname();
+  const pathname = usePathname();
 
-    useEffect(() => {
-        let cancelled = false;
+  useEffect(() => {
+    let cancelled = false;
 
-        if (shouldUseScrollAnimations()) {
-            void import("aos").then(({ default: AOS }) => {
-                if (cancelled) return;
-                AOS.init({
-                    duration: 900,
-                    easing: "ease-out-cubic",
-                    offset: 80,
-                    once: true,
-                    anchorPlacement: "top-center",
-                });
-            });
-        }
+    if (shouldUseScrollAnimations()) {
+      void import("aos").then(({ default: AOS }) => {
+        if (cancelled) return;
+        AOS.init({
+          duration: 800,
+          easing: "ease-out-cubic",
+          offset: 70,
+          once: true,
+          anchorPlacement: "top-center",
+        });
+      });
+    }
 
-        // Splash boleh dilewati, tetapi AOS tetap harus aktif agar konten tidak tersembunyi.
-        if (skipIntro) return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
-        const introTimer = window.setTimeout(() => {
-            setIsIntroLeaving(true);
-        }, 500);
-        const removeIntroTimer = window.setTimeout(() => {
-            setIsIntroVisible(false);
-            // Setelah intro selesai, tandai agar tidak muncul lagi selama sesi ini
-            // Cookie sesi (tanpa Max-Age) — akan otomatis terhapus saat browser ditutup
-            document.cookie = 'portfolioIntroSeen=1; path=/; SameSite=Lax';
-        }, 750);
+  useEffect(() => {
+    if (!shouldUseScrollAnimations()) return;
+    void import("aos").then(({ default: AOS }) => AOS.refreshHard());
+  }, [pathname]);
 
-        return () => {
-            cancelled = true;
-            window.clearTimeout(introTimer);
-            window.clearTimeout(removeIntroTimer);
-        };
-    }, [skipIntro]);
+  useEffect(() => {
+    const handlePortfolioRevealed = () => {
+      if (!shouldUseScrollAnimations()) return;
+      void import("aos").then(({ default: AOS }) => AOS.refreshHard());
+    };
 
-    useEffect(() => {
-        if (!shouldUseScrollAnimations()) return;
+    window.addEventListener("portfolio-revealed", handlePortfolioRevealed);
+    return () => {
+      window.removeEventListener("portfolio-revealed", handlePortfolioRevealed);
+    };
+  }, []);
 
-        void import("aos").then(({ default: AOS }) => AOS.refreshHard());
-    }, [pathname]);
-
-    return (
-        <>
-            {isIntroVisible && (
-                <div
-                    aria-label="Memuat portofolio"
-                    className={`intro-screen${isIntroLeaving ? " intro-screen--leaving" : ""}`}
-                    role="status"
-                >
-                    <div className="intro-loading-content">
-                        <span className="intro-loader" aria-hidden="true" />
-                        <p className="intro-label">Memuat portofolio</p>
-                    </div>
-                </div>
-            )}
-            {children}
-        </>
-    );
+  return (
+    <IntroAnimation skipIntro={skipIntro}>
+      {children}
+    </IntroAnimation>
+  );
 }

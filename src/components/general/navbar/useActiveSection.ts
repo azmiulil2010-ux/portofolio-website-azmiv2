@@ -1,80 +1,118 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-const sectionIds = ["home", "about", "skills", "projects", "contact"];
+const sectionIds = ["home", "about", "services", "skills", "projects", "contact"];
 
 export function useActiveSection() {
   const [activeSection, setActiveSection] = useState("home");
+  const isManualLockRef = useRef(false);
+  const lockTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const setActiveSectionManual = (section: string) => {
+    if (sectionIds.includes(section)) {
+      setActiveSection(section);
+      isManualLockRef.current = true;
+      if (lockTimeoutRef.current) {
+        clearTimeout(lockTimeoutRef.current);
+      }
+      lockTimeoutRef.current = setTimeout(() => {
+        isManualLockRef.current = false;
+      }, 750);
+    }
+  };
 
   useEffect(() => {
-    let currentHashSection = window.location.hash.replace("#", "");
-    let hashNavigationActive = sectionIds.includes(currentHashSection);
+    const computeActiveSection = () => {
+      if (isManualLockRef.current) return;
 
-    if (hashNavigationActive) {
-      setActiveSection(currentHashSection);
-    }
+      const scrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const docHeight = document.documentElement.scrollHeight;
 
-    const handleHashChange = () => {
-      const nextSection = window.location.hash.replace("#", "");
-      currentHashSection = nextSection;
+      // 1. Near the very top of page -> always "home"
+      if (scrollY < 120) {
+        setActiveSection("home");
+        return;
+      }
 
-      if (sectionIds.includes(nextSection)) {
-        hashNavigationActive = true;
-        setActiveSection(nextSection);
+      // 2. Near bottom of page -> always "contact"
+      if (scrollY + windowHeight >= docHeight - 80) {
+        setActiveSection("contact");
+        return;
+      }
+
+      // 3. Focal point check: line at 36% down viewport where user naturally reads section titles
+      const focalLine = windowHeight * 0.36;
+
+      for (const id of sectionIds) {
+        const el = document.getElementById(id);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          // Element boundary contains focal reading line
+          if (rect.top <= focalLine && rect.bottom > focalLine) {
+            setActiveSection(id);
+            return;
+          }
+        }
+      }
+
+      // 4. Fallback: select section with highest visible pixel height in viewport
+      let bestSection = "home";
+      let maxCoverage = -1;
+
+      for (const id of sectionIds) {
+        const el = document.getElementById(id);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          const visibleTop = Math.max(0, rect.top);
+          const visibleBottom = Math.min(windowHeight, rect.bottom);
+          const visibleHeight = Math.max(0, visibleBottom - visibleTop);
+
+          if (visibleHeight > maxCoverage) {
+            maxCoverage = visibleHeight;
+            bestSection = id;
+          }
+        }
+      }
+
+      if (maxCoverage > 0) {
+        setActiveSection(bestSection);
       }
     };
 
-    const sections = sectionIds
-      .map((sectionId) => document.getElementById(sectionId))
-      .filter((section): section is HTMLElement => section !== null);
+    computeActiveSection();
 
-    if (sections.length === 0) {
-      return;
-    }
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          computeActiveSection();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const hashTarget = hashNavigationActive ? document.getElementById(currentHashSection) : null;
+    const handleHashChange = () => {
+      const nextSection = window.location.hash.replace("#", "");
+      if (sectionIds.includes(nextSection)) {
+        setActiveSectionManual(nextSection);
+      }
+    };
 
-        if (hashNavigationActive && hashTarget) {
-          const targetEntry = entries.find((entry) => entry.target === hashTarget);
-          if (!targetEntry) {
-            return;
-          }
-
-          const targetBounds = targetEntry.boundingClientRect;
-          const targetIsVisible = targetBounds.top < window.innerHeight * 0.72 && targetBounds.bottom > window.innerHeight * 0.18;
-
-          if (!targetIsVisible) {
-            return;
-          }
-
-          hashNavigationActive = false;
-        }
-
-        const visibleSections = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((first, second) => second.intersectionRatio - first.intersectionRatio);
-
-        if (visibleSections[0]) {
-          setActiveSection(visibleSections[0].target.id);
-        }
-      },
-      {
-        rootMargin: "-18% 0px -58% 0px",
-        threshold: [0.1, 0.25, 0.5, 0.75],
-      },
-    );
-
-    sections.forEach((section) => observer.observe(section));
+    window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("hashchange", handleHashChange);
 
     return () => {
-      observer.disconnect();
+      window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("hashchange", handleHashChange);
+      if (lockTimeoutRef.current) {
+        clearTimeout(lockTimeoutRef.current);
+      }
     };
   }, []);
 
-  return activeSection;
+  return { activeSection, setActiveSectionManual };
 }
+

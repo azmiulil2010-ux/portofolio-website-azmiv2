@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import ProjectSection from "@/components/projects/ProjectSection";
 import ProjectSearch from "@/components/projects/ProjectSearch";
 import PageLead from "@/components/general/PageLead";
-import SpaceDecorations from "@/components/general/SpaceDecorations";
+import FuturisticBackground from "@/components/general/FuturisticBackground";
 import ProjectCategoryFilter from "@/components/projects/ProjectCategoryFilter";
 import { PROJECT_CATEGORIES, type ProjectCategory } from "@/types/project.types";
 import { absoluteSiteUrl } from "@/lib/seo";
@@ -53,8 +53,8 @@ export default async function Projects({ searchParams }: ProjectsPageProps) {
     : "";
 
   return (
-    <main className="relative overflow-hidden pt-18">
-      <SpaceDecorations />
+    <main className="relative overflow-hidden pt-18 bg-slate-950 text-slate-100">
+      <FuturisticBackground show3D={false} />
       <PageLead
         eyebrow="Selected work"
         title="Small experiments, real problems, and lessons that stick."
