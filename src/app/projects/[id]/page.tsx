@@ -5,7 +5,12 @@ import type { Metadata } from "next";
 import PageLead from "@/components/general/PageLead";
 import FuturisticBackground from "@/components/general/FuturisticBackground";
 import { getProjectById } from "@/components/projects/projectData";
-import { absoluteSiteUrl, getAbsoluteImageUrl, getSeoDescription } from "@/lib/seo";
+import {
+  absoluteSiteUrl,
+  getAbsoluteImageUrl,
+  getSeoDescription,
+  siteUrl,
+} from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
@@ -31,6 +36,7 @@ export async function generateMetadata({
     absoluteSiteUrl(`/projects/${encodeURIComponent(id)}/opengraph-image`);
 
   return {
+    metadataBase: siteUrl,
     title,
     description,
     alternates: {

@@ -30,17 +30,19 @@ export default function HeroPhoto() {
     }
 
     // Defer 3D canvas mount until browser has finished First Contentful Paint
-    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
-      const handle = (window as unknown as { requestIdleCallback: (cb: () => void, opt?: { timeout: number }) => number }).requestIdleCallback(
-        () => setShouldLoad3D(true),
-        { timeout: 800 }
-      );
+    const win = window as unknown as {
+      requestIdleCallback?: (cb: () => void, opt?: { timeout: number }) => number;
+      cancelIdleCallback?: (id: number) => void;
+    };
+
+    if (typeof win.requestIdleCallback === "function") {
+      const handle = win.requestIdleCallback(() => setShouldLoad3D(true), { timeout: 800 });
       return () => {
-        (window as unknown as { cancelIdleCallback?: (id: number) => void }).cancelIdleCallback?.(handle);
+        win.cancelIdleCallback?.(handle);
       };
     } else {
-      const timer = window.setTimeout(() => setShouldLoad3D(true), 300);
-      return () => window.clearTimeout(timer);
+      const timer = setTimeout(() => setShouldLoad3D(true), 300);
+      return () => clearTimeout(timer);
     }
   }, []);
 
