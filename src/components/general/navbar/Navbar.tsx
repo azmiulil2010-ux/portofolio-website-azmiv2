@@ -29,21 +29,31 @@ export default function Navbar() {
       e.preventDefault();
       setActiveSectionManual(section);
 
+      const win = typeof window !== "undefined" ? (window as unknown as { __lenis?: { scrollTo: (target: string | number, options?: { offset?: number; duration?: number }) => void } }) : null;
+
       if (section === "home") {
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        if (win?.__lenis) {
+          win.__lenis.scrollTo(0, { duration: 1.2 });
+        } else {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
         window.history.pushState(null, "", "/");
         return;
       }
 
       const targetEl = document.getElementById(section);
       if (targetEl) {
-        const navHeight = 72;
-        const elementPosition = targetEl.getBoundingClientRect().top + window.scrollY;
-        const offsetPosition = elementPosition - navHeight;
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: "smooth",
-        });
+        if (win?.__lenis) {
+          win.__lenis.scrollTo(`#${section}`, { offset: -72, duration: 1.2 });
+        } else {
+          const navHeight = 72;
+          const elementPosition = targetEl.getBoundingClientRect().top + window.scrollY;
+          const offsetPosition = elementPosition - navHeight;
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth",
+          });
+        }
         window.history.pushState(null, "", `/#${section}`);
       }
     }

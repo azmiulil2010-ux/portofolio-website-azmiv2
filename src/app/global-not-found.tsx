@@ -10,8 +10,11 @@ const poppins = Poppins({
 
 export default function GlobalNotFound() {
   return (
-    <html lang="en">
-      <body className={`${poppins.className} theme-transition antialiased bg-slate-950`}>
+    <html lang="id" data-theme="dark" className="dark" suppressHydrationWarning>
+      <body
+        className={`${poppins.className} theme-transition antialiased bg-slate-950`}
+        suppressHydrationWarning
+      >
         <NotFound />
       </body>
     </html>

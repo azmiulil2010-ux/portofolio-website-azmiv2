@@ -39,65 +39,18 @@ export default function CustomCursor() {
     const ring = ringRef.current;
     if (!dot || !ring) return;
 
-    const onMouseMove = (e: MouseEvent) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-      if (!isVisible) {
-        isVisible = true;
-        dot.style.opacity = "1";
-        ring.style.opacity = "1";
-      }
-    };
-
-    const onMouseDown = () => {
-      isClicking = true;
-    };
-
-    const onMouseUp = () => {
-      isClicking = false;
-    };
-
-    const onMouseLeave = () => {
-      isVisible = false;
-      dot.style.opacity = "0";
-      ring.style.opacity = "0";
-    };
-
-    const onMouseEnter = () => {
-      isVisible = true;
-      dot.style.opacity = "1";
-      ring.style.opacity = "1";
-    };
-
-    // Check hovered elements
-    const onMouseOver = (e: MouseEvent) => {
-      const target = e.target as HTMLElement | null;
-      if (!target) return;
-
-      const interactive = target.closest(
-        "a, button, input, textarea, select, [role='button'], .project-card, .skill-card, .service-card, .hero-social-link, .interactive-target"
-      );
-
-      isHovering = !!interactive;
-    };
-
-    window.addEventListener("mousemove", onMouseMove, { passive: true });
-    window.addEventListener("mousedown", onMouseDown);
-    window.addEventListener("mouseup", onMouseUp);
-    document.documentElement.addEventListener("mouseleave", onMouseLeave);
-    document.documentElement.addEventListener("mouseenter", onMouseEnter);
-    document.addEventListener("mouseover", onMouseOver, { passive: true });
-
     let animationFrameId: number;
+    let isRunning = false;
 
     const animate = () => {
       const dx = Math.abs(mouseX - ringX);
       const dy = Math.abs(mouseY - ringY);
+      const hasDelta = dx > 0.1 || dy > 0.1;
+      const stateChanged = isHovering !== wasHovering;
 
-      // Only write to DOM if position changed or state toggled (prevents Forced Reflow)
-      if (dx > 0.05 || dy > 0.05 || isHovering !== wasHovering) {
-        ringX += (mouseX - ringX) * 0.18;
-        ringY += (mouseY - ringY) * 0.18;
+      if (hasDelta || stateChanged) {
+        ringX += (mouseX - ringX) * 0.22;
+        ringY += (mouseY - ringY) * 0.22;
 
         if (dot && ring) {
           dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%) scale(${
@@ -114,12 +67,77 @@ export default function CustomCursor() {
           }
           wasHovering = isHovering;
         }
+        animationFrameId = requestAnimationFrame(animate);
+      } else {
+        isRunning = false;
       }
-
-      animationFrameId = requestAnimationFrame(animate);
     };
 
-    animationFrameId = requestAnimationFrame(animate);
+    const startAnimation = () => {
+      if (!isRunning) {
+        isRunning = true;
+        animationFrameId = requestAnimationFrame(animate);
+      }
+    };
+
+    const onMouseMove = (e: MouseEvent) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      if (!isVisible) {
+        isVisible = true;
+        dot.style.opacity = "1";
+        ring.style.opacity = "1";
+      }
+      startAnimation();
+    };
+
+    const onMouseDown = () => {
+      isClicking = true;
+      startAnimation();
+    };
+
+    const onMouseUp = () => {
+      isClicking = false;
+      startAnimation();
+    };
+
+    const onMouseLeave = () => {
+      isVisible = false;
+      dot.style.opacity = "0";
+      ring.style.opacity = "0";
+    };
+
+    const onMouseEnter = () => {
+      isVisible = true;
+      dot.style.opacity = "1";
+      ring.style.opacity = "1";
+      startAnimation();
+    };
+
+    // Check hovered elements
+    const onMouseOver = (e: MouseEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (!target) return;
+
+      const interactive = target.closest(
+        "a, button, input, textarea, select, [role='button'], .project-card, .skill-card, .service-card, .hero-social-link, .interactive-target"
+      );
+
+      const nextHovering = !!interactive;
+      if (nextHovering !== isHovering) {
+        isHovering = nextHovering;
+        startAnimation();
+      }
+    };
+
+    window.addEventListener("mousemove", onMouseMove, { passive: true });
+    window.addEventListener("mousedown", onMouseDown, { passive: true });
+    window.addEventListener("mouseup", onMouseUp, { passive: true });
+    document.documentElement.addEventListener("mouseleave", onMouseLeave, { passive: true });
+    document.documentElement.addEventListener("mouseenter", onMouseEnter, { passive: true });
+    document.addEventListener("mouseover", onMouseOver, { passive: true });
+
+    startAnimation();
 
     return () => {
       cancelAnimationFrame(animationFrameId);

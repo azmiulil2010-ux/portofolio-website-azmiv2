@@ -125,13 +125,12 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
       antialias: true,
-      powerPreference: "high-performance",
+      powerPreference: "default",
     });
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, width < 768 ? 1.0 : 1.25));
     renderer.setClearColor(0x000000, 0);
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.shadowMap.enabled = false;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.25;
     container.appendChild(renderer.domElement);
@@ -763,25 +762,40 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
     const raycaster = new THREE.Raycaster();
     const mouseCoord = new THREE.Vector2();
 
-    const handlePointerMove = (e: PointerEvent) => {
-      const rect = container.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-      const y = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
-
-      mouseCoord.x = x;
-      mouseCoord.y = y;
-
-      if (isDragging) {
-        const deltaX = e.clientX - previousMouseX;
-        robotRoot.rotation.y += deltaX * 0.012;
-        dragVelocity = deltaX * 0.012;
-        previousMouseX = e.clientX;
-      } else {
-        mouseX = x;
-        mouseY = y;
-        targetRotY = mouseX * 0.55;
-        targetRotX = -mouseY * 0.35;
+    let cachedRect = container.getBoundingClientRect();
+    const updateRect = () => {
+      if (container) {
+        cachedRect = container.getBoundingClientRect();
       }
+    };
+
+    let moveTicking = false;
+    const handlePointerMove = (e: PointerEvent) => {
+      if (!isVisible) return;
+      if (moveTicking) return;
+      moveTicking = true;
+      requestAnimationFrame(() => {
+        moveTicking = false;
+        const rect = cachedRect;
+        if (!rect.width || !rect.height) return;
+        const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        const y = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
+
+        mouseCoord.x = x;
+        mouseCoord.y = y;
+
+        if (isDragging) {
+          const deltaX = e.clientX - previousMouseX;
+          robotRoot.rotation.y += deltaX * 0.012;
+          dragVelocity = deltaX * 0.012;
+          previousMouseX = e.clientX;
+        } else {
+          mouseX = x;
+          mouseY = y;
+          targetRotY = mouseX * 0.55;
+          targetRotX = -mouseY * 0.35;
+        }
+      });
     };
 
     let pointerDownTime = 0;
@@ -789,6 +803,7 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
     let pointerStartY = 0;
 
     const handlePointerDown = (e: PointerEvent) => {
+      updateRect();
       isDragging = true;
       isRoaming = false;
       stationaryCooldown = 3.5;
@@ -806,34 +821,36 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
 
       if (isQuickClick) {
         // Direct click on canvas / robot!
-        const rect = container.getBoundingClientRect();
-        mouseCoord.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-        mouseCoord.y = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
+        const rect = cachedRect;
+        if (rect.width && rect.height) {
+          mouseCoord.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+          mouseCoord.y = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
 
-        raycaster.setFromCamera(mouseCoord, camera);
-        const hits = raycaster.intersectObjects(robotRoot.children, true);
+          raycaster.setFromCamera(mouseCoord, camera);
+          const hits = raycaster.intersectObjects(robotRoot.children, true);
 
-        // Advance to next exciting RPL action!
-        const actionCycle: RobotActionType[] = [
-          "code",
-          "debug",
-          "spin",
-          "deploy",
-          "thumbsUp",
-          "dance",
-          "wave",
-        ];
+          // Advance to next exciting RPL action!
+          const actionCycle: RobotActionType[] = [
+            "code",
+            "debug",
+            "spin",
+            "deploy",
+            "thumbsUp",
+            "dance",
+            "wave",
+          ];
 
-        let nextAction: RobotActionType;
-        if (hits.length > 0) {
-          const currentIndex = currentAction ? actionCycle.indexOf(currentAction) : -1;
-          nextAction = actionCycle[(currentIndex + 1) % actionCycle.length];
-        } else {
-          const currentIndex = currentAction ? actionCycle.indexOf(currentAction) : -1;
-          nextAction = actionCycle[(currentIndex + 1) % actionCycle.length];
+          let nextAction: RobotActionType;
+          if (hits.length > 0) {
+            const currentIndex = currentAction ? actionCycle.indexOf(currentAction) : -1;
+            nextAction = actionCycle[(currentIndex + 1) % actionCycle.length];
+          } else {
+            const currentIndex = currentAction ? actionCycle.indexOf(currentAction) : -1;
+            nextAction = actionCycle[(currentIndex + 1) % actionCycle.length];
+          }
+
+          handleActionClick(nextAction);
         }
-
-        handleActionClick(nextAction);
       }
     };
 
@@ -845,13 +862,14 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
       targetRotY = 0;
     };
 
-    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointermove", handlePointerMove, { passive: true });
     container.addEventListener("pointerdown", handlePointerDown);
     window.addEventListener("pointerup", handlePointerUp);
     container.addEventListener("pointerleave", handlePointerLeave);
 
     const handleResize = () => {
       if (!container) return;
+      updateRect();
       width = container.clientWidth || window.innerWidth;
       height = container.clientHeight || window.innerHeight;
       camera.aspect = width / height;
@@ -878,7 +896,7 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
       // DYNAMIC FLIGHT: AUTONOMOUS ROAMING vs. STATIONARY INTERACTION ("DIAM DULU")
       // =========================================================================
       if (currentAction || isDragging || stationaryCooldown > 0) {
-        // --- 1. STATIONARY INTERACTION MODE ("DIAM DULU") ---
+        // --- 1. STATIONARY INTERACTION MODE ("DIAM DULU / BERDIRI") ---
         isRoaming = false;
         if (!currentAction && !isDragging) {
           stationaryCooldown -= 0.018;
@@ -893,7 +911,7 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
         flightVelY *= 0.85;
         flightVelZ *= 0.85;
 
-        // Reset banking and pitch to clean upright interaction stance
+        // Reset banking, heading, and pitch to clean upright interaction stance
         robotRoot.rotation.z = THREE.MathUtils.lerp(robotRoot.rotation.z, 0, 0.08);
         if (currentAction !== "deploy") {
           robotRoot.rotation.x = THREE.MathUtils.lerp(robotRoot.rotation.x, 0, 0.08);
@@ -902,24 +920,41 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
           robotRoot.rotation.y = THREE.MathUtils.lerp(robotRoot.rotation.y, 0, 0.08);
         }
 
+        // Tech ring & nodes visible when interacting
+        orbitRing.visible = true;
+        orbitNodesGroup.visible = true;
+        orbitRing.position.copy(robotWorldPos);
+        orbitRing.position.y += 0.4;
+        orbitNodesGroup.position.copy(robotWorldPos);
+
         // Thrusters in calm idle hover
         const idleFlame = 0.85 + Math.sin(elapsed * 12) * 0.22;
         leftExhaust.scale.set(1.0, idleFlame, 1.0);
         rightExhaust.scale.set(1.0, idleFlame, 1.0);
       } else {
-        // --- 2. AUTONOMOUS ROAMING MODE ("BERJALAN-JALAN SENDIRI DENGAN ROKET") ---
+        // --- 2. AUTONOMOUS SUPERSONIC ROCKET FLIGHT ("TERBANG TIDUR KELILING SECTION HOME") ---
         isRoaming = true;
-        roamTime += 0.012;
+        roamTime += 0.009; // smooth pacing
 
-        // Dynamic roaming boundaries adapted to viewport aspect ratio
-        const roamSpanX = Math.min(2.8, Math.max(0.9, camera.aspect * 1.55));
-        const roamSpanY = 0.55;
-        const roamSpanZ = 0.45;
+        // Hide tech ring during high-speed rocket cruise
+        orbitRing.visible = false;
+        orbitNodesGroup.visible = false;
 
-        // Smooth 3D Lissajous cruising path across the home section
-        const targetX = Math.sin(roamTime * 0.85) * (roamSpanX * 0.72) + Math.sin(roamTime * 1.6) * (roamSpanX * 0.28);
-        const targetY = -0.05 + Math.sin(roamTime * 1.15) * roamSpanY + Math.cos(roamTime * 0.6) * 0.15 + hoverY;
-        const targetZ = Math.cos(roamTime * 0.75) * roamSpanZ;
+        // Dynamic roaming boundaries covering the ENTIRE Home section
+        // Viewport bounds: horizontal span up to ~4.0 on desktop, vertical span up to ~1.45
+        const roamSpanX = Math.max(1.4, Math.min(4.0, camera.aspect * 2.25));
+        const roamSpanY = 1.35;
+        const roamSpanZ = 0.65;
+
+        // Broad looping trajectory covering left orange half, central editorial title, and right white/dark half
+        const targetX =
+          Math.sin(roamTime * 0.72) * (roamSpanX * 0.86) +
+          Math.cos(roamTime * 1.44) * (roamSpanX * 0.22);
+        const targetY =
+          0.12 +
+          Math.sin(roamTime * 0.92) * (roamSpanY * 0.72) +
+          Math.cos(roamTime * 0.46) * 0.42;
+        const targetZ = Math.sin(roamTime * 0.62) * roamSpanZ;
 
         // Velocity tracking for aerodynamics
         flightVelX = targetX - prevRoamX;
@@ -929,35 +964,60 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
         prevRoamY = targetY;
         prevRoamZ = targetZ;
 
+        const flightSpeed = Math.hypot(flightVelX, flightVelY, flightVelZ);
+
         // Smooth position interpolation
         robotWorldPos.x = THREE.MathUtils.lerp(robotWorldPos.x, targetX, 0.06);
         robotWorldPos.y = THREE.MathUtils.lerp(robotWorldPos.y, targetY, 0.06);
         robotWorldPos.z = THREE.MathUtils.lerp(robotWorldPos.z, targetZ, 0.06);
 
-        // Aerodynamic Banking: tilt body into turns and acceleration
-        const targetBankZ = -flightVelX * 3.6;
-        const targetPitchX = flightVelZ * 2.2 - flightVelY * 0.6;
-        const targetHeadingY = flightVelX * 1.6;
+        // =====================================================================
+        // ROCKET PRONE FLIGHT POSTURE ("TERBANG TIDUR", BUKAN BERDIRI)
+        // =====================================================================
+        // 1. Pitch: Body lies horizontally flat in the air (~78° to 84° forward lean)
+        // Head leads forward, feet & thrusters trail behind!
+        const basePronePitch = Math.PI * 0.44; // ~79.2 degrees forward tilt!
+        const climbAngle = (flightVelY / Math.max(0.001, flightSpeed)) * 0.32;
+        const targetPitchX = basePronePitch - climbAngle;
+
+        // 2. Heading / Yaw: Points smoothly toward flight direction
+        const targetHeadingY = Math.atan2(flightVelX, 0.02 + Math.abs(flightVelZ) * 0.4) * 0.95;
+
+        // 3. Dynamic Aerodynamic Banking: Roll body into curves
+        const targetBankZ = -flightVelX * 4.4;
 
         robotRoot.rotation.z = THREE.MathUtils.lerp(robotRoot.rotation.z, targetBankZ, 0.08);
         robotRoot.rotation.x = THREE.MathUtils.lerp(robotRoot.rotation.x, targetPitchX, 0.08);
         robotRoot.rotation.y = THREE.MathUtils.lerp(robotRoot.rotation.y, targetHeadingY, 0.08);
 
-        // Rocket Thrusters flare brightly with flight speed
-        const speed = Math.hypot(flightVelX, flightVelY, flightVelZ);
-        const cruiseFlame = 1.35 + speed * 15.0 + Math.sin(elapsed * 24) * 0.35;
-        leftExhaust.scale.set(1.3, cruiseFlame, 1.3);
-        rightExhaust.scale.set(1.3, cruiseFlame, 1.3);
+        // 4. Head pose: Tilted up & forward relative to pitched torso so eyes look where it is flying!
+        headGroup.rotation.x = THREE.MathUtils.lerp(headGroup.rotation.x, -0.56 - climbAngle * 0.3, 0.08);
+        headGroup.rotation.y = THREE.MathUtils.lerp(headGroup.rotation.y, flightVelX * 1.8, 0.08);
 
-        // Aerodynamic flight stabilizer arms while roaming
-        leftArmGroup.rotation.x = THREE.MathUtils.lerp(leftArmGroup.rotation.x, 0.2 - flightVelY * 1.2, 0.08);
-        leftArmGroup.rotation.z = THREE.MathUtils.lerp(leftArmGroup.rotation.z, -0.35 + targetBankZ * 0.4, 0.08);
-        rightArmGroup.rotation.x = THREE.MathUtils.lerp(rightArmGroup.rotation.x, 0.2 - flightVelY * 1.2, 0.08);
-        rightArmGroup.rotation.z = THREE.MathUtils.lerp(rightArmGroup.rotation.z, 0.35 + targetBankZ * 0.4, 0.08);
+        // 5. Streamlined Rocket Arms: Tucked back along the torso like supersonic wings/fins
+        leftArmGroup.rotation.x = THREE.MathUtils.lerp(leftArmGroup.rotation.x, 1.82, 0.08);
+        leftArmGroup.rotation.z = THREE.MathUtils.lerp(leftArmGroup.rotation.z, -0.32 + targetBankZ * 0.2, 0.08);
+        leftArmGroup.rotation.y = THREE.MathUtils.lerp(leftArmGroup.rotation.y, 0.1, 0.08);
 
-        // Head looks forward along flight path
-        headGroup.rotation.y = THREE.MathUtils.lerp(headGroup.rotation.y, flightVelX * 2.5, 0.08);
-        headGroup.rotation.x = THREE.MathUtils.lerp(headGroup.rotation.x, -flightVelY * 1.4, 0.08);
+        rightArmGroup.rotation.x = THREE.MathUtils.lerp(rightArmGroup.rotation.x, 1.82, 0.08);
+        rightArmGroup.rotation.z = THREE.MathUtils.lerp(rightArmGroup.rotation.z, 0.32 + targetBankZ * 0.2, 0.08);
+        rightArmGroup.rotation.y = THREE.MathUtils.lerp(rightArmGroup.rotation.y, -0.1, 0.08);
+
+        // Forearms streamlined with subtle flight micro-flutter
+        leftForearmGroup.rotation.x = THREE.MathUtils.lerp(leftForearmGroup.rotation.x, 0.16 + Math.sin(elapsed * 10) * 0.03, 0.08);
+        rightForearmGroup.rotation.x = THREE.MathUtils.lerp(rightForearmGroup.rotation.x, 0.16 + Math.sin(elapsed * 10 + 1) * 0.03, 0.08);
+        leftForearmGroup.rotation.y = 0;
+        rightForearmGroup.rotation.y = 0;
+        leftForearmGroup.rotation.z = 0;
+        rightForearmGroup.rotation.z = 0;
+
+        leftHand.position.y = -0.6;
+        rightHand.position.y = -0.6;
+
+        // 6. Rocket Thrusters flare bright and long
+        const cruiseFlame = 1.85 + flightSpeed * 28.0 + Math.sin(elapsed * 28) * 0.35;
+        leftExhaust.scale.set(1.4, cruiseFlame, 1.4);
+        rightExhaust.scale.set(1.4, cruiseFlame, 1.4);
       }
 
       robotRoot.position.copy(robotWorldPos);
@@ -966,8 +1026,8 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
       groundShadow.position.x = robotWorldPos.x;
       groundShadow.position.z = robotWorldPos.z;
       const groundDist = robotWorldPos.y - (-1.05);
-      groundShadow.scale.setScalar(Math.max(0.35, 1.25 - groundDist * 0.35));
-      shadowMat.opacity = Math.max(0.04, 0.24 - groundDist * 0.08);
+      groundShadow.scale.setScalar(Math.max(0.2, 1.25 - groundDist * 0.35));
+      shadowMat.opacity = Math.max(0.02, 0.22 - groundDist * 0.07);
 
       // --- JETPACK ROCKET PARTICLE TRAIL UPDATE ---
       const posAttr = pGeo.attributes.position as THREE.BufferAttribute;
@@ -983,15 +1043,24 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
           const source = p % 2 === 0 ? leftJetWorld : rightJetWorld;
           posAttr.setXYZ(
             p,
-            source.x + (Math.random() - 0.5) * 0.08,
-            source.y - 0.15 + (Math.random() - 0.5) * 0.05,
-            source.z - 0.1 + (Math.random() - 0.5) * 0.08
+            source.x + (Math.random() - 0.5) * 0.06,
+            source.y + (Math.random() - 0.5) * 0.06,
+            source.z + (Math.random() - 0.5) * 0.06
           );
-          pVelocities[p].set(
-            (Math.random() - 0.5) * 0.02 - flightVelX * 0.3,
-            -0.035 - Math.random() * 0.03 - flightVelY * 0.2,
-            -0.02 - Math.random() * 0.025 - flightVelZ * 0.3
-          );
+          if (isRoaming) {
+            // Trailing backwards behind the robot's flight path
+            pVelocities[p].set(
+              -flightVelX * 1.5 + (Math.random() - 0.5) * 0.025,
+              -flightVelY * 1.5 + (Math.random() - 0.5) * 0.025,
+              -flightVelZ * 1.5 + (Math.random() - 0.5) * 0.025
+            );
+          } else {
+            pVelocities[p].set(
+              (Math.random() - 0.5) * 0.02,
+              -0.035 - Math.random() * 0.03,
+              -0.02 - Math.random() * 0.025
+            );
+          }
         } else {
           const px = posAttr.getX(p) + pVelocities[p].x;
           const py = posAttr.getY(p) + pVelocities[p].y;
@@ -1001,12 +1070,14 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
       }
       posAttr.needsUpdate = true;
 
-      // Rotate Orbit Ring and Nodes
-      orbitRing.rotation.z = elapsed * 0.3;
-      orbitNodesGroup.rotation.y = elapsed * 0.45;
-      nodeMeshes.forEach((nm) => {
-        nm.rotation.y = -orbitNodesGroup.rotation.y;
-      });
+      // Rotate Orbit Ring and Nodes when visible
+      if (orbitRing.visible) {
+        orbitRing.rotation.z = elapsed * 0.3;
+        orbitNodesGroup.rotation.y = elapsed * 0.45;
+        nodeMeshes.forEach((nm) => {
+          nm.rotation.y = -orbitNodesGroup.rotation.y;
+        });
+      }
 
       // Core pulsating glow
       const corePulse = 3.2 + Math.sin(elapsed * 4.5) * 1.2;
@@ -1255,8 +1326,20 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
       { threshold: 0.05 }
     );
     visibilityObserver.observe(container);
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        isVisible = false;
+        cancelAnimationFrame(animId);
+      } else {
+        isVisible = true;
+        clock.getDelta();
+        animate();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       visibilityObserver.disconnect();
       cancelAnimationFrame(animId);
       window.removeEventListener("pointermove", handlePointerMove);

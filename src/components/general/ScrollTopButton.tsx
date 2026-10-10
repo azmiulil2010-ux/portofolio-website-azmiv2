@@ -35,10 +35,15 @@ export default function ScrollTopButton() {
   }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    const win = typeof window !== "undefined" ? (window as unknown as { __lenis?: { scrollTo: (target: string | number, options?: { duration?: number }) => void } }) : null;
+    if (win?.__lenis) {
+      win.__lenis.scrollTo(0, { duration: 1.2 });
+    } else {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
   };
 
   // SVG circle progress calculations

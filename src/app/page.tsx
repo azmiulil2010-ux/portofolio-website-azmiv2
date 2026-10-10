@@ -10,8 +10,8 @@ import SectionDivider from "@/components/general/SectionDivider";
 export default async function Home() {
   return (
     <main className="relative overflow-hidden bg-slate-950 text-slate-100 transition-colors duration-500">
-      {/* Global Futuristic Ambient Background Layer */}
-      <FuturisticBackground />
+      {/* Global Futuristic Ambient Background Layer (disable secondary 3D to prioritize hero 3D robot) */}
+      <FuturisticBackground show3D={false} />
 
       {/* 1. HERO SECTION (#home) */}
       <section id="home" className="relative isolate overflow-hidden scroll-mt-20">

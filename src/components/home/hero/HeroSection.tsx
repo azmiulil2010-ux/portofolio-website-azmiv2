@@ -130,7 +130,7 @@ export default function HeroSection() {
                 rel="noreferrer"
                 aria-label={label}
                 title={name}
-                style={{ animationDelay: `${320 + index * 60}ms` }}
+                style={{ animationDelay: `${550 + index * 80}ms` }}
                 className="hero-anim-social hero-right-social group grid h-8 w-8 sm:h-10 sm:w-10 place-items-center rounded-full border border-slate-300 bg-white text-slate-800 shadow-xs transition-all duration-300 hover:border-orange-500 hover:text-orange-600 hover:scale-110 hover:shadow-md"
               >
                 <Icon
@@ -144,7 +144,7 @@ export default function HeroSection() {
             <a
               href="/#about"
               aria-label="Scroll ke konten"
-              style={{ animationDelay: "520ms" }}
+              style={{ animationDelay: "850ms" }}
               className="hero-anim-social hero-right-social group grid h-8 w-8 sm:h-10 sm:w-10 place-items-center rounded-full border border-orange-400/60 bg-orange-500/10 text-orange-600 shadow-xs transition-all duration-300 hover:bg-orange-500 hover:text-white hover:scale-110 hover:shadow-md"
               title="Scroll ke Tentang Saya"
             >

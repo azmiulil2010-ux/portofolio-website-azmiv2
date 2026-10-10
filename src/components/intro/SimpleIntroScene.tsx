@@ -51,11 +51,11 @@ export default function SimpleIntroScene({ phase }: SimpleIntroSceneProps) {
     <div
       className={`fixed inset-0 z-[110] flex flex-col items-center justify-center bg-[#070b14] select-none pointer-events-auto transition-all ${
         isDissolving
-          ? "opacity-0 scale-105 filter blur-lg pointer-events-none"
-          : "opacity-100 scale-100 filter blur-0"
+          ? "opacity-0 scale-[1.02] pointer-events-none"
+          : "opacity-100 scale-100"
       }`}
       style={{
-        transitionDuration: "900ms",
+        transitionDuration: "750ms",
         transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
       }}
       aria-label="Opening Scene"

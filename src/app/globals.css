@@ -1822,40 +1822,63 @@ body:has(.not-found-page) .intro-screen {
   animation: none !important;
 }
 
-/* Fluid Entrance Keyframes Triggered upon Reveal */
+/* Lenis Smooth Scroll Core Rules */
+html.lenis,
+html.lenis body {
+  height: auto;
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* Fluid Entrance Keyframes Triggered upon Reveal with Graceful Pacing */
 .portfolio-reveal-container.is-revealing .hero-anim-navbar,
 .portfolio-reveal-container.is-ready .hero-anim-navbar {
-  animation: hero-nav-enter 750ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: hero-nav-enter 850ms cubic-bezier(0.16, 1, 0.3, 1) 80ms both;
 }
 
 .portfolio-reveal-container.is-revealing .hero-anim-canvas,
 .portfolio-reveal-container.is-ready .hero-anim-canvas {
-  animation: hero-canvas-enter 800ms cubic-bezier(0.16, 1, 0.3, 1) 40ms both;
+  animation: hero-canvas-enter 950ms cubic-bezier(0.16, 1, 0.3, 1) 120ms both;
 }
 
 .portfolio-reveal-container.is-revealing .hero-anim-title,
 .portfolio-reveal-container.is-ready .hero-anim-title {
-  animation: hero-title-enter 850ms cubic-bezier(0.16, 1, 0.3, 1) 100ms both;
+  animation: hero-title-enter 1000ms cubic-bezier(0.16, 1, 0.3, 1) 220ms both;
 }
 
 .portfolio-reveal-container.is-revealing .hero-anim-robot,
 .portfolio-reveal-container.is-ready .hero-anim-robot {
-  animation: hero-robot-enter 900ms cubic-bezier(0.16, 1, 0.3, 1) 140ms both;
+  animation: hero-robot-enter 1050ms cubic-bezier(0.16, 1, 0.3, 1) 280ms both;
 }
 
 .portfolio-reveal-container.is-revealing .hero-anim-left,
 .portfolio-reveal-container.is-ready .hero-anim-left {
-  animation: hero-left-enter 800ms cubic-bezier(0.16, 1, 0.3, 1) 180ms both;
+  animation: hero-left-enter 950ms cubic-bezier(0.16, 1, 0.3, 1) 360ms both;
 }
 
 .portfolio-reveal-container.is-revealing .hero-anim-right,
 .portfolio-reveal-container.is-ready .hero-anim-right {
-  animation: hero-right-enter 800ms cubic-bezier(0.16, 1, 0.3, 1) 220ms both;
+  animation: hero-right-enter 950ms cubic-bezier(0.16, 1, 0.3, 1) 420ms both;
 }
 
 .portfolio-reveal-container.is-revealing .hero-anim-social,
 .portfolio-reveal-container.is-ready .hero-anim-social {
-  animation: hero-social-pop 600ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: hero-social-pop 750ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes hero-nav-enter {

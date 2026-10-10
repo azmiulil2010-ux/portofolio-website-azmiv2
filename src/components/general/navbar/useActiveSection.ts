@@ -23,6 +23,27 @@ export function useActiveSection() {
   };
 
   useEffect(() => {
+    // Cache section layout positions to eliminate layout thrashing during scroll
+    let sectionMetrics: { id: string; top: number; bottom: number }[] = [];
+
+    const measureSections = () => {
+      sectionMetrics = sectionIds
+        .map((id) => {
+          const el = document.getElementById(id);
+          if (!el) return null;
+          const rect = el.getBoundingClientRect();
+          const top = rect.top + window.scrollY;
+          return {
+            id,
+            top,
+            bottom: top + rect.height,
+          };
+        })
+        .filter((item): item is { id: string; top: number; bottom: number } => item !== null);
+    };
+
+    measureSections();
+
     const computeActiveSection = () => {
       if (isManualLockRef.current) return;
 
@@ -31,53 +52,25 @@ export function useActiveSection() {
       const docHeight = document.documentElement.scrollHeight;
 
       // 1. Near the very top of page -> always "home"
-      if (scrollY < 120) {
+      if (scrollY < 100) {
         setActiveSection("home");
         return;
       }
 
       // 2. Near bottom of page -> always "contact"
-      if (scrollY + windowHeight >= docHeight - 80) {
+      if (scrollY + windowHeight >= docHeight - 60) {
         setActiveSection("contact");
         return;
       }
 
-      // 3. Focal point check: line at 36% down viewport where user naturally reads section titles
-      const focalLine = windowHeight * 0.36;
+      // 3. Focal line at ~35% viewport height
+      const targetY = scrollY + windowHeight * 0.35;
 
-      for (const id of sectionIds) {
-        const el = document.getElementById(id);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          // Element boundary contains focal reading line
-          if (rect.top <= focalLine && rect.bottom > focalLine) {
-            setActiveSection(id);
-            return;
-          }
+      for (const section of sectionMetrics) {
+        if (targetY >= section.top && targetY < section.bottom) {
+          setActiveSection(section.id);
+          return;
         }
-      }
-
-      // 4. Fallback: select section with highest visible pixel height in viewport
-      let bestSection = "home";
-      let maxCoverage = -1;
-
-      for (const id of sectionIds) {
-        const el = document.getElementById(id);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          const visibleTop = Math.max(0, rect.top);
-          const visibleBottom = Math.min(windowHeight, rect.bottom);
-          const visibleHeight = Math.max(0, visibleBottom - visibleTop);
-
-          if (visibleHeight > maxCoverage) {
-            maxCoverage = visibleHeight;
-            bestSection = id;
-          }
-        }
-      }
-
-      if (maxCoverage > 0) {
-        setActiveSection(bestSection);
       }
     };
 
@@ -94,6 +87,15 @@ export function useActiveSection() {
       }
     };
 
+    let resizeTimer: number;
+    const handleResize = () => {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(() => {
+        measureSections();
+        computeActiveSection();
+      }, 200);
+    };
+
     const handleHashChange = () => {
       const nextSection = window.location.hash.replace("#", "");
       if (sectionIds.includes(nextSection)) {
@@ -102,10 +104,12 @@ export function useActiveSection() {
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleResize, { passive: true });
     window.addEventListener("hashchange", handleHashChange);
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
       window.removeEventListener("hashchange", handleHashChange);
       if (lockTimeoutRef.current) {
         clearTimeout(lockTimeoutRef.current);
@@ -115,4 +119,3 @@ export function useActiveSection() {
 
   return { activeSection, setActiveSectionManual };
 }
-

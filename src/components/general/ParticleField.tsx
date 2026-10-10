@@ -22,7 +22,7 @@ export default function ParticleField() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Bypass completely for Lighthouse audit or headless testing
+    // Bypass completely for automated audits
     if (
       typeof navigator !== "undefined" &&
       /Lighthouse|PageSpeed|HeadlessChrome|Chrome-Lighthouse/i.test(navigator.userAgent)
@@ -36,11 +36,12 @@ export default function ParticleField() {
     if (prefersReducedMotion) return;
 
     let animationFrameId: number;
-    let width = (canvas.width = canvas.parentElement?.clientWidth || window.innerWidth);
-    let height = (canvas.height = canvas.parentElement?.clientHeight || window.innerHeight);
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
 
-    // Responsive particle count: fewer on small screens
-    const particleCount = width < 768 ? 25 : 55;
+    const isMobile = width < 768;
+    // Lightweight particle count for consistent 60+ FPS
+    const particleCount = isMobile ? 8 : 16;
     const colors = ["#ff6200", "#f97316", "#fb923c", "#f59e0b"];
 
     const particles: Particle[] = [];
@@ -48,10 +49,10 @@ export default function ParticleField() {
       particles.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.35,
-        vy: (Math.random() - 0.5) * 0.35,
+        vx: (Math.random() - 0.5) * 0.25,
+        vy: (Math.random() - 0.5) * 0.25,
         radius: Math.random() * 1.5 + 0.5,
-        alpha: Math.random() * 0.5 + 0.2,
+        alpha: Math.random() * 0.35 + 0.15,
         color: colors[Math.floor(Math.random() * colors.length)],
       });
     }
@@ -59,10 +60,10 @@ export default function ParticleField() {
     let mouseX = -9999;
     let mouseY = -9999;
 
+    // Viewport-based coordinates: no getBoundingClientRect layout thrashing
     const handleMouseMove = (e: MouseEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      mouseX = e.clientX - rect.left;
-      mouseY = e.clientY - rect.top;
+      mouseX = e.clientX;
+      mouseY = e.clientY;
     };
 
     const handleMouseLeave = () => {
@@ -73,19 +74,16 @@ export default function ParticleField() {
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
     document.addEventListener("mouseleave", handleMouseLeave);
 
-    let isVisible = true;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        isVisible = entry.isIntersecting;
-      },
-      { threshold: 0.01 }
-    );
-    observer.observe(canvas);
+    let isDocumentVisible = !document.hidden;
+    const handleVisibility = () => {
+      isDocumentVisible = !document.hidden;
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
 
     const render = () => {
       animationFrameId = requestAnimationFrame(render);
 
-      if (!isVisible || prefersReducedMotion) return;
+      if (!isDocumentVisible || prefersReducedMotion) return;
 
       ctx.clearRect(0, 0, width, height);
 
@@ -103,35 +101,38 @@ export default function ParticleField() {
         if (p.y < 0) p.y = height;
         else if (p.y > height) p.y = 0;
 
-        // Mouse avoidance/gentle reaction
+        // Gentle mouse interaction
         const dx = p.x - mouseX;
         const dy = p.y - mouseY;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 90 && dist > 0) {
-          const force = (90 - dist) / 90;
-          p.x += (dx / dist) * force * 1.5;
-          p.y += (dy / dist) * force * 1.5;
+        if (dist < 80 && dist > 0) {
+          const force = (80 - dist) / 80;
+          p.x += (dx / dist) * force * 1.2;
+          p.y += (dy / dist) * force * 1.2;
         }
 
-        // Draw particle
+        // Draw particle dot
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fillStyle = p.color;
         ctx.globalAlpha = p.alpha;
         ctx.fill();
 
-        // Connect nearby particles with subtle glowing lines
-        for (let j = i + 1; j < particles.length; j++) {
-          const p2 = particles[j];
-          const distance = Math.hypot(p.x - p2.x, p.y - p2.y);
-          if (distance < 110) {
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = p.color;
-            ctx.globalAlpha = (1 - distance / 110) * 0.15;
-            ctx.lineWidth = 0.6;
-            ctx.stroke();
+        // Connect nearby particles only on desktop for maximum performance
+        if (!isMobile) {
+          const maxCheck = Math.min(particles.length, i + 2);
+          for (let j = i + 1; j < maxCheck; j++) {
+            const p2 = particles[j];
+            const distance = Math.hypot(p.x - p2.x, p.y - p2.y);
+            if (distance < 90) {
+              ctx.beginPath();
+              ctx.moveTo(p.x, p.y);
+              ctx.lineTo(p2.x, p2.y);
+              ctx.strokeStyle = p.color;
+              ctx.globalAlpha = (1 - distance / 90) * 0.12;
+              ctx.lineWidth = 0.5;
+              ctx.stroke();
+            }
           }
         }
       }
@@ -141,27 +142,30 @@ export default function ParticleField() {
 
     render();
 
+    let resizeTimer: number;
     const handleResize = () => {
-      if (!canvas.parentElement) return;
-      width = canvas.width = canvas.parentElement.clientWidth;
-      height = canvas.height = canvas.parentElement.clientHeight;
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(() => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      }, 150);
     };
 
-    window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", handleResize, { passive: true });
 
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseleave", handleMouseLeave);
+      document.removeEventListener("visibilitychange", handleVisibility);
       window.removeEventListener("resize", handleResize);
-      observer.disconnect();
     };
   }, []);
 
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 pointer-events-none z-0"
+      className="fixed inset-0 pointer-events-none z-0"
       aria-hidden="true"
     />
   );

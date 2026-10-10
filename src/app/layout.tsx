@@ -58,9 +58,9 @@ export const metadata: Metadata = {
     images: [absoluteSiteUrl("/opengraph-image")],
   },
   icons: {
-    icon : "/logoo.png",
-  }
-}
+    icon: "/logo.png?v=3",
+  },
+};
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   const cookieStore = await cookies();
@@ -71,16 +71,25 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   const skipSplash = isAudit || (!isDev && cookieStore.get("portfolioIntroSeen")?.value === "1");
 
   return (
-    <html lang="id" data-theme="light" data-scroll-behavior="smooth">
-      <head>
-        <link rel="icon" href="/logo.png?v=3" type="image/png" />
+    <html
+      lang="id"
+      data-theme="dark"
+      className="dark"
+      suppressHydrationWarning
+      data-scroll-behavior="smooth"
+    >
+      <body
+        className={`${poppins.className} theme-transition antialiased bg-slate-950`}
+        suppressHydrationWarning
+      >
         <script
+          suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
                 try {
                   var saved = localStorage.getItem('theme');
-                  var isDark = saved ? saved === 'dark' : false;
+                  var isDark = saved ? saved === 'dark' : true;
                   document.documentElement.dataset.theme = isDark ? 'dark' : 'light';
                   if (isDark) {
                     document.documentElement.classList.add('dark');
@@ -92,8 +101,6 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
             `,
           }}
         />
-      </head>
-      <body className={`${poppins.className} theme-transition antialiased bg-slate-950`}>
         <SiteChrome skipSplash={skipSplash}>{children}</SiteChrome>
       </body>
     </html>
