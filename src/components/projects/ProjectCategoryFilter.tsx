@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { PROJECT_CATEGORIES, type ProjectCategory } from "@/types/project.types";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface ProjectCategoryFilterProps {
   category: ProjectCategory | "";
@@ -10,7 +13,26 @@ export default function ProjectCategoryFilter({
   category,
   searchTerm,
 }: ProjectCategoryFilterProps) {
-  const filters = [{ value: "" as const, label: "All" }, ...PROJECT_CATEGORIES];
+  const { t } = useLanguage();
+
+  const getCategoryLabel = (val: string, defaultLabel: string) => {
+    switch (val) {
+      case "":
+        return t("filterAll");
+      case "website":
+        return t("filterWebsite");
+      case "iot":
+        return t("filterIot");
+      case "mobile-app":
+        return t("filterMobile");
+      case "UI/UX":
+        return t("filterDesign");
+      default:
+        return defaultLabel;
+    }
+  };
+
+  const filters = [{ value: "" as const, label: t("filterAll") }, ...PROJECT_CATEGORIES];
 
   return (
     <nav
@@ -23,6 +45,7 @@ export default function ProjectCategoryFilter({
         if (filter.value) params.set("category", filter.value);
         const href = params.size ? `/projects?${params.toString()}` : "/projects";
         const isActive = category === filter.value;
+        const displayLabel = getCategoryLabel(filter.value, filter.label);
 
         return (
           <Link
@@ -35,7 +58,7 @@ export default function ProjectCategoryFilter({
                 : "border-slate-700 bg-slate-900/70 text-slate-300 hover:border-cyan-400/60 hover:text-cyan-200"
             }`}
           >
-            {filter.label}
+            {displayLabel}
           </Link>
         );
       })}

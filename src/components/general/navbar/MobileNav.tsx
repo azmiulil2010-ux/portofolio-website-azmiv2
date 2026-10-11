@@ -6,6 +6,8 @@ import LinkButton from "../LinkButton";
 import { LuDownload, LuX } from "react-icons/lu";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
+import LanguageSwitcher from "../LanguageSwitcher";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface MobileNavProps {
   navOpen: boolean;
@@ -21,6 +23,17 @@ export default function MobileNav({
   setActiveSectionManual,
 }: MobileNavProps) {
   const pathname = usePathname();
+  const { t } = useLanguage();
+
+  const navLabelMap: Record<string, string> = {
+    home: t("navHome"),
+    about: t("navAbout"),
+    services: t("navServices"),
+    skills: t("navSkills"),
+    projects: t("navProjects"),
+    contact: t("navContact"),
+  };
+
   const isLinkActive = (section: string) =>
     pathname === "/" ? activeSection === section : pathname.startsWith(`/${section}`);
 
@@ -110,7 +123,7 @@ export default function MobileNav({
                     : "border-slate-200 bg-slate-50 text-slate-800 hover:border-orange-400 hover:bg-orange-50 hover:text-orange-600 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-200 dark:hover:border-orange-500/40 dark:hover:bg-slate-900"
                 }`}
               >
-                <span>{link.label}</span>
+                <span>{navLabelMap[link.section] || link.label}</span>
                 {active && (
                   <span className="h-2 w-2 rounded-full bg-white shadow-[0_0_8px_#ffffff]" />
                 )}
@@ -119,10 +132,15 @@ export default function MobileNav({
           );
         })}
 
-        <div className="mt-6 w-full flex justify-center">
+        <div className="mt-4 w-full flex flex-col items-center gap-3">
+          <div className="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+            <span className="text-xs font-mono text-slate-500 dark:text-slate-400">Language:</span>
+            <LanguageSwitcher />
+          </div>
+
           <LinkButton
             href="/cv.png"
-            text="Download CV"
+            text={t("downloadCv")}
             download="CV-Muhammad-Ulil-Azmi.png"
             icon={LuDownload}
             iconPosition="left"

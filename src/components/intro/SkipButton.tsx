@@ -1,6 +1,7 @@
 "use client";
 
 import { LuFastForward } from "react-icons/lu";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface SkipButtonProps {
   onSkip: () => void;
@@ -8,6 +9,8 @@ interface SkipButtonProps {
 }
 
 export default function SkipButton({ onSkip, visible = true }: SkipButtonProps) {
+  const { t } = useLanguage();
+
   return (
     <button
       type="button"
@@ -20,7 +23,7 @@ export default function SkipButton({ onSkip, visible = true }: SkipButtonProps) 
       }`}
     >
       <span className="uppercase text-[0.7rem] tracking-widest font-mono">
-        Skip Intro
+        {t("skipIntro")}
       </span>
       <LuFastForward
         size={14}

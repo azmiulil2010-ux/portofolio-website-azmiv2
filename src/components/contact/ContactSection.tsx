@@ -1,3 +1,5 @@
+"use client";
+
 import {
   FaEnvelope,
   FaInstagram,
@@ -5,24 +7,10 @@ import {
   FaTiktok,
   FaYoutube,
 } from "react-icons/fa";
-import { LuSparkles, LuSend, LuArrowUpRight } from "react-icons/lu";
+import { LuSend, LuArrowUpRight } from "react-icons/lu";
 import Link from "next/link";
 import ContactForm from "./ContactForm";
-
-const contactInfo = [
-  {
-    icon: <FaEnvelope className="w-5 h-5" />,
-    title: "Email",
-    value: "azmiulil2010@gmail.com",
-    link: "mailto:azmiulil2010@gmail.com",
-  },
-  {
-    icon: <FaMapMarkedAlt className="w-5 h-5" />,
-    title: "Lokasi",
-    value: "Indonesia, Jawa Timur, Kota Pasuruan",
-    link: "https://maps.google.com/?q=Pasuruan,+Jawa+Timur",
-  },
-];
+import { useLanguage } from "@/context/LanguageContext";
 
 const socialLinks = [
   {
@@ -52,6 +40,23 @@ const socialLinks = [
 ];
 
 export default function ContactSection() {
+  const { t } = useLanguage();
+
+  const contactInfo = [
+    {
+      icon: <FaEnvelope className="w-5 h-5" />,
+      title: "Email",
+      value: "azmiulil2010@gmail.com",
+      link: "mailto:azmiulil2010@gmail.com",
+    },
+    {
+      icon: <FaMapMarkedAlt className="w-5 h-5" />,
+      title: t("locationChip"),
+      value: t("contactLocationFull"),
+      link: "https://maps.google.com/?q=Pasuruan,+Jawa+Timur",
+    },
+  ];
+
   return (
     <section className="relative py-14 sm:py-20">
       {/* Ambient background glow */}
@@ -63,15 +68,15 @@ export default function ContactSection() {
         <div data-aos="fade-right">
           <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-950/40 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-cyan-300 backdrop-blur-md">
             <LuSend size={12} />
-            <span>Get in Touch</span>
+            <span>{t("contactGetInTouch")}</span>
           </div>
 
           <h2 className="py-4 text-3xl md:text-5xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-100 to-indigo-300">
-            Beri Kritik Atau Saran Anda Disini
+            {t("contactCritiqueTitle")}
           </h2>
 
           <p className="text-slate-300 mb-8 text-sm md:text-base leading-relaxed">
-            Punya pertanyaan, ide kolaborasi, atau ingin berdiskusi mengenai proyek web modern? Jangan ragu untuk menghubungi saya. Saya siap merespons dan terhubung untuk berbagai kesempatan.
+            {t("contactCritiqueDesc")}
           </p>
 
           {/* Contact Methods */}
@@ -101,7 +106,7 @@ export default function ContactSection() {
           {/* Social Channels */}
           <div>
             <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">
-              Social Channels
+              {t("socialChannels")}
             </p>
             <div className="flex flex-wrap items-center gap-3">
               {socialLinks.map((social) => (

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { FaInstagram, FaTiktok, FaYoutube, FaEnvelope } from "react-icons/fa";
 import { LuArrowUpRight, LuHeart, LuCode } from "react-icons/lu";
+import { useLanguage } from "@/context/LanguageContext";
 
 const footerSocials = [
   { name: "Instagram", icon: FaInstagram, url: "https://www.instagram.com/qzmiuu/", hoverColor: "hover:text-pink-500 hover:border-pink-500/40 hover:shadow-[0_0_15px_rgba(236,72,153,0.3)]" },
@@ -11,17 +12,18 @@ const footerSocials = [
   { name: "Email", icon: FaEnvelope, url: "mailto:azmiulil2010@gmail.com", hoverColor: "hover:text-amber-500 hover:border-amber-500/40 hover:shadow-[0_0_15px_rgba(245,158,11,0.3)]" },
 ];
 
-const quickLinks = [
-  { label: "Home", url: "/#home" },
-  { label: "About", url: "/#about" },
-  { label: "Services", url: "/#services" },
-  { label: "Skills", url: "/#skills" },
-  { label: "Projects", url: "/#projects" },
-  { label: "Contact", url: "/#contact" },
-];
-
 export default function Footer() {
   const year = new Date().getFullYear();
+  const { t } = useLanguage();
+
+  const quickLinks = [
+    { label: t("navHome"), url: "/#home" },
+    { label: t("navAbout"), url: "/#about" },
+    { label: t("navServices"), url: "/#services" },
+    { label: t("navSkills"), url: "/#skills" },
+    { label: t("navProjects"), url: "/#projects" },
+    { label: t("navContact"), url: "/#contact" },
+  ];
 
   return (
     <footer className="site-footer relative overflow-hidden border-t border-slate-200 bg-white dark:border-slate-800/60 dark:bg-slate-950/90 transition-colors duration-300">
@@ -42,7 +44,7 @@ export default function Footer() {
               </span>
             </div>
             <p className="max-w-xs text-sm leading-relaxed text-slate-600 dark:text-slate-400 transition-colors duration-300">
-              Membangun pengalaman digital yang modern, responsif, dan berestetika tinggi. Rekayasa Perangkat Lunak berkualitas.
+              {t("footerBrandDesc")}
             </p>
 
             {/* Social Icons */}
@@ -66,11 +68,11 @@ export default function Footer() {
           {/* Quick Links Column */}
           <div>
             <h4 className="mb-4 text-xs font-bold uppercase tracking-[0.2em] text-orange-600 dark:text-orange-400">
-              Quick Links
+              {t("footerQuickLinks")}
             </h4>
             <ul className="space-y-2.5">
               {quickLinks.map(({ label, url }) => (
-                <li key={label}>
+                <li key={url}>
                   <Link
                     href={url}
                     className="group inline-flex items-center gap-1.5 text-sm text-slate-700 dark:text-slate-400 transition-colors duration-200 hover:text-orange-600 dark:hover:text-orange-400"
@@ -86,10 +88,10 @@ export default function Footer() {
           {/* Contact / CTA Column */}
           <div>
             <h4 className="mb-4 text-xs font-bold uppercase tracking-[0.2em] text-orange-600 dark:text-orange-400">
-              Get in Touch
+              {t("footerGetInTouch")}
             </h4>
             <p className="mb-4 text-sm leading-relaxed text-slate-600 dark:text-slate-400 transition-colors duration-300">
-              Tertarik berkolaborasi atau punya proyek impian? Jangan ragu untuk menghubungi saya.
+              {t("footerCtaDesc")}
             </p>
             <a
               href="mailto:azmiulil2010@gmail.com"
@@ -117,12 +119,10 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="flex flex-col items-center justify-between gap-3 border-t border-slate-200 dark:border-slate-800/60 py-6 sm:flex-row transition-colors duration-300">
           <p className="footer-copy flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-500">
-            &copy; {year} Muhammad Ulil Azmi. Built with
-            <LuHeart size={12} className="text-rose-500 animate-pulse" />
-            &amp; clean code.
+            &copy; {year} {t("footerCopyText")}
           </p>
           <p className="text-[0.65rem] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-600">
-            Designed &amp; Developed by Azmi
+            {t("designedDevelopedBy")}
           </p>
         </div>
       </div>

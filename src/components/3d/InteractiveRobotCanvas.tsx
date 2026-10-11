@@ -10,7 +10,21 @@ import {
   ThumbsUp,
   Trophy,
   Hand,
+  Volume2,
+  VolumeX,
+  Gamepad2,
+  Sparkles,
 } from "lucide-react";
+import { robotAudio } from "@/lib/robotSoundSynth";
+import {
+  ROBOT_SKINS,
+  ROBOT_SKIN_LIST,
+  RobotSkinId,
+  applyRobotSkinToMaterials,
+} from "@/lib/robotSkins";
+import CyberBugArcadeGame from "@/components/3d/CyberBugArcadeGame";
+import { useLanguage } from "@/context/LanguageContext";
+import { TRANSLATIONS } from "@/lib/i18n";
 
 interface RobotCanvasProps {
   className?: string;
@@ -28,25 +42,31 @@ export type RobotActionType =
 interface ActionItem {
   id: RobotActionType;
   label: string;
+  translationKey: keyof typeof TRANSLATIONS.id;
   icon: ComponentType<{ className?: string; size?: number }>;
 }
 
 const ACTION_LIST: ActionItem[] = [
-  { id: "code", label: "Holo Code", icon: Code2 },
-  { id: "debug", label: "Fix Bug", icon: ShieldCheck },
-  { id: "spin", label: "Turbo Spin", icon: Zap },
-  { id: "deploy", label: "Deploy App", icon: Rocket },
-  { id: "thumbsUp", label: "Clean Code", icon: ThumbsUp },
-  { id: "dance", label: "Victory", icon: Trophy },
-  { id: "wave", label: "Salam RPL", icon: Hand },
+  { id: "wave", label: "Salam RPL", translationKey: "actionWave", icon: Hand },
+  { id: "code", label: "Holo Code", translationKey: "actionCode", icon: Code2 },
+  { id: "debug", label: "Fix Bug", translationKey: "actionDebug", icon: ShieldCheck },
+  { id: "spin", label: "Turbo Spin", translationKey: "actionSpin", icon: Zap },
+  { id: "deploy", label: "Deploy App", translationKey: "actionDeploy", icon: Rocket },
+  { id: "thumbsUp", label: "Clean Code", translationKey: "actionThumbsUp", icon: ThumbsUp },
+  { id: "dance", label: "Victory", translationKey: "actionDance", icon: Trophy },
 ];
 
 const RPL_SPEECHES: Record<RobotActionType, string[]> = {
+  wave: [
+    "Halo! Salam Rekayasa Perangkat Lunak dari SMKN 1 Pasuruan!",
+    "Selamat datang di Azmi.Dev - Siswa RPL SMKN 1 Pasuruan!",
+    "Siap bantu kembangkan proyek digital Anda dengan standar modern!",
+  ],
   code: [
     "rpl-terminal: npm run dev --turbo",
-    "Writing clean, modular TypeScript code!",
-    "const dev = 'Azmi'; // Rekayasa Perangkat Lunak",
-    "Building fullstack web app with Next.js 16",
+    "Writing clean, modular TypeScript code • SMKN 1 Pasuruan!",
+    "const dev = 'Azmi'; // Rekayasa Perangkat Lunak SMKN 1 Pasuruan",
+    "Building fullstack web app with Next.js 16 & React 19!",
   ],
   debug: [
     "0 Errors, 0 Warnings! Bug Resolved!",
@@ -67,45 +87,308 @@ const RPL_SPEECHES: Record<RobotActionType, string[]> = {
   thumbsUp: [
     "Clean Code & Solid Architecture Approved!",
     "Code that works, Design that sells!",
-    "TypeScript strict mode: Fully Verified!",
+    "TypeScript strict mode: Fully Verified by SMKN 1 Pasuruan!",
   ],
   dance: [
     "All Tests Passing on First Attempt!",
     "Feature Shipped on Schedule!",
     "Sprint Goal Achieved with 100% Velocity!",
   ],
-  wave: [
-    "Halo! Salam Rekayasa Perangkat Lunak",
-    "Selamat datang di Azmi.Dev!",
-    "Siap bantu kembangkan proyek digital Anda!",
-  ],
 };
+
+// Procedural Digital LED Visor Face Painter
+function drawRobotFace(
+  ctx: CanvasRenderingContext2D,
+  expression: string,
+  eyeColorHex: string,
+  blinkScale: number
+) {
+  ctx.clearRect(0, 0, 512, 256);
+
+  const leftX = 175;
+  const rightX = 337;
+  const centerY = 128;
+
+  // 1. If blinking, draw horizontal glowing laser slits
+  if (blinkScale < 0.22) {
+    ctx.fillStyle = eyeColorHex;
+    ctx.beginPath();
+    ctx.roundRect(leftX - 44, centerY - 4, 88, 8, 4);
+    ctx.roundRect(rightX - 44, centerY - 4, 88, 8, 4);
+    ctx.fill();
+    return;
+  }
+
+  ctx.lineWidth = 14;
+  ctx.strokeStyle = eyeColorHex;
+  ctx.fillStyle = eyeColorHex;
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+
+  if (expression === "wave" || expression === "happy") {
+    // (^ ‿ ^) Happy curved arch eyes with cute blushing LEDs
+    ctx.beginPath();
+    ctx.arc(leftX, centerY + 12, 42, Math.PI * 1.15, Math.PI * 1.85);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(rightX, centerY + 12, 42, Math.PI * 1.15, Math.PI * 1.85);
+    ctx.stroke();
+
+    // Soft blush LED dots
+    ctx.fillStyle = "rgba(255, 98, 0, 0.65)";
+    ctx.beginPath();
+    ctx.arc(leftX - 58, centerY + 24, 12, 0, Math.PI * 2);
+    ctx.arc(rightX + 58, centerY + 24, 12, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Digital smile notch
+    ctx.strokeStyle = eyeColorHex;
+    ctx.lineWidth = 7;
+    ctx.beginPath();
+    ctx.arc(256, centerY + 36, 22, 0.2 * Math.PI, 0.8 * Math.PI);
+    ctx.stroke();
+  } else if (expression === "thumbsUp" || expression === "dance") {
+    // (★ ‿ ★) Star eyes with proud smile
+    const drawStar = (cx: number, cy: number, r: number) => {
+      ctx.beginPath();
+      for (let i = 0; i < 5; i++) {
+        const outerAngle = (i * Math.PI * 2) / 5 - Math.PI / 2;
+        const innerAngle = outerAngle + Math.PI / 5;
+        const ox = cx + Math.cos(outerAngle) * r;
+        const oy = cy + Math.sin(outerAngle) * r;
+        const ix = cx + Math.cos(innerAngle) * (r * 0.45);
+        const iy = cy + Math.sin(innerAngle) * (r * 0.45);
+        if (i === 0) ctx.moveTo(ox, oy);
+        else ctx.lineTo(ox, oy);
+        ctx.lineTo(ix, iy);
+      }
+      ctx.closePath();
+      ctx.fill();
+    };
+
+    drawStar(leftX, centerY, 40);
+    drawStar(rightX, centerY, 40);
+
+    ctx.strokeStyle = eyeColorHex;
+    ctx.lineWidth = 7;
+    ctx.beginPath();
+    ctx.arc(256, centerY + 36, 26, 0.15 * Math.PI, 0.85 * Math.PI);
+    ctx.stroke();
+  } else if (expression === "code") {
+    // ({ ⌂ }) Code brackets on eyes
+    ctx.font = "bold 82px monospace";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("{", leftX, centerY);
+    ctx.fillText("}", rightX, centerY);
+
+    // Center prompt
+    ctx.fillStyle = "#34d399";
+    ctx.font = "bold 34px monospace";
+    ctx.fillText(">_", 256, centerY + 34);
+  } else if (expression === "debug") {
+    // (ಠ ‿ ಠ) Focused analytical diagnostic squint with green reticle
+    ctx.beginPath();
+    ctx.roundRect(leftX - 44, centerY - 18, 88, 36, 12);
+    ctx.roundRect(rightX - 44, centerY - 18, 88, 36, 12);
+    ctx.fill();
+
+    ctx.fillStyle = "#10b981";
+    ctx.beginPath();
+    ctx.arc(leftX, centerY, 10, 0, Math.PI * 2);
+    ctx.arc(rightX, centerY, 10, 0, Math.PI * 2);
+    ctx.fill();
+  } else if (expression === "spin") {
+    // (> ‿ <) Turbo speed squints
+    ctx.lineWidth = 14;
+    ctx.beginPath();
+    ctx.moveTo(leftX - 32, centerY - 25);
+    ctx.lineTo(leftX + 22, centerY);
+    ctx.lineTo(leftX - 32, centerY + 25);
+
+    ctx.moveTo(rightX + 32, centerY - 25);
+    ctx.lineTo(rightX - 22, centerY);
+    ctx.lineTo(rightX + 32, centerY + 25);
+    ctx.stroke();
+  } else if (expression === "deploy") {
+    // (✦ ‿ ✦) Sparkle launch starbursts
+    ctx.font = "bold 76px sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("✦", leftX, centerY);
+    ctx.fillText("✦", rightX, centerY);
+  } else if (expression === "surprised") {
+    // (⊙ ‿ ⊙) Surprised wide eyes when poked/clicked
+    ctx.beginPath();
+    ctx.arc(leftX, centerY, 44, 0, Math.PI * 2);
+    ctx.arc(rightX, centerY, 44, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(leftX, centerY, 14, 0, Math.PI * 2);
+    ctx.arc(rightX, centerY, 14, 0, Math.PI * 2);
+    ctx.fill();
+  } else if (expression === "arcade") {
+    // (◉ ‿ ◉) Tactical battle targeting reticles for mini-game
+    ctx.beginPath();
+    ctx.arc(leftX, centerY, 42, 0, Math.PI * 2);
+    ctx.arc(rightX, centerY, 42, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.fillStyle = "#ef4444";
+    ctx.beginPath();
+    ctx.arc(leftX, centerY, 14, 0, Math.PI * 2);
+    ctx.arc(rightX, centerY, 14, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Crosshair ticks
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = "#ef4444";
+    ctx.beginPath();
+    ctx.moveTo(leftX - 52, centerY);
+    ctx.lineTo(leftX + 52, centerY);
+    ctx.moveTo(leftX, centerY - 52);
+    ctx.lineTo(leftX, centerY + 52);
+    ctx.moveTo(rightX - 52, centerY);
+    ctx.lineTo(rightX + 52, centerY);
+    ctx.moveTo(rightX, centerY - 52);
+    ctx.lineTo(rightX, centerY + 52);
+    ctx.stroke();
+  } else {
+    // Idle: High-tech glowing capsule eyes with specular glint
+    ctx.beginPath();
+    ctx.roundRect(leftX - 32, centerY - 38 * blinkScale, 64, 76 * blinkScale, 28);
+    ctx.roundRect(rightX - 32, centerY - 38 * blinkScale, 64, 76 * blinkScale, 28);
+    ctx.fill();
+
+    // Specular inner reflection
+    ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
+    ctx.beginPath();
+    ctx.arc(leftX - 10, centerY - 14 * blinkScale, 7 * blinkScale, 0, Math.PI * 2);
+    ctx.arc(rightX - 10, centerY - 14 * blinkScale, 7 * blinkScale, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Subtle gentle smile notch
+    ctx.strokeStyle = eyeColorHex;
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.arc(256, centerY + 38, 16, 0.25 * Math.PI, 0.75 * Math.PI);
+    ctx.stroke();
+  }
+}
 
 export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [speechText, setSpeechText] = useState<string | null>("Halo! Klik robot atau pilih aksi RPL di bawah");
+  const { t, language } = useLanguage();
+  const [speechText, setSpeechText] = useState<string | null>(null);
   const [activeAction, setActiveAction] = useState<RobotActionType>("wave");
+  const [activeSkin, setActiveSkin] = useState<RobotSkinId>("orange");
+  const [isMuted, setIsMuted] = useState(false);
+  const [isArcadeOpen, setIsArcadeOpen] = useState(false);
 
-  // Keep actions triggerable without recreating the Three.js scene
+  // References to Three.js internal controls
   const triggerActionRef = useRef<((action: RobotActionType) => void) | null>(null);
+  const triggerSkinRef = useRef<((skin: RobotSkinId) => void) | null>(null);
   const speechTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const showSpeech = useCallback((text: string) => {
+  useEffect(() => {
+    setIsMuted(robotAudio.isMuted());
+    const savedSkin = (localStorage.getItem("robot_active_skin") as RobotSkinId) || "orange";
+    if (ROBOT_SKINS[savedSkin]) {
+      setActiveSkin(savedSkin);
+    }
+  }, []);
+
+  useEffect(() => {
+    setSpeechText(t("robotGreeting"));
+  }, [language, t]);
+
+  const showSpeech = useCallback((text: string, durationMs = 3800) => {
     if (speechTimeoutRef.current) clearTimeout(speechTimeoutRef.current);
     setSpeechText(text);
     speechTimeoutRef.current = setTimeout(() => {
       setSpeechText(null);
-    }, 3500);
+    }, durationMs);
   }, []);
 
-  const handleActionClick = useCallback((action: RobotActionType) => {
-    setActiveAction(action);
-    const msgs = RPL_SPEECHES[action];
-    const randomMsg = msgs[Math.floor(Math.random() * msgs.length)];
-    showSpeech(randomMsg);
-    if (triggerActionRef.current) {
-      triggerActionRef.current(action);
+  const handleActionClick = useCallback(
+    (action: RobotActionType) => {
+      setActiveAction(action);
+
+      if (action === "code") {
+        robotAudio.playCyberLaser();
+      } else if (action === "spin" || action === "deploy") {
+        robotAudio.playTurboWhoosh();
+      } else if (action === "dance" || action === "thumbsUp") {
+        robotAudio.playVictoryChime();
+      } else {
+        robotAudio.playRobotBeep(820, 0.1);
+      }
+
+      const speechKeyMap: Record<RobotActionType, keyof typeof TRANSLATIONS.id> = {
+        wave: "speechWave",
+        code: "speechCode",
+        debug: "speechDebug",
+        spin: "speechSpin",
+        deploy: "speechDeploy",
+        thumbsUp: "speechThumbsUp",
+        dance: "speechDance",
+      };
+
+      const key = speechKeyMap[action];
+      const translatedList = t(key) as string[] | undefined;
+      const msgs =
+        Array.isArray(translatedList) && translatedList.length > 0
+          ? translatedList
+          : RPL_SPEECHES[action];
+      const randomMsg = msgs[Math.floor(Math.random() * msgs.length)];
+      showSpeech(randomMsg);
+
+      if (triggerActionRef.current) {
+        triggerActionRef.current(action);
+      }
+    },
+    [showSpeech, t]
+  );
+
+  const handleSkinChange = useCallback((skinId: RobotSkinId) => {
+    setActiveSkin(skinId);
+    robotAudio.playSkinChange();
+    if (typeof window !== "undefined") {
+      localStorage.setItem("robot_active_skin", skinId);
+      window.dispatchEvent(new Event("storage"));
     }
+    if (triggerSkinRef.current) {
+      triggerSkinRef.current(skinId);
+    }
+  }, []);
+
+  const handleToggleSound = useCallback(() => {
+    const muted = robotAudio.toggleMute();
+    setIsMuted(muted);
+  }, []);
+
+  const handleOpenArcade = useCallback(() => {
+    setIsArcadeOpen(true);
+    robotAudio.playCyberLaser();
+    if (triggerActionRef.current) {
+      triggerActionRef.current("debug");
+    }
+  }, []);
+
+  const handleCloseArcade = useCallback(() => {
+    setIsArcadeOpen(false);
+    if (triggerActionRef.current) {
+      triggerActionRef.current("wave");
+    }
+  }, []);
+
+  const handleGameWin = useCallback((score: number) => {
+    showSpeech(
+      `🏆 Skor Anda: ${score.toLocaleString()} PTS! Anda telah lulus sertifikasi Developer SMKN 1 Pasuruan!`,
+      6000
+    );
   }, [showSpeech]);
 
   useEffect(() => {
@@ -118,7 +401,6 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
     // 1. Scene, Camera, Renderer
     const scene = new THREE.Scene();
 
-    // Perspective camera set for full-bleed home section roaming
     const camera = new THREE.PerspectiveCamera(36, width / height, 0.1, 100);
     camera.position.set(0, 0.05, 8.8);
 
@@ -203,7 +485,7 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
 
     // 4. Robot Rig Hierarchy
     const robotRoot = new THREE.Group();
-    robotRoot.scale.setScalar(width < 640 ? 0.60 : 0.72);
+    robotRoot.scale.setScalar(width < 640 ? 0.6 : 0.72);
     robotRoot.position.set(0, -0.15, 0);
     scene.add(robotRoot);
 
@@ -211,7 +493,6 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
     const torsoGroup = new THREE.Group();
     robotRoot.add(torsoGroup);
 
-    // Upper Torso / Chest Armor
     const chestGeo = new THREE.CylinderGeometry(0.7, 0.56, 1.05, 16);
     const chestMesh = new THREE.Mesh(chestGeo, whiteArmorMat);
     chestMesh.position.y = 0.45;
@@ -227,7 +508,6 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
       cCtx.fillRect(0, 0, 256, 256);
       cCtx.strokeStyle = "#ff9a55";
       cCtx.lineWidth = 4;
-      // Draw cyber circuit traces
       cCtx.beginPath();
       cCtx.moveTo(20, 40);
       cCtx.lineTo(90, 40);
@@ -240,7 +520,6 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
       cCtx.lineTo(90, 220);
       cCtx.lineTo(128, 180);
       cCtx.stroke();
-      // Circuit nodes
       cCtx.fillStyle = "#ffffff";
       cCtx.beginPath();
       cCtx.arc(20, 40, 7, 0, Math.PI * 2);
@@ -261,7 +540,7 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
     chestPlateMesh.scale.set(0.9, 0.9, 0.5);
     torsoGroup.add(chestPlateMesh);
 
-    // Center Arc Reactor / Power Core (Software Logic Core)
+    // Center Arc Reactor / Power Core
     const coreRingGeo = new THREE.TorusGeometry(0.2, 0.045, 16, 32);
     const coreRingMesh = new THREE.Mesh(coreRingGeo, darkMetalMat);
     coreRingMesh.position.set(0, 0.54, 0.7);
@@ -273,7 +552,7 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
     coreInnerMesh.position.set(0, 0.54, 0.7);
     torsoGroup.add(coreInnerMesh);
 
-    // Ribbed Spine & Abdomen
+    // Spine & Abdomen
     const abGeo = new THREE.CylinderGeometry(0.42, 0.46, 0.45, 12);
     const abMesh = new THREE.Mesh(abGeo, darkMetalMat);
     abMesh.position.y = -0.22;
@@ -287,7 +566,7 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
       torsoGroup.add(ringMesh);
     }
 
-    // Pelvis & Antigrav Thruster Orb
+    // Pelvis & Thruster Orb
     const pelvisGeo = new THREE.CylinderGeometry(0.46, 0.36, 0.35, 12);
     const pelvisMesh = new THREE.Mesh(pelvisGeo, whiteArmorMat);
     pelvisMesh.position.y = -0.55;
@@ -320,7 +599,7 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
     crestMesh.position.set(0, 0.65, 0.05);
     headGroup.add(crestMesh);
 
-    // Curved Glossy Visor
+    // Glossy Curved Visor Background
     const visorGeo = new THREE.SphereGeometry(0.58, 24, 24, 0, Math.PI, 0, Math.PI * 0.55);
     visorGeo.scale(0.96, 0.82, 1.08);
     visorGeo.rotateY(Math.PI / 2);
@@ -328,16 +607,25 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
     visorMesh.position.set(0, 0.02, 0.08);
     headGroup.add(visorMesh);
 
-    // Digital LED Eyes (Dual Cyan / Orange glowing lenses)
-    const eyeGeo = new THREE.CapsuleGeometry(0.065, 0.16, 8, 16);
-    eyeGeo.rotateZ(Math.PI / 2);
-    const leftEye = new THREE.Mesh(eyeGeo, eyeGlowMat);
-    leftEye.position.set(-0.22, 0.06, 0.62);
-    headGroup.add(leftEye);
+    // --- EXPRESSIVE DIGITAL LED SCREEN VISOR DECAL ---
+    const faceCanvas = document.createElement("canvas");
+    faceCanvas.width = 512;
+    faceCanvas.height = 256;
+    const faceCtx = faceCanvas.getContext("2d")!;
+    const faceTex = new THREE.CanvasTexture(faceCanvas);
+    faceTex.colorSpace = THREE.SRGBColorSpace;
 
-    const rightEye = new THREE.Mesh(eyeGeo, eyeGlowMat);
-    rightEye.position.set(0.22, 0.06, 0.62);
-    headGroup.add(rightEye);
+    const faceMat = new THREE.MeshBasicMaterial({
+      map: faceTex,
+      transparent: true,
+      opacity: 0.98,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    });
+    const faceGeo = new THREE.PlaneGeometry(0.72, 0.36);
+    const faceMesh = new THREE.Mesh(faceGeo, faceMat);
+    faceMesh.position.set(0, 0.06, 0.65);
+    headGroup.add(faceMesh);
 
     // Ear Antennas with Glowing Sensor Tips
     const earGeo = new THREE.CylinderGeometry(0.14, 0.14, 0.12, 16);
@@ -371,7 +659,6 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
     headGroup.add(rightAntennaTip);
 
     // --- ARMS & SHOULDERS ---
-    // Left Arm
     const leftArmGroup = new THREE.Group();
     leftArmGroup.position.set(-0.92, 0.72, 0);
     torsoGroup.add(leftArmGroup);
@@ -381,7 +668,7 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
     const leftPauldron = new THREE.Mesh(pauldronGeo, orangeArmorMat);
     leftArmGroup.add(leftPauldron);
 
-    // 1. LEFT SHOULDER: RPL BADGE (Rekayasa Perangkat Lunak)
+    // Left Shoulder: RPL Badge
     const rplCanvas = document.createElement("canvas");
     rplCanvas.width = 160;
     rplCanvas.height = 80;
@@ -434,7 +721,7 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
     const rightPauldron = new THREE.Mesh(pauldronGeo, orangeArmorMat);
     rightArmGroup.add(rightPauldron);
 
-    // 2. RIGHT SHOULDER: CODE BADGE "{ }"
+    // Right Shoulder: SMKN 1 Pasuruan Badge
     const smkCanvas = document.createElement("canvas");
     smkCanvas.width = 160;
     smkCanvas.height = 80;
@@ -446,10 +733,10 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
       smkCtx.lineWidth = 5;
       smkCtx.strokeRect(4, 4, 152, 72);
       smkCtx.fillStyle = "#ffffff";
-      smkCtx.font = "bold 44px 'Courier New', monospace";
+      smkCtx.font = "bold 36px 'Courier New', monospace";
       smkCtx.textAlign = "center";
       smkCtx.textBaseline = "middle";
-      smkCtx.fillText("{ DEV }", 80, 40);
+      smkCtx.fillText("SMKN 1", 80, 40);
     }
     const smkTex = new THREE.CanvasTexture(smkCanvas);
     const smkBadgeMat = new THREE.MeshBasicMaterial({ map: smkTex });
@@ -475,7 +762,7 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
     rightHand.position.set(0, -0.6, 0.22);
     rightForearmGroup.add(rightHand);
 
-    // --- JETPACK ON BACK (For Deploy / Rocket Thruster Mode) ---
+    // --- JETPACK ---
     const jetpackGroup = new THREE.Group();
     jetpackGroup.position.set(0, 0.45, -0.62);
     torsoGroup.add(jetpackGroup);
@@ -503,7 +790,7 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
     rightExhaust.position.set(0.25, -0.68, 0);
     jetpackGroup.add(rightExhaust);
 
-    // --- 5. RPL HOLOGRAPHIC CODE TERMINAL (Projects in front on Code action) ---
+    // --- 5. HOLOGRAPHIC CODE TERMINAL ---
     const holoCanvas = document.createElement("canvas");
     holoCanvas.width = 512;
     holoCanvas.height = 256;
@@ -517,7 +804,6 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
       holoCtx.roundRect(0, 0, 512, 256, 18);
       holoCtx.stroke();
 
-      // Terminal top bar
       holoCtx.fillStyle = "#ff5500";
       holoCtx.beginPath();
       holoCtx.arc(32, 24, 7, 0, Math.PI * 2);
@@ -531,18 +817,17 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
       holoCtx.arc(80, 24, 7, 0, Math.PI * 2);
       holoCtx.fill();
 
-      // Code text
       holoCtx.font = "bold 20px monospace";
       holoCtx.fillStyle = "#ff9955";
-      holoCtx.fillText("rpl-ide@azmi:~/project$ npm run dev", 26, 68);
+      holoCtx.fillText("azmi@smkn1-pasuruan:~/app$ npm run dev", 26, 68);
       holoCtx.fillStyle = "#00f0ff";
       holoCtx.fillText("✓ Ready in 118ms (Next.js 16 + Turbopack)", 26, 108);
       holoCtx.fillStyle = "#ffffff";
-      holoCtx.fillText("const dev = new Developer('Ulil Azmi');", 26, 148);
+      holoCtx.fillText("const dev = new Dev('Muhammad Ulil Azmi');", 26, 148);
       holoCtx.fillStyle = "#fb923c";
-      holoCtx.fillText("dev.stack(['React', 'TypeScript', 'Node']);", 26, 188);
+      holoCtx.fillText("dev.school('SMKN 1 Pasuruan • Rekayasa Perangkat Lunak');", 26, 188);
       holoCtx.fillStyle = "#34d399";
-      holoCtx.fillText("status: '0 ERRORS • READY TO HIRE ⚡'", 26, 226);
+      holoCtx.fillText("status: '0 ERRORS • READY TO COLLABORATE ⚡'", 26, 226);
     }
     const holoTex = new THREE.CanvasTexture(holoCanvas);
     const holoMat = new THREE.MeshBasicMaterial({
@@ -557,7 +842,7 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
     holoScreenMesh.position.set(0, 0.5, 1.15);
     torsoGroup.add(holoScreenMesh);
 
-    // --- 5B. VIRTUAL HOLOGRAPHIC KEYBOARD (Projects in front for Holo Code) ---
+    // --- 5B. VIRTUAL KEYBOARD ---
     const kbCanvas = document.createElement("canvas");
     kbCanvas.width = 512;
     kbCanvas.height = 220;
@@ -571,14 +856,13 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
       kbCtx.roundRect(0, 0, 512, 220, 16);
       kbCtx.stroke();
 
-      // Futuristic Cyber Grid Keyboard Keycaps
       const rows = 4;
       const cols = 12;
       const keyW = 32;
       const keyH = 26;
       for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
-          const kx = 22 + c * 38 + (r * 7);
+          const kx = 22 + c * 38 + r * 7;
           const ky = 18 + r * 36;
           if (kx + keyW < 496) {
             const isAccentKey = (r === 1 && c === 3) || (r === 2 && c === 7) || (r === 0 && c === 11);
@@ -592,7 +876,6 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
           }
         }
       }
-      // Spacebar
       kbCtx.fillStyle = "rgba(255, 98, 0, 0.5)";
       kbCtx.roundRect(140, 165, 230, 24, 6);
       kbCtx.fill();
@@ -614,8 +897,7 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
     kbMesh.rotation.x = -Math.PI / 4.2;
     torsoGroup.add(kbMesh);
 
-    // --- 6. FLOATING ORBITING CODE NODES (RPL Software Symbols) ---
-    // 6 Orbiting tech chips: < / >, { }, >_, git, TS, API
+    // --- 6. FLOATING TECH NODES ---
     const orbitNodesGroup = new THREE.Group();
     robotRoot.add(orbitNodesGroup);
 
@@ -648,7 +930,7 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
       nodeG.add(nPlane);
 
       const angle = (idx / nodeSymbols.length) * Math.PI * 2;
-      const radius = 1.25; // Compact radius so it NEVER cuts into border
+      const radius = 1.25;
       nodeG.position.set(Math.cos(angle) * radius, 0.35 + (idx % 2) * 0.22, Math.sin(angle) * radius);
       orbitNodesGroup.add(nodeG);
       nodeMeshes.push(nodeG);
@@ -666,7 +948,7 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
     orbitRing.position.set(0, 0.4, 0);
     scene.add(orbitRing);
 
-    // Ground Shadow (Lifted so it won't be cut off by container bottom)
+    // Ground Shadow
     const shadowGeo = new THREE.PlaneGeometry(1.6, 0.8);
     shadowGeo.rotateX(-Math.PI / 2);
     const shadowMat = new THREE.MeshBasicMaterial({
@@ -678,7 +960,7 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
     groundShadow.position.set(0, -1.05, 0);
     scene.add(groundShadow);
 
-    // --- 6B. JETPACK ROCKET EXHAUST PARTICLES (Active during roaming flight) ---
+    // --- 6B. JETPACK ROCKET EXHAUST PARTICLES ---
     const pCount = 54;
     const pPositions = new Float32Array(pCount * 3);
     const pLifetimes = new Float32Array(pCount);
@@ -722,7 +1004,7 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
     const pPoints = new THREE.Points(pGeo, pMat);
     scene.add(pPoints);
 
-    // 7. Interactive State Machine & Autonomous Roaming Engine
+    // --- 7. FLIGHT DYNAMICS & EXPRESSION ENGINE ---
     let mouseX = 0;
     let mouseY = 0;
     let targetRotX = 0;
@@ -735,28 +1017,78 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
     let actionTime = 0;
     const actionDuration = 3.2;
 
-    // Autonomous Roaming State
-    let isRoaming = false;
-    let stationaryCooldown = 2.5; // Initial stationary greeting before roaming begins
-    let roamTime = 0.5;
+    // Visor LED Expression state
+    let activeExpression = "wave";
+    let blinkTimer = 0;
+    let nextBlinkTime = 3.2;
+    let isBlinking = false;
+    let currentBlinkScale = 1.0;
+    let activeEyeColor = "#00f0ff";
+
+    // Aerodynamic continuous glide parameters
+    let flightPhase = 0;
+    let roamBlend = 0.0;
+    let targetRoamBlend = 0.0;
+    let stationaryCooldown = 2.0;
+
     const robotWorldPos = new THREE.Vector3(0, -0.15, 0);
     const stationPos = new THREE.Vector3(0, -0.15, 0);
-    let prevRoamX = 0;
-    let prevRoamY = -0.15;
-    let prevRoamZ = 0;
-    let flightVelX = 0;
-    let flightVelY = 0;
-    let flightVelZ = 0;
+
+    let prevPosX = 0;
+    let prevPosY = -0.15;
+    let prevPosZ = 0;
+
+    let smoothedVelX = 0;
+    let smoothedVelY = 0;
+    let smoothedVelZ = 0;
+
+    let currentBankZ = 0;
+    let currentPitchX = 0;
+    let currentYawY = 0;
 
     const triggerAction = (action: RobotActionType) => {
       currentAction = action;
+      activeExpression = action;
       actionTime = 0;
-      isRoaming = false; // STOP ROAMING IMMEDIATELY
-      stationaryCooldown = 3.5; // Stay still for action duration + post-interaction pause
+      targetRoamBlend = 0.0;
+      stationaryCooldown = 3.2;
       coreLight.intensity = 6.0;
       orangeGlowMat.emissiveIntensity = 6.0;
+
+      // Draw expression onto visor canvas immediately
+      drawRobotFace(faceCtx, activeExpression, activeEyeColor, 1.0);
+      faceTex.needsUpdate = true;
     };
     triggerActionRef.current = triggerAction;
+
+    // Skin updater function
+    const applySkin = (skinKey: RobotSkinId) => {
+      applyRobotSkinToMaterials(skinKey, {
+        orangeArmorMat,
+        orangeGlowMat,
+        eyeGlowMat,
+        whiteArmorMat,
+        darkMetalMat,
+        orbitRingMat,
+        coreLight,
+        keyLight: orangeKeyLight,
+      });
+
+      const skinCfg = ROBOT_SKINS[skinKey] || ROBOT_SKINS.orange;
+      activeEyeColor = `#${skinCfg.eyeHex.toString(16).padStart(6, "0")}`;
+      drawRobotFace(faceCtx, activeExpression, activeEyeColor, currentBlinkScale);
+      faceTex.needsUpdate = true;
+    };
+    triggerSkinRef.current = applySkin;
+
+    const initSkin = (localStorage.getItem("robot_active_skin") as RobotSkinId) || "orange";
+    if (initSkin && ROBOT_SKINS[initSkin]) {
+      applySkin(initSkin);
+    }
+
+    // Initial face draw
+    drawRobotFace(faceCtx, activeExpression, activeEyeColor, 1.0);
+    faceTex.needsUpdate = true;
 
     // Raycaster for clicking directly on 3D robot
     const raycaster = new THREE.Raycaster();
@@ -805,7 +1137,7 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
     const handlePointerDown = (e: PointerEvent) => {
       updateRect();
       isDragging = true;
-      isRoaming = false;
+      targetRoamBlend = 0.0;
       stationaryCooldown = 3.5;
       previousMouseX = e.clientX;
       pointerDownTime = performance.now();
@@ -815,12 +1147,11 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
 
     const handlePointerUp = (e: PointerEvent) => {
       isDragging = false;
-      stationaryCooldown = 2.5;
+      stationaryCooldown = 2.0;
       const moveDistance = Math.hypot(e.clientX - pointerStartX, e.clientY - pointerStartY);
-      const isQuickClick = performance.now() - pointerDownTime < 350 && moveDistance < 10;
+      const isQuickClick = performance.now() - pointerDownTime < 350 && moveDistance < 12;
 
       if (isQuickClick) {
-        // Direct click on canvas / robot!
         const rect = cachedRect;
         if (rect.width && rect.height) {
           mouseCoord.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
@@ -829,27 +1160,22 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
           raycaster.setFromCamera(mouseCoord, camera);
           const hits = raycaster.intersectObjects(robotRoot.children, true);
 
-          // Advance to next exciting RPL action!
-          const actionCycle: RobotActionType[] = [
-            "code",
-            "debug",
-            "spin",
-            "deploy",
-            "thumbsUp",
-            "dance",
-            "wave",
-          ];
-
-          let nextAction: RobotActionType;
           if (hits.length > 0) {
-            const currentIndex = currentAction ? actionCycle.indexOf(currentAction) : -1;
-            nextAction = actionCycle[(currentIndex + 1) % actionCycle.length];
-          } else {
-            const currentIndex = currentAction ? actionCycle.indexOf(currentAction) : -1;
-            nextAction = actionCycle[(currentIndex + 1) % actionCycle.length];
-          }
+            // Interactive poke response - does NOT switch or cancel selected action
+            activeExpression = "happy";
+            drawRobotFace(faceCtx, activeExpression, activeEyeColor, 1.0);
+            faceTex.needsUpdate = true;
+            robotAudio.playRobotBeep(940, 0.1);
+            coreLight.intensity = 6.5;
+            orangeGlowMat.emissiveIntensity = 6.5;
 
-          handleActionClick(nextAction);
+            const pokeList = (t("speechPoke") as string[]) || [
+              "Bip-bop! 👋 Halo dari SMKN 1 Pasuruan!",
+              "Sensor sentuh aktif! Ada yang bisa dibantu?",
+            ];
+            const randomPoke = pokeList[Math.floor(Math.random() * pokeList.length)];
+            showSpeech(randomPoke, 3200);
+          }
         }
       }
     };
@@ -867,169 +1193,199 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
     window.addEventListener("pointerup", handlePointerUp);
     container.addEventListener("pointerleave", handlePointerLeave);
 
+    // Mobile Device Orientation Gyroscope Tilt
+    const handleOrientation = (e: DeviceOrientationEvent) => {
+      if (e.gamma !== null && e.beta !== null) {
+        const tiltX = THREE.MathUtils.clamp(e.gamma / 35, -1, 1);
+        const tiltY = THREE.MathUtils.clamp((e.beta - 45) / 35, -1, 1);
+        targetRotY = tiltX * 0.45;
+        targetRotX = -tiltY * 0.25;
+      }
+    };
+    if (typeof window !== "undefined" && window.DeviceOrientationEvent) {
+      window.addEventListener("deviceorientation", handleOrientation, { passive: true });
+    }
+
     const handleResize = () => {
       if (!container) return;
-      updateRect();
       width = container.clientWidth || window.innerWidth;
       height = container.clientHeight || window.innerHeight;
+      updateRect();
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
       renderer.setSize(width, height);
-      robotRoot.scale.setScalar(width < 640 ? 0.60 : 0.72);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, width < 768 ? 1.0 : 1.25));
+      robotRoot.scale.setScalar(width < 640 ? 0.6 : 0.72);
     };
     window.addEventListener("resize", handleResize);
 
-    // 8. Main Render & Animation Loop
-    let clock = new THREE.Clock();
-    let animId: number;
+    // 8. Animation & Roaming Render Loop
+    let animId = 0;
     let isVisible = true;
+    const clock = new THREE.Clock();
 
     const animate = () => {
       if (!isVisible) return;
       animId = requestAnimationFrame(animate);
+
+      const delta = Math.min(clock.getDelta(), 0.05);
       const elapsed = clock.getElapsedTime();
 
-      // Base Hovering oscillation
-      const hoverY = Math.sin(elapsed * 2.2) * 0.05;
-
-      // =========================================================================
-      // DYNAMIC FLIGHT: AUTONOMOUS ROAMING vs. STATIONARY INTERACTION ("DIAM DULU")
-      // =========================================================================
-      if (currentAction || isDragging || stationaryCooldown > 0) {
-        // --- 1. STATIONARY INTERACTION MODE ("DIAM DULU / BERDIRI") ---
-        isRoaming = false;
-        if (!currentAction && !isDragging) {
-          stationaryCooldown -= 0.018;
-        }
-
-        // Smoothly glide back to center interactive station
-        robotWorldPos.x = THREE.MathUtils.lerp(robotWorldPos.x, stationPos.x, 0.08);
-        robotWorldPos.y = THREE.MathUtils.lerp(robotWorldPos.y, stationPos.y + hoverY, 0.08);
-        robotWorldPos.z = THREE.MathUtils.lerp(robotWorldPos.z, stationPos.z, 0.08);
-
-        flightVelX *= 0.85;
-        flightVelY *= 0.85;
-        flightVelZ *= 0.85;
-
-        // Reset banking, heading, and pitch to clean upright interaction stance
-        robotRoot.rotation.z = THREE.MathUtils.lerp(robotRoot.rotation.z, 0, 0.08);
-        if (currentAction !== "deploy") {
-          robotRoot.rotation.x = THREE.MathUtils.lerp(robotRoot.rotation.x, 0, 0.08);
-        }
-        if (!isDragging && currentAction !== "spin") {
-          robotRoot.rotation.y = THREE.MathUtils.lerp(robotRoot.rotation.y, 0, 0.08);
-        }
-
-        // Tech ring & nodes visible when interacting
-        orbitRing.visible = true;
-        orbitNodesGroup.visible = true;
-        orbitRing.position.copy(robotWorldPos);
-        orbitRing.position.y += 0.4;
-        orbitNodesGroup.position.copy(robotWorldPos);
-
-        // Thrusters in calm idle hover
-        const idleFlame = 0.85 + Math.sin(elapsed * 12) * 0.22;
-        leftExhaust.scale.set(1.0, idleFlame, 1.0);
-        rightExhaust.scale.set(1.0, idleFlame, 1.0);
+      // Check stationary cooldown before roaming
+      if (stationaryCooldown > 0) {
+        stationaryCooldown -= delta;
+        targetRoamBlend = 0.0;
+      } else if (!isDragging && !currentAction) {
+        targetRoamBlend = 1.0;
       } else {
-        // --- 2. AUTONOMOUS SUPERSONIC ROCKET FLIGHT ("TERBANG TIDUR KELILING SECTION HOME") ---
-        isRoaming = true;
-        roamTime += 0.009; // smooth pacing
-
-        // Hide tech ring during high-speed rocket cruise
-        orbitRing.visible = false;
-        orbitNodesGroup.visible = false;
-
-        // Dynamic roaming boundaries covering the ENTIRE Home section
-        // Viewport bounds: horizontal span up to ~4.0 on desktop, vertical span up to ~1.45
-        const roamSpanX = Math.max(1.4, Math.min(4.0, camera.aspect * 2.25));
-        const roamSpanY = 1.35;
-        const roamSpanZ = 0.65;
-
-        // Broad looping trajectory covering left orange half, central editorial title, and right white/dark half
-        const targetX =
-          Math.sin(roamTime * 0.72) * (roamSpanX * 0.86) +
-          Math.cos(roamTime * 1.44) * (roamSpanX * 0.22);
-        const targetY =
-          0.12 +
-          Math.sin(roamTime * 0.92) * (roamSpanY * 0.72) +
-          Math.cos(roamTime * 0.46) * 0.42;
-        const targetZ = Math.sin(roamTime * 0.62) * roamSpanZ;
-
-        // Velocity tracking for aerodynamics
-        flightVelX = targetX - prevRoamX;
-        flightVelY = targetY - prevRoamY;
-        flightVelZ = targetZ - prevRoamZ;
-        prevRoamX = targetX;
-        prevRoamY = targetY;
-        prevRoamZ = targetZ;
-
-        const flightSpeed = Math.hypot(flightVelX, flightVelY, flightVelZ);
-
-        // Smooth position interpolation
-        robotWorldPos.x = THREE.MathUtils.lerp(robotWorldPos.x, targetX, 0.06);
-        robotWorldPos.y = THREE.MathUtils.lerp(robotWorldPos.y, targetY, 0.06);
-        robotWorldPos.z = THREE.MathUtils.lerp(robotWorldPos.z, targetZ, 0.06);
-
-        // =====================================================================
-        // ROCKET PRONE FLIGHT POSTURE ("TERBANG TIDUR", BUKAN BERDIRI)
-        // =====================================================================
-        // 1. Pitch: Body lies horizontally flat in the air (~78° to 84° forward lean)
-        // Head leads forward, feet & thrusters trail behind!
-        const basePronePitch = Math.PI * 0.44; // ~79.2 degrees forward tilt!
-        const climbAngle = (flightVelY / Math.max(0.001, flightSpeed)) * 0.32;
-        const targetPitchX = basePronePitch - climbAngle;
-
-        // 2. Heading / Yaw: Points smoothly toward flight direction
-        const targetHeadingY = Math.atan2(flightVelX, 0.02 + Math.abs(flightVelZ) * 0.4) * 0.95;
-
-        // 3. Dynamic Aerodynamic Banking: Roll body into curves
-        const targetBankZ = -flightVelX * 4.4;
-
-        robotRoot.rotation.z = THREE.MathUtils.lerp(robotRoot.rotation.z, targetBankZ, 0.08);
-        robotRoot.rotation.x = THREE.MathUtils.lerp(robotRoot.rotation.x, targetPitchX, 0.08);
-        robotRoot.rotation.y = THREE.MathUtils.lerp(robotRoot.rotation.y, targetHeadingY, 0.08);
-
-        // 4. Head pose: Tilted up & forward relative to pitched torso so eyes look where it is flying!
-        headGroup.rotation.x = THREE.MathUtils.lerp(headGroup.rotation.x, -0.56 - climbAngle * 0.3, 0.08);
-        headGroup.rotation.y = THREE.MathUtils.lerp(headGroup.rotation.y, flightVelX * 1.8, 0.08);
-
-        // 5. Streamlined Rocket Arms: Tucked back along the torso like supersonic wings/fins
-        leftArmGroup.rotation.x = THREE.MathUtils.lerp(leftArmGroup.rotation.x, 1.82, 0.08);
-        leftArmGroup.rotation.z = THREE.MathUtils.lerp(leftArmGroup.rotation.z, -0.32 + targetBankZ * 0.2, 0.08);
-        leftArmGroup.rotation.y = THREE.MathUtils.lerp(leftArmGroup.rotation.y, 0.1, 0.08);
-
-        rightArmGroup.rotation.x = THREE.MathUtils.lerp(rightArmGroup.rotation.x, 1.82, 0.08);
-        rightArmGroup.rotation.z = THREE.MathUtils.lerp(rightArmGroup.rotation.z, 0.32 + targetBankZ * 0.2, 0.08);
-        rightArmGroup.rotation.y = THREE.MathUtils.lerp(rightArmGroup.rotation.y, -0.1, 0.08);
-
-        // Forearms streamlined with subtle flight micro-flutter
-        leftForearmGroup.rotation.x = THREE.MathUtils.lerp(leftForearmGroup.rotation.x, 0.16 + Math.sin(elapsed * 10) * 0.03, 0.08);
-        rightForearmGroup.rotation.x = THREE.MathUtils.lerp(rightForearmGroup.rotation.x, 0.16 + Math.sin(elapsed * 10 + 1) * 0.03, 0.08);
-        leftForearmGroup.rotation.y = 0;
-        rightForearmGroup.rotation.y = 0;
-        leftForearmGroup.rotation.z = 0;
-        rightForearmGroup.rotation.z = 0;
-
-        leftHand.position.y = -0.6;
-        rightHand.position.y = -0.6;
-
-        // 6. Rocket Thrusters flare bright and long
-        const cruiseFlame = 1.85 + flightSpeed * 28.0 + Math.sin(elapsed * 28) * 0.35;
-        leftExhaust.scale.set(1.4, cruiseFlame, 1.4);
-        rightExhaust.scale.set(1.4, cruiseFlame, 1.4);
+        targetRoamBlend = 0.0;
       }
+
+      roamBlend = THREE.MathUtils.damp(roamBlend, targetRoamBlend, 2.0, delta);
+
+      // Natural Blinking & LED Visor Face Animation Routine
+      blinkTimer += delta;
+      let prevBlinkScale = currentBlinkScale;
+      if (blinkTimer >= nextBlinkTime) {
+        isBlinking = true;
+        if (blinkTimer >= nextBlinkTime + 0.14) {
+          isBlinking = false;
+          blinkTimer = 0;
+          nextBlinkTime = 3.2 + Math.random() * 3.5;
+        }
+      }
+
+      const targetBlink = isBlinking ? 0.08 : 1.0;
+      currentBlinkScale = THREE.MathUtils.damp(currentBlinkScale, targetBlink, 12.0, delta);
+
+      // Redraw face if blink scale changed significantly
+      if (Math.abs(prevBlinkScale - currentBlinkScale) > 0.05) {
+        drawRobotFace(
+          faceCtx,
+          currentAction || "idle",
+          activeEyeColor,
+          currentBlinkScale
+        );
+        faceTex.needsUpdate = true;
+      }
+
+      // Smooth Aerospace Figure-8 Flight Glide
+      flightPhase += delta * 0.32;
+      const corridorX = width < 768 ? 1.05 : 1.75;
+      const corridorY = 0.42;
+      const corridorZ = 0.75;
+
+      const cruiseX = Math.sin(flightPhase * 0.8) * corridorX;
+      const cruiseY =
+        stationPos.y +
+        Math.sin(flightPhase * 1.6) * (corridorY * 0.5) +
+        Math.cos(flightPhase * 0.5) * 0.12;
+      const cruiseZ = Math.cos(flightPhase * 0.8) * (corridorZ * 0.6);
+
+      const hoverY = Math.sin(elapsed * 2.0) * 0.07;
+
+      const targetX = THREE.MathUtils.lerp(stationPos.x, cruiseX, roamBlend);
+      const targetY = THREE.MathUtils.lerp(stationPos.y + hoverY, cruiseY, roamBlend);
+      const targetZ = THREE.MathUtils.lerp(stationPos.z, cruiseZ, roamBlend);
+
+      robotWorldPos.x = THREE.MathUtils.damp(robotWorldPos.x, targetX, 2.8, delta);
+      robotWorldPos.y = THREE.MathUtils.damp(robotWorldPos.y, targetY, 3.0, delta);
+      robotWorldPos.z = THREE.MathUtils.damp(robotWorldPos.z, targetZ, 2.8, delta);
+
+      const dt = Math.max(delta, 0.001);
+      const instVelX = (robotWorldPos.x - prevPosX) / dt;
+      const instVelY = (robotWorldPos.y - prevPosY) / dt;
+      const instVelZ = (robotWorldPos.z - prevPosZ) / dt;
+
+      prevPosX = robotWorldPos.x;
+      prevPosY = robotWorldPos.y;
+      prevPosZ = robotWorldPos.z;
+
+      smoothedVelX = THREE.MathUtils.damp(smoothedVelX, instVelX, 4.0, delta);
+      smoothedVelY = THREE.MathUtils.damp(smoothedVelY, instVelY, 4.0, delta);
+      smoothedVelZ = THREE.MathUtils.damp(smoothedVelZ, instVelZ, 4.0, delta);
+
+      const targetBankZ = THREE.MathUtils.clamp(-smoothedVelX * 0.22 * roamBlend, -0.22, 0.22);
+      const targetPitchX = THREE.MathUtils.clamp(smoothedVelY * 0.15 * roamBlend, -0.16, 0.16);
+      const targetYawY = THREE.MathUtils.clamp(smoothedVelX * 0.28 * roamBlend, -0.35, 0.35);
+
+      currentBankZ = THREE.MathUtils.damp(currentBankZ, targetBankZ, 3.8, delta);
+      currentPitchX = THREE.MathUtils.damp(currentPitchX, targetPitchX, 3.8, delta);
+      currentYawY = THREE.MathUtils.damp(currentYawY, targetYawY, 3.8, delta);
+
+      robotRoot.rotation.z = currentBankZ;
+      if (!isDragging) {
+        robotRoot.rotation.x = currentPitchX;
+        if (currentAction !== "spin") {
+          robotRoot.rotation.y = THREE.MathUtils.damp(robotRoot.rotation.y, currentYawY, 3.8, delta);
+        }
+      }
+
+      orbitRing.position.copy(robotWorldPos);
+      orbitRing.position.y += 0.55;
+      orbitNodesGroup.position.copy(robotWorldPos);
+
+      if (!currentAction) {
+        leftArmGroup.rotation.z = THREE.MathUtils.damp(
+          leftArmGroup.rotation.z,
+          -0.25 + currentBankZ * 0.4,
+          3.2,
+          delta
+        );
+        rightArmGroup.rotation.z = THREE.MathUtils.damp(
+          rightArmGroup.rotation.z,
+          0.25 + currentBankZ * 0.4,
+          3.2,
+          delta
+        );
+        leftArmGroup.rotation.x = THREE.MathUtils.damp(
+          leftArmGroup.rotation.x,
+          0.15 * roamBlend,
+          3.2,
+          delta
+        );
+        rightArmGroup.rotation.x = THREE.MathUtils.damp(
+          rightArmGroup.rotation.x,
+          0.15 * roamBlend,
+          3.2,
+          delta
+        );
+      }
+
+      if (currentAction && currentAction !== "spin") {
+        headGroup.rotation.y = THREE.MathUtils.damp(headGroup.rotation.y, targetRotY * 1.05, 4.5, delta);
+        headGroup.rotation.x = THREE.MathUtils.damp(headGroup.rotation.x, targetRotX * 0.85, 4.5, delta);
+        torsoGroup.rotation.y = THREE.MathUtils.damp(torsoGroup.rotation.y, targetRotY * 0.25, 3.0, delta);
+      } else if (!currentAction) {
+        headGroup.rotation.y = THREE.MathUtils.damp(
+          headGroup.rotation.y,
+          targetRotY * 0.8 + currentYawY * 0.5,
+          4.2,
+          delta
+        );
+        headGroup.rotation.x = THREE.MathUtils.damp(
+          headGroup.rotation.x,
+          targetRotX * 0.6 + currentPitchX * 0.4,
+          4.2,
+          delta
+        );
+      }
+
+      const flightSpeed = Math.hypot(smoothedVelX, smoothedVelY, smoothedVelZ);
+      const thrustFlame = 1.0 + Math.sin(elapsed * 16) * 0.15 + flightSpeed * 0.5 * roamBlend;
+      leftExhaust.scale.set(1.1, thrustFlame, 1.1);
+      rightExhaust.scale.set(1.1, thrustFlame, 1.1);
 
       robotRoot.position.copy(robotWorldPos);
 
-      // Ground Shadow follows robot position and scales with flight altitude
+      // Ground Shadow
       groundShadow.position.x = robotWorldPos.x;
       groundShadow.position.z = robotWorldPos.z;
-      const groundDist = robotWorldPos.y - (-1.05);
+      const groundDist = robotWorldPos.y - -1.05;
       groundShadow.scale.setScalar(Math.max(0.2, 1.25 - groundDist * 0.35));
       shadowMat.opacity = Math.max(0.02, 0.22 - groundDist * 0.07);
 
-      // --- JETPACK ROCKET PARTICLE TRAIL UPDATE ---
+      // Jetpack exhaust particles
       const posAttr = pGeo.attributes.position as THREE.BufferAttribute;
       const leftJetWorld = new THREE.Vector3();
       const rightJetWorld = new THREE.Vector3();
@@ -1037,7 +1393,7 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
       rightExhaust.getWorldPosition(rightJetWorld);
 
       for (let p = 0; p < pCount; p++) {
-        pLifetimes[p] += isRoaming ? 0.045 : 0.025;
+        pLifetimes[p] += roamBlend > 0.5 ? 0.04 : 0.025;
         if (pLifetimes[p] >= 1.0) {
           pLifetimes[p] = 0;
           const source = p % 2 === 0 ? leftJetWorld : rightJetWorld;
@@ -1047,12 +1403,11 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
             source.y + (Math.random() - 0.5) * 0.06,
             source.z + (Math.random() - 0.5) * 0.06
           );
-          if (isRoaming) {
-            // Trailing backwards behind the robot's flight path
+          if (roamBlend > 0.3) {
             pVelocities[p].set(
-              -flightVelX * 1.5 + (Math.random() - 0.5) * 0.025,
-              -flightVelY * 1.5 + (Math.random() - 0.5) * 0.025,
-              -flightVelZ * 1.5 + (Math.random() - 0.5) * 0.025
+              -smoothedVelX * 1.2 + (Math.random() - 0.5) * 0.02,
+              -smoothedVelY * 1.2 + (Math.random() - 0.5) * 0.02,
+              -smoothedVelZ * 1.2 + (Math.random() - 0.5) * 0.02
             );
           } else {
             pVelocities[p].set(
@@ -1070,7 +1425,7 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
       }
       posAttr.needsUpdate = true;
 
-      // Rotate Orbit Ring and Nodes when visible
+      // Rotate Orbit Ring and Nodes
       if (orbitRing.visible) {
         orbitRing.rotation.z = elapsed * 0.3;
         orbitNodesGroup.rotation.y = elapsed * 0.45;
@@ -1081,41 +1436,33 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
 
       // Core pulsating glow
       const corePulse = 3.2 + Math.sin(elapsed * 4.5) * 1.2;
-      coreLight.intensity = THREE.MathUtils.lerp(coreLight.intensity, corePulse, 0.05);
-      orangeGlowMat.emissiveIntensity = THREE.MathUtils.lerp(orangeGlowMat.emissiveIntensity, corePulse, 0.05);
-
-      // Smooth Head Tracking when interacting
-      if (currentAction && currentAction !== "spin") {
-        headGroup.rotation.y = THREE.MathUtils.lerp(headGroup.rotation.y, targetRotY * 1.15, 0.08);
-        headGroup.rotation.x = THREE.MathUtils.lerp(headGroup.rotation.x, targetRotX * 0.95, 0.08);
-        torsoGroup.rotation.y = THREE.MathUtils.lerp(torsoGroup.rotation.y, targetRotY * 0.35, 0.05);
-      }
+      coreLight.intensity = THREE.MathUtils.damp(coreLight.intensity, corePulse, 3.5, delta);
+      orangeGlowMat.emissiveIntensity = THREE.MathUtils.damp(
+        orangeGlowMat.emissiveIntensity,
+        corePulse,
+        3.5,
+        delta
+      );
 
       // Drag inertia
       if (!isDragging && currentAction !== "spin") {
         dragVelocity *= 0.94;
         robotRoot.rotation.y += dragVelocity;
-        if (Math.abs(dragVelocity) < 0.001) {
-          robotRoot.rotation.y = THREE.MathUtils.lerp(robotRoot.rotation.y, 0, 0.03);
-        }
       }
 
       // --- ACTION ANIMATIONS DISPATCHER ---
       if (currentAction) {
-        actionTime += 0.024;
+        actionTime += delta;
 
         if (currentAction === "code") {
-          // ACTION 1: Hologram Coding Mode
           holoMat.opacity = THREE.MathUtils.lerp(holoMat.opacity, 0.95, 0.14);
           kbMat.opacity = THREE.MathUtils.lerp(kbMat.opacity, 0.88, 0.14);
           holoScreenMesh.position.z = THREE.MathUtils.lerp(holoScreenMesh.position.z, 1.15, 0.1);
           kbMesh.position.z = THREE.MathUtils.lerp(kbMesh.position.z, 1.05, 0.1);
 
-          // Alternating natural typing rhythm
-          const leftTap = Math.sin(actionTime * 24);
-          const rightTap = Math.sin(actionTime * 24 + 1.8);
+          const leftTap = Math.sin(actionTime * 14);
+          const rightTap = Math.sin(actionTime * 14 + 1.8);
 
-          // Both arms reach FORWARD (negative X angle) and angle inward (Y angle) towards the keyboard
           leftArmGroup.rotation.x = THREE.MathUtils.lerp(leftArmGroup.rotation.x, -0.68, 0.16);
           leftArmGroup.rotation.y = THREE.MathUtils.lerp(leftArmGroup.rotation.y, 0.28, 0.16);
           leftArmGroup.rotation.z = THREE.MathUtils.lerp(leftArmGroup.rotation.z, 0.16, 0.16);
@@ -1124,14 +1471,13 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
           rightArmGroup.rotation.y = THREE.MathUtils.lerp(rightArmGroup.rotation.y, -0.28, 0.16);
           rightArmGroup.rotation.z = THREE.MathUtils.lerp(rightArmGroup.rotation.z, -0.16, 0.16);
 
-          // Forearms: Bend up/forward horizontally over virtual keyboard with fluid keystroke tapping
           leftForearmGroup.rotation.x = THREE.MathUtils.lerp(
             leftForearmGroup.rotation.x,
             -0.74 + leftTap * 0.12,
             0.22
           );
           leftForearmGroup.rotation.y = THREE.MathUtils.lerp(leftForearmGroup.rotation.y, -0.12, 0.16);
-          leftForearmGroup.rotation.z = Math.cos(actionTime * 18) * 0.05;
+          leftForearmGroup.rotation.z = Math.cos(actionTime * 10) * 0.05;
 
           rightForearmGroup.rotation.x = THREE.MathUtils.lerp(
             rightForearmGroup.rotation.x,
@@ -1139,27 +1485,17 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
             0.22
           );
           rightForearmGroup.rotation.y = THREE.MathUtils.lerp(rightForearmGroup.rotation.y, 0.12, 0.16);
-          rightForearmGroup.rotation.z = -Math.cos(actionTime * 18 + 1.8) * 0.05;
+          rightForearmGroup.rotation.z = -Math.cos(actionTime * 10 + 1.8) * 0.05;
 
-          // Hands: subtle fingertip tapping displacement
           leftHand.position.y = -0.6 + leftTap * 0.03;
           rightHand.position.y = -0.6 + rightTap * 0.03;
 
-          // Head looks directly down at the holographic code and keyboard
           headGroup.rotation.x = THREE.MathUtils.lerp(headGroup.rotation.x, 0.26, 0.15);
-          headGroup.rotation.y = THREE.MathUtils.lerp(headGroup.rotation.y, Math.sin(actionTime * 4.5) * 0.08, 0.15);
-
-          if (actionTime > actionDuration + 0.6) {
-            currentAction = null;
-          }
+          headGroup.rotation.y = THREE.MathUtils.lerp(headGroup.rotation.y, Math.sin(actionTime * 3.5) * 0.08, 0.15);
         } else if (currentAction === "debug") {
-          // ACTION 2: Debug Mode / 0 Errors Resolved
           holoMat.opacity = THREE.MathUtils.lerp(holoMat.opacity, 0, 0.12);
           kbMat.opacity = THREE.MathUtils.lerp(kbMat.opacity, 0, 0.12);
-          leftEye.material = debugGreenMat;
-          rightEye.material = debugGreenMat;
 
-          // Natural thinking posture: Right hand to chin, left arm resting forward
           rightArmGroup.rotation.x = THREE.MathUtils.lerp(rightArmGroup.rotation.x, -0.85, 0.15);
           rightArmGroup.rotation.y = THREE.MathUtils.lerp(rightArmGroup.rotation.y, -0.42, 0.15);
           rightArmGroup.rotation.z = THREE.MathUtils.lerp(rightArmGroup.rotation.z, -0.18, 0.15);
@@ -1171,20 +1507,12 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
           leftArmGroup.rotation.z = THREE.MathUtils.lerp(leftArmGroup.rotation.z, 0.15, 0.12);
           leftForearmGroup.rotation.x = THREE.MathUtils.lerp(leftForearmGroup.rotation.x, -0.42, 0.12);
 
-          // Head tilt of thoughtful satisfaction
           headGroup.rotation.z = THREE.MathUtils.lerp(headGroup.rotation.z, 0.12, 0.1);
-          headGroup.rotation.x = Math.sin(actionTime * 5.5) * 0.08;
-
-          if (actionTime > actionDuration) {
-            leftEye.material = eyeGlowMat;
-            rightEye.material = eyeGlowMat;
-            currentAction = null;
-          }
+          headGroup.rotation.x = Math.sin(actionTime * 4.0) * 0.08;
         } else if (currentAction === "spin") {
-          // ACTION 3: 360 Turbo Spin Trick
           holoMat.opacity = 0;
           kbMat.opacity = 0;
-          const spinProgress = actionTime / 1.5;
+          const spinProgress = actionTime / 1.6;
           if (spinProgress <= 1.0) {
             robotRoot.rotation.y = spinProgress * Math.PI * 2;
             robotRoot.position.y = hoverY + Math.sin(spinProgress * Math.PI) * 0.28;
@@ -1197,40 +1525,36 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
             leftForearmGroup.rotation.x = 0;
             rightForearmGroup.rotation.x = 0;
           } else {
-            robotRoot.rotation.y = 0;
-            currentAction = null;
+            robotRoot.rotation.y = THREE.MathUtils.damp(robotRoot.rotation.y, 0, 4.0, delta);
+            leftArmGroup.rotation.z = THREE.MathUtils.damp(leftArmGroup.rotation.z, -0.25, 3.0, delta);
+            rightArmGroup.rotation.z = THREE.MathUtils.damp(rightArmGroup.rotation.z, 0.25, 3.0, delta);
           }
         } else if (currentAction === "deploy") {
-          // ACTION 4: Deploy / Rocket Thruster Launch Boost
           holoMat.opacity = 0;
           kbMat.opacity = 0;
           const launchProgress = actionTime / 2.2;
-          const liftHeight = Math.sin(Math.min(launchProgress, 1.0) * Math.PI) * 0.55;
-          robotRoot.position.y = hoverY + liftHeight;
+          if (launchProgress <= 1.0) {
+            const liftHeight = Math.sin(launchProgress * Math.PI) * 0.55;
+            robotRoot.position.y = hoverY + liftHeight;
+            leftExhaust.scale.set(2.0, 2.8, 2.0);
+            rightExhaust.scale.set(2.0, 2.8, 2.0);
 
-          // Mega flame jets
-          leftExhaust.scale.set(2.0, 2.8, 2.0);
-          rightExhaust.scale.set(2.0, 2.8, 2.0);
-
-          // Aerodynamic flight pose: arms swept BACKWARDS (positive X in Three.js)
-          leftArmGroup.rotation.x = THREE.MathUtils.lerp(leftArmGroup.rotation.x, 0.68, 0.15);
-          leftArmGroup.rotation.z = THREE.MathUtils.lerp(leftArmGroup.rotation.z, -0.35, 0.15);
-          rightArmGroup.rotation.x = THREE.MathUtils.lerp(rightArmGroup.rotation.x, 0.68, 0.15);
-          rightArmGroup.rotation.z = THREE.MathUtils.lerp(rightArmGroup.rotation.z, 0.35, 0.15);
-          leftForearmGroup.rotation.x = 0;
-          rightForearmGroup.rotation.x = 0;
-
-          // Look up towards cloud
-          headGroup.rotation.x = -0.35;
-
-          if (actionTime > actionDuration) {
-            currentAction = null;
+            leftArmGroup.rotation.x = THREE.MathUtils.lerp(leftArmGroup.rotation.x, 0.68, 0.15);
+            leftArmGroup.rotation.z = THREE.MathUtils.lerp(leftArmGroup.rotation.z, -0.35, 0.15);
+            rightArmGroup.rotation.x = THREE.MathUtils.lerp(rightArmGroup.rotation.x, 0.68, 0.15);
+            rightArmGroup.rotation.z = THREE.MathUtils.lerp(rightArmGroup.rotation.z, 0.35, 0.15);
+            leftForearmGroup.rotation.x = 0;
+            rightForearmGroup.rotation.x = 0;
+            headGroup.rotation.x = -0.35;
+          } else {
+            robotRoot.position.y = THREE.MathUtils.damp(robotRoot.position.y, hoverY, 3.0, delta);
+            leftExhaust.scale.set(1.1, 1.2, 1.1);
+            rightExhaust.scale.set(1.1, 1.2, 1.1);
           }
         } else if (currentAction === "thumbsUp") {
-          // ACTION 5: Thumbs Up / Dev Respect
           holoMat.opacity = THREE.MathUtils.lerp(holoMat.opacity, 0, 0.12);
           kbMat.opacity = THREE.MathUtils.lerp(kbMat.opacity, 0, 0.12);
-          // Right arm reaches FORWARD (negative X) with confident thumbs-up
+
           rightArmGroup.rotation.x = THREE.MathUtils.lerp(rightArmGroup.rotation.x, -0.85, 0.15);
           rightArmGroup.rotation.y = THREE.MathUtils.lerp(rightArmGroup.rotation.y, -0.15, 0.15);
           rightArmGroup.rotation.z = THREE.MathUtils.lerp(rightArmGroup.rotation.z, -0.12, 0.15);
@@ -1239,16 +1563,10 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
 
           leftArmGroup.rotation.z = THREE.MathUtils.lerp(leftArmGroup.rotation.z, -0.18, 0.1);
           coreLight.intensity = 5.5;
-
-          if (actionTime > actionDuration) {
-            rightHand.scale.set(1, 1, 1);
-            currentAction = null;
-          }
         } else if (currentAction === "dance") {
-          // ACTION 6: Victory Groove Dance
           holoMat.opacity = 0;
           kbMat.opacity = 0;
-          const beat = Math.sin(actionTime * 9);
+          const beat = Math.sin(actionTime * 6.5);
           robotRoot.position.y = hoverY + Math.abs(beat) * 0.15;
           torsoGroup.rotation.z = beat * 0.12;
 
@@ -1259,50 +1577,47 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
           rightArmGroup.rotation.z = THREE.MathUtils.lerp(rightArmGroup.rotation.z, -0.35 + beat * 0.2, 0.15);
 
           headGroup.rotation.y = -beat * 0.25;
-
-          if (actionTime > actionDuration) {
-            torsoGroup.rotation.z = 0;
-            currentAction = null;
-          }
         } else if (currentAction === "wave") {
-          // ACTION 7: Friendly RPL Greeting Wave
           holoMat.opacity = THREE.MathUtils.lerp(holoMat.opacity, 0, 0.12);
           kbMat.opacity = THREE.MathUtils.lerp(kbMat.opacity, 0, 0.12);
           rightArmGroup.rotation.z = THREE.MathUtils.lerp(rightArmGroup.rotation.z, 1.95, 0.15);
           rightArmGroup.rotation.x = THREE.MathUtils.lerp(rightArmGroup.rotation.x, -0.25, 0.15);
-          rightForearmGroup.rotation.z = Math.sin(actionTime * 12) * 0.45;
+          rightForearmGroup.rotation.z = Math.sin(actionTime * 8.0) * 0.45;
           leftArmGroup.rotation.z = THREE.MathUtils.lerp(leftArmGroup.rotation.z, -0.2, 0.1);
-
-          if (actionTime > actionDuration) {
-            currentAction = null;
-          }
         }
       } else {
-        // Return smoothly to idle pose
-        holoMat.opacity = THREE.MathUtils.lerp(holoMat.opacity, 0, 0.1);
-        kbMat.opacity = THREE.MathUtils.lerp(kbMat.opacity, 0, 0.1);
-        rightArmGroup.rotation.z = THREE.MathUtils.lerp(rightArmGroup.rotation.z, Math.sin(elapsed * 1.5) * 0.05, 0.08);
-        rightArmGroup.rotation.x = THREE.MathUtils.lerp(rightArmGroup.rotation.x, 0, 0.08);
-        rightArmGroup.rotation.y = THREE.MathUtils.lerp(rightArmGroup.rotation.y, 0, 0.08);
-        rightForearmGroup.rotation.z = THREE.MathUtils.lerp(rightForearmGroup.rotation.z, 0, 0.08);
-        rightForearmGroup.rotation.x = THREE.MathUtils.lerp(rightForearmGroup.rotation.x, 0, 0.08);
-        rightForearmGroup.rotation.y = THREE.MathUtils.lerp(rightForearmGroup.rotation.y, 0, 0.08);
+        // Idle Pose
+        holoMat.opacity = THREE.MathUtils.damp(holoMat.opacity, 0, 4.0, delta);
+        kbMat.opacity = THREE.MathUtils.damp(kbMat.opacity, 0, 4.0, delta);
+        rightArmGroup.rotation.z = THREE.MathUtils.damp(
+          rightArmGroup.rotation.z,
+          Math.sin(elapsed * 1.5) * 0.05,
+          3.0,
+          delta
+        );
+        rightArmGroup.rotation.x = THREE.MathUtils.damp(rightArmGroup.rotation.x, 0, 3.0, delta);
+        rightArmGroup.rotation.y = THREE.MathUtils.damp(rightArmGroup.rotation.y, 0, 3.0, delta);
+        rightForearmGroup.rotation.z = THREE.MathUtils.damp(rightForearmGroup.rotation.z, 0, 3.0, delta);
+        rightForearmGroup.rotation.x = THREE.MathUtils.damp(rightForearmGroup.rotation.x, 0, 3.0, delta);
+        rightForearmGroup.rotation.y = THREE.MathUtils.damp(rightForearmGroup.rotation.y, 0, 3.0, delta);
 
-        leftArmGroup.rotation.z = THREE.MathUtils.lerp(leftArmGroup.rotation.z, -Math.sin(elapsed * 1.5) * 0.05, 0.08);
-        leftArmGroup.rotation.x = THREE.MathUtils.lerp(leftArmGroup.rotation.x, 0, 0.08);
-        leftArmGroup.rotation.y = THREE.MathUtils.lerp(leftArmGroup.rotation.y, 0, 0.08);
-        leftForearmGroup.rotation.x = THREE.MathUtils.lerp(leftForearmGroup.rotation.x, 0, 0.08);
-        leftForearmGroup.rotation.y = THREE.MathUtils.lerp(leftForearmGroup.rotation.y, 0, 0.08);
-        leftForearmGroup.rotation.z = THREE.MathUtils.lerp(leftForearmGroup.rotation.z, 0, 0.08);
+        leftArmGroup.rotation.z = THREE.MathUtils.damp(
+          leftArmGroup.rotation.z,
+          -Math.sin(elapsed * 1.5) * 0.05,
+          3.0,
+          delta
+        );
+        leftArmGroup.rotation.x = THREE.MathUtils.damp(leftArmGroup.rotation.x, 0, 3.0, delta);
+        leftArmGroup.rotation.y = THREE.MathUtils.damp(leftArmGroup.rotation.y, 0, 3.0, delta);
+        leftForearmGroup.rotation.x = THREE.MathUtils.damp(leftForearmGroup.rotation.x, 0, 3.0, delta);
+        leftForearmGroup.rotation.y = THREE.MathUtils.damp(leftForearmGroup.rotation.y, 0, 3.0, delta);
+        leftForearmGroup.rotation.z = THREE.MathUtils.damp(leftForearmGroup.rotation.z, 0, 3.0, delta);
 
-        leftHand.position.y = THREE.MathUtils.lerp(leftHand.position.y, -0.6, 0.08);
-        rightHand.position.y = THREE.MathUtils.lerp(rightHand.position.y, -0.6, 0.08);
+        leftHand.position.y = THREE.MathUtils.damp(leftHand.position.y, -0.6, 3.0, delta);
+        rightHand.position.y = THREE.MathUtils.damp(rightHand.position.y, -0.6, 3.0, delta);
 
-        leftEye.material = eyeGlowMat;
-        rightEye.material = eyeGlowMat;
         rightHand.scale.set(1, 1, 1);
-        torsoGroup.rotation.z = THREE.MathUtils.lerp(torsoGroup.rotation.z, 0, 0.08);
-        headGroup.rotation.z = THREE.MathUtils.lerp(headGroup.rotation.z, 0, 0.08);
+        torsoGroup.rotation.z = THREE.MathUtils.damp(torsoGroup.rotation.z, 0, 3.0, delta);
       }
 
       renderer.render(scene, camera);
@@ -1326,6 +1641,7 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
       { threshold: 0.05 }
     );
     visibilityObserver.observe(container);
+
     const handleVisibilityChange = () => {
       if (document.hidden) {
         isVisible = false;
@@ -1347,8 +1663,14 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
       window.removeEventListener("pointerup", handlePointerUp);
       container.removeEventListener("pointerleave", handlePointerLeave);
       window.removeEventListener("resize", handleResize);
+      if (typeof window !== "undefined" && window.DeviceOrientationEvent) {
+        window.removeEventListener("deviceorientation", handleOrientation);
+      }
 
       renderer.dispose();
+      faceTex.dispose();
+      faceMat.dispose();
+      faceGeo.dispose();
       pGeo.dispose();
       pMat.dispose();
       pTex.dispose();
@@ -1362,67 +1684,145 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
         container.removeChild(renderer.domElement);
       }
     };
-  }, [handleActionClick]);
+  }, [handleActionClick, showSpeech]);
+
+  const activeSkinConfig = ROBOT_SKINS[activeSkin] || ROBOT_SKINS.orange;
 
   return (
-    <div
-      ref={containerRef}
-      className={`interactive-robot-container relative flex flex-col items-center justify-center select-none cursor-grab active:cursor-grabbing ${className}`}
-    >
-      {/* 1. Tech Speech Bubble / Status Output */}
-      {speechText && (
-        <div className="robot-speech-bubble absolute top-4 sm:top-6 z-30 animate-bounce pointer-events-none max-w-[90vw] text-center">
-          <div className="inline-flex items-center gap-2 rounded-full border border-orange-500/50 bg-slate-950/95 px-4 sm:px-5 py-1.5 sm:py-2 text-[0.72rem] sm:text-xs font-bold text-orange-400 shadow-[0_0_25px_rgba(255,98,0,0.45)] backdrop-blur-md">
-            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping shrink-0" />
-            <span className="line-clamp-2">{speechText}</span>
+    <>
+      <div
+        ref={containerRef}
+        className={`interactive-robot-container relative flex flex-col items-center justify-center select-none cursor-grab active:cursor-grabbing ${className}`}
+      >
+        {/* 1. TOP SPEECH BUBBLE */}
+        {speechText && (
+          <div className="robot-speech-bubble absolute top-4 sm:top-6 z-30 pointer-events-none max-w-[92vw] text-center animate-in fade-in zoom-in-95 duration-300">
+            <div
+              className="inline-flex items-center gap-2 rounded-full border bg-slate-950/95 px-3.5 sm:px-5 py-1.5 sm:py-2 text-[0.7rem] sm:text-xs font-bold shadow-xl backdrop-blur-md"
+              style={{
+                borderColor: `${activeSkinConfig.dotColor}77`,
+                color: activeSkinConfig.dotColor,
+                boxShadow: `0 0 25px ${activeSkinConfig.dotColor}35`,
+              }}
+            >
+              <span
+                className="h-2 w-2 rounded-full animate-ping shrink-0"
+                style={{ backgroundColor: activeSkinConfig.dotColor }}
+              />
+              <span className="text-slate-300 font-medium line-clamp-1">{speechText}</span>
+            </div>
+          </div>
+        )}
+
+        {/* 2. UNIFIED BOTTOM CYBER HUD DOCK */}
+        <div className="robot-floating-actions-container absolute bottom-24 sm:bottom-28 md:bottom-24 lg:bottom-6 inset-x-0 z-30 flex flex-col items-center pointer-events-none px-3">
+          <div className="w-full max-w-[340px] sm:max-w-[480px] md:max-w-[620px] rounded-2xl sm:rounded-full bg-slate-950/80 dark:bg-slate-950/90 border border-orange-500/25 p-1.5 sm:p-2 backdrop-blur-md shadow-2xl shadow-black/60 pointer-events-auto flex flex-col items-center gap-1.5 sm:gap-2">
+            {/* TIER 1: UTILITY STRIP */}
+            <div className="flex items-center justify-between w-full px-2 sm:px-3 py-0.5 border-b border-slate-800/80 text-[10.5px]">
+              {/* Skin Palette */}
+              <div className="flex items-center gap-1.5">
+                <span className="font-mono font-bold tracking-wider text-slate-400 text-[9.5px]">
+                  SKIN:
+                </span>
+                <div className="flex items-center gap-1">
+                  {ROBOT_SKIN_LIST.map((skin) => (
+                    <button
+                      key={skin.id}
+                      type="button"
+                      onClick={() => handleSkinChange(skin.id)}
+                      className={`h-3.5 w-3.5 sm:h-4 sm:w-4 rounded-full border transition-all cursor-pointer ${
+                        activeSkin === skin.id
+                          ? "scale-125 border-white shadow-[0_0_10px_rgba(255,255,255,0.9)] ring-1 ring-white/60"
+                          : "border-transparent opacity-60 hover:opacity-100 hover:scale-110"
+                      }`}
+                      style={{ backgroundColor: skin.dotColor }}
+                      title={`${skin.name} • ${skin.tagline}`}
+                      aria-label={`Ganti tema ke ${skin.name}`}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* School Tagline Micro Badge */}
+              <span className="hidden md:inline font-mono text-[9px] text-slate-400 tracking-wider">
+                SMKN 1 PASURUAN • RPL
+              </span>
+
+              {/* Right Controls: SFX + Game Launcher */}
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleToggleSound}
+                  className="flex items-center gap-1 font-mono text-slate-300 hover:text-orange-400 transition-colors cursor-pointer"
+                  title={isMuted ? "Nyalakan Cyber SFX" : "Matikan Cyber SFX"}
+                  aria-label={isMuted ? "Nyalakan Cyber SFX" : "Matikan Cyber SFX"}
+                >
+                  {isMuted ? (
+                    <VolumeX size={12} className="text-slate-500" />
+                  ) : (
+                    <Volume2 size={12} style={{ color: activeSkinConfig.dotColor }} />
+                  )}
+                  <span className="font-bold text-[9.5px]">{isMuted ? "MUTE" : "SFX"}</span>
+                </button>
+
+                <div className="h-3 w-px bg-slate-800" />
+
+                <button
+                  type="button"
+                  onClick={handleOpenArcade}
+                  className="flex items-center gap-1 rounded-full px-2.5 py-0.5 font-bold transition-all cursor-pointer text-[10.5px] bg-gradient-to-r from-orange-500/25 to-amber-500/25 border border-orange-500/40 text-orange-300 hover:from-orange-500 hover:to-amber-500 hover:text-white hover:shadow-[0_0_15px_rgba(255,98,0,0.5)]"
+                  title="Mainkan Cyber Arcade Game 20 detik"
+                >
+                  <Gamepad2 size={12} />
+                  <span>{t("actionArcade")}</span>
+                </button>
+              </div>
+            </div>
+
+            {/* TIER 2: ACTION PILLS STRIP */}
+            <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-1.5 w-full">
+              {ACTION_LIST.map((action) => {
+                const isActive = activeAction === action.id;
+                const ActionIcon = action.icon;
+                const actionLabel = t(action.translationKey) || action.label;
+                return (
+                  <button
+                    key={action.id}
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleActionClick(action.id);
+                    }}
+                    className={`group relative flex items-center gap-1 rounded-full px-2 sm:px-2.5 py-1 text-[10px] sm:text-[11px] font-bold backdrop-blur-md transition-all duration-300 cursor-pointer ${
+                      isActive
+                        ? "!bg-gradient-to-r !from-orange-500 !to-amber-500 !text-white !border-orange-300 shadow-[0_0_20px_rgba(255,98,0,0.6)] ring-1 ring-orange-300"
+                        : "bg-slate-900/90 text-slate-200 border border-slate-700/60 hover:border-orange-500/60 hover:text-orange-400 hover:bg-slate-800/90"
+                    }`}
+                    title={actionLabel}
+                  >
+                    <ActionIcon
+                      size={11}
+                      className="shrink-0 transition-transform duration-300 group-hover:scale-125"
+                    />
+                    <span className="tracking-tight whitespace-nowrap">{actionLabel}</span>
+                    {isActive && (
+                      <span className="h-1 w-1 rounded-full bg-white animate-ping shrink-0" />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
-      )}
-
-      {/* 2. Interactive RPL Floating Action Hologram Badges (Zero-gravity random floating) */}
-      <div className="robot-floating-actions-container absolute bottom-28 sm:bottom-32 md:bottom-28 lg:bottom-6 inset-x-0 z-30 flex flex-col items-center pointer-events-none px-2">
-        {/* Subtle floating HUD micro-label */}
-        <div className="mb-1.5 sm:mb-2 inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-0.5 rounded-full bg-slate-950/85 dark:bg-slate-950/90 border border-orange-500/35 text-[9px] sm:text-[11px] font-mono text-orange-400 backdrop-blur-md shadow-md">
-          <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-ping shrink-0" />
-          <span className="tracking-wide">Holo Actions • Click Robot or Floating Badges</span>
-        </div>
-
-        {/* Floating Badges Constellation */}
-        <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-2 max-w-[340px] sm:max-w-[460px] md:max-w-[580px] pointer-events-auto">
-          {ACTION_LIST.map((action, idx) => {
-            const isActive = activeAction === action.id;
-            const floatClass = `float-pill-${(idx % 7) + 1}`;
-            const ActionIcon = action.icon;
-            return (
-              <button
-                key={action.id}
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleActionClick(action.id);
-                }}
-                className={`float-pill-btn ${floatClass} ${
-                  isActive ? "is-active" : ""
-                } group relative flex items-center gap-1 sm:gap-1.5 rounded-full px-2.5 sm:px-3.5 py-1 sm:py-1.5 text-[0.62rem] sm:text-xs font-bold backdrop-blur-md transition-all duration-300 cursor-pointer ${
-                  isActive
-                    ? "!bg-gradient-to-r !from-orange-500 !to-amber-500 !text-white !border-orange-300 shadow-[0_0_25px_rgba(255,98,0,0.65)] ring-2 ring-orange-300"
-                    : "bg-white/95 dark:bg-slate-950/90 text-slate-800 dark:text-slate-100 border border-orange-400/50 dark:border-orange-500/40 shadow-[0_6px_20px_rgba(249,115,22,0.18)] dark:shadow-[0_6px_20px_rgba(0,0,0,0.45)] hover:border-orange-500 hover:text-orange-600 dark:hover:text-orange-400 hover:bg-white dark:hover:bg-slate-900"
-                }`}
-                title={action.label}
-              >
-                <ActionIcon
-                  size={12}
-                  className="shrink-0 transition-transform duration-300 group-hover:scale-125"
-                />
-                <span className="tracking-tight">{action.label}</span>
-                {isActive && (
-                  <span className="h-1.5 w-1.5 rounded-full bg-white animate-ping shrink-0 ml-0.5" />
-                )}
-              </button>
-            );
-          })}
-        </div>
       </div>
-    </div>
+
+      {/* 3. CYBER BUG ARCADE MINI-GAME MODAL */}
+      <CyberBugArcadeGame
+        isOpen={isArcadeOpen}
+        onClose={handleCloseArcade}
+        activeSkin={activeSkin}
+        onGameWin={handleGameWin}
+      />
+    </>
   );
 }

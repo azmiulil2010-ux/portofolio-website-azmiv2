@@ -5,12 +5,14 @@ import Link from "next/link";
 import { LuArrowUpRight, LuExternalLink } from "react-icons/lu";
 import type { Project } from "./projectData";
 import TiltCard from "@/components/ui/TiltCard";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface ProjectCardProps {
   project: Project;
 }
 
 export default function ProjectCard({ project }: ProjectCardProps) {
+  const { t } = useLanguage();
   return (
     <TiltCard maxTilt={6} scale={1.015} className="h-full">
       <article className="project-card group relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-cyan-400/20 bg-gradient-to-br from-slate-900/90 via-slate-900/80 to-cyan-950/40 p-4 sm:p-5 shadow-xl shadow-slate-950/50 backdrop-blur-md transition-all duration-300 hover:border-cyan-400/50 hover:shadow-[0_0_35px_rgba(6,182,212,0.25)]">
@@ -70,7 +72,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
               rel="noreferrer"
               className="project-live-link inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-cyan-400 transition-all duration-300 hover:text-cyan-200"
             >
-              <span>Visit live project</span>
+              <span>{t("visitLiveProject")}</span>
               <LuArrowUpRight
                 size={16}
                 className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"

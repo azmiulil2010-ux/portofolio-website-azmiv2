@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import ProjectSection from "@/components/projects/ProjectSection";
 import ProjectSearch from "@/components/projects/ProjectSearch";
-import PageLead from "@/components/general/PageLead";
+import ProjectsPageLeadClient from "@/components/projects/ProjectsPageLeadClient";
 import FuturisticBackground from "@/components/general/FuturisticBackground";
 import ProjectCategoryFilter from "@/components/projects/ProjectCategoryFilter";
 import { PROJECT_CATEGORIES, type ProjectCategory } from "@/types/project.types";
@@ -55,11 +55,7 @@ export default async function Projects({ searchParams }: ProjectsPageProps) {
   return (
     <main className="relative overflow-hidden pt-18 bg-slate-950 text-slate-100">
       <FuturisticBackground show3D={false} />
-      <PageLead
-        eyebrow="Selected work"
-        title="Small experiments, real problems, and lessons that stick."
-        description="A collection of websites and product ideas built while learning how design, code, and useful functionality come together."
-      />
+      <ProjectsPageLeadClient />
       <ProjectSearch searchTerm={searchTerm} category={category} />
       <ProjectCategoryFilter category={category} searchTerm={searchTerm} />
       <ProjectSection searchTerm={searchTerm} category={category} heading="All Projects" />

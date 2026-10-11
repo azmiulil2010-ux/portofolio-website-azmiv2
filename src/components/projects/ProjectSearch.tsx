@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LuSearch, LuX } from "react-icons/lu";
 import type { ProjectCategory } from "@/types/project.types";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface ProjectSearchProps {
   searchTerm: string;
@@ -12,6 +13,7 @@ interface ProjectSearchProps {
 
 export default function ProjectSearch({ searchTerm, category = "", basePath = "/projects" }: ProjectSearchProps) {
   const router = useRouter();
+  const { t } = useLanguage();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -32,14 +34,14 @@ export default function ProjectSearch({ searchTerm, category = "", basePath = "/
     >
       <LuSearch className="ml-3 shrink-0 text-cyan-400" size={20} aria-hidden="true" />
       <label htmlFor="project-search" className="sr-only">
-        Search projects
+        {t("projectSearchPlaceholder")}
       </label>
       <input
         id="project-search"
         name="search"
         type="search"
         defaultValue={searchTerm}
-        placeholder="Search projects..."
+        placeholder={t("projectSearchPlaceholder")}
         className="min-w-0 flex-1 bg-transparent px-2 py-3 text-sm text-gray-100 outline-none placeholder:text-gray-500"
       />
       {category && <input type="hidden" name="category" value={category} />}
@@ -55,9 +57,9 @@ export default function ProjectSearch({ searchTerm, category = "", basePath = "/
       )}
       <button
         type="submit"
-        className="rounded-xl bg-linear-to-r from-blue-900 to-purple-800 px-5 py-3 text-sm font-semibold text-white transition-all hover:from-blue-800 hover:to-purple-700"
+        className="rounded-xl bg-linear-to-r from-blue-900 to-purple-800 px-5 py-3 text-sm font-semibold text-white transition-all hover:from-blue-800 hover:to-purple-700 cursor-pointer"
       >
-        Search
+        {t("searchBtn")}
       </button>
     </form>
   );

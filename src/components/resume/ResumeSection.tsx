@@ -5,11 +5,15 @@ import { LuAward, LuBookOpen, LuGraduationCap, LuLayers3, LuMail, LuMapPin } fro
 import Header from "../general/Header";
 import ResumeCard from "./ResumeCard";
 
+import { useLanguage } from "@/context/LanguageContext";
+
 export default function ResumeSection() {
+  const { t } = useLanguage();
+
   return (
     <div className="about-section my-6 sm:my-10">
       <div className="mx-auto w-[90%] max-w-7xl">
-        <Header title="About Me" as="h2" />
+        <Header title={t("aboutTitle")} as="h2" />
         <div className="about-layout grid grid-cols-1 items-center gap-12 lg:grid-cols-[minmax(320px,0.9fr)_minmax(0,1.3fr)] lg:gap-16">
           {/* Portrait with Holographic Glow */}
           <div className="about-portrait-wrap mx-auto w-full max-w-md" data-aos="fade-right">
@@ -31,7 +35,7 @@ export default function ResumeSection() {
               {/* Status pill badge */}
               <span className="about-portrait-status absolute bottom-[4%] left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-emerald-400/40 bg-slate-950/90 px-4 py-2 text-xs font-bold uppercase tracking-wider text-emerald-300 shadow-[0_4px_20px_rgba(16,185,129,0.3)] backdrop-blur-md">
                 <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-ping mr-2 align-middle" />
-                Open to work &amp; freelance
+                {t("openToWork")}
               </span>
             </div>
           </div>
@@ -40,19 +44,19 @@ export default function ResumeSection() {
           <div className="space-y-5" data-aos="fade-left">
             <ResumeCard
               icon={LuGraduationCap}
-              role="Student SMKN 1 Pasuruan"
-              description="Saya Muhammad Ulil Azmi merupakan siswa SMK Negeri 1 Pasuruan dari jurusan Rekayasa Perangkat Lunak (RPL). Saya memiliki ketertarikan dan fokus pada bidang teknologi, khususnya pengembangan website dan aplikasi. Saya terus mengembangkan kemampuan dalam pemrograman, desain antarmuka, serta pembuatan aplikasi menggunakan teknologi modern seperti React, Next.js, dan database."
-              date="July 2025 - April 2028"
+              role={t("aboutRoleStudent")}
+              description={t("aboutRoleStudentDesc")}
+              date={t("studyPeriod")}
             />
             <ResumeCard
               icon={LuBookOpen}
-              role="Lesson Learned"
-              description="Saya mempelajari berbagai bidang dalam pengembangan perangkat lunak, mulai dari pembuatan dan pengelolaan database menggunakan XAMPP dan Supabase, hingga pengembangan website menggunakan JavaScript, TypeScript, React, Next.js, dan Tailwind CSS. Selain itu, saya juga mempelajari desain antarmuka menggunakan Figma serta dasar-dasar pemrograman menggunakan Python. Fokus saya adalah mengembangkan kemampuan dalam membuat website dan aplikasi yang modern, responsif, dan mudah digunakan."
+              role={t("aboutRoleLesson")}
+              description={t("aboutRoleLessonDesc")}
             />
             <ResumeCard
               icon={LuAward}
-              role="Future Goals"
-              description="Future goals saya adalah terus mengembangkan kemampuan di bidang teknologi dan pemrograman, terutama dalam pengembangan website dan aplikasi. Saya ingin memperdalam skill seperti React, Next.js, JavaScript, Python, database, dan UI/UX. Ke depannya, saya berharap dapat menjadi seorang developer yang profesional, mampu membuat karya yang bermanfaat, serta terus belajar mengikuti perkembangan teknologi."
+              role={t("aboutRoleGoals")}
+              description={t("aboutRoleGoalsDesc")}
             />
 
             {/* Quick Fact Chips */}
@@ -67,8 +71,8 @@ export default function ResumeSection() {
                   <LuMapPin size={18} aria-hidden="true" />
                 </div>
                 <div className="flex flex-col">
-                  <small className="text-[0.65rem] font-bold uppercase tracking-wider text-slate-400">Lokasi</small>
-                  <span className="text-xs font-semibold text-slate-200">Pasuruan, Jawa Timur</span>
+                  <small className="text-[0.65rem] font-bold uppercase tracking-wider text-slate-400">{t("locationChip")}</small>
+                  <span className="text-xs font-semibold text-slate-200">{t("pasuruanLocation")}</span>
                 </div>
               </a>
 
@@ -77,8 +81,8 @@ export default function ResumeSection() {
                   <LuLayers3 size={18} aria-hidden="true" />
                 </div>
                 <div className="flex flex-col">
-                  <small className="text-[0.65rem] font-bold uppercase tracking-wider text-slate-400">Fokus</small>
-                  <span className="text-xs font-semibold text-slate-200">Web &amp; UI/UX</span>
+                  <small className="text-[0.65rem] font-bold uppercase tracking-wider text-slate-400">{t("focusChip")}</small>
+                  <span className="text-xs font-semibold text-slate-200">{t("focusValue")}</span>
                 </div>
               </div>
 

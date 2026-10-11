@@ -7,6 +7,9 @@ import ScrollTopButton from "./ScrollTopButton";
 import Navbar from "./navbar/Navbar";
 import { Toaster } from "react-hot-toast";
 import CustomCursor from "./CustomCursor";
+import RobotCompanionDrone from "./RobotCompanionDrone";
+
+import { LanguageProvider } from "@/context/LanguageContext";
 
 const staticRoutes = new Set(["/", "/about", "/services", "/contact", "/projects", "/skills"]);
 
@@ -31,19 +34,20 @@ export default function SiteChrome({
   const pathname = usePathname();
 
   if (!isValidPortfolioRoute(pathname)) {
-    return children;
+    return <LanguageProvider>{children}</LanguageProvider>;
   }
 
   return (
-    <>
+    <LanguageProvider>
       <CustomCursor />
       <AnimationLayout skipIntro={skipSplash}>
         <Navbar />
         {children}
         <Footer />
         <ScrollTopButton />
+        <RobotCompanionDrone />
       </AnimationLayout>
       <Toaster />
-    </>
+    </LanguageProvider>
   );
 }

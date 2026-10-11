@@ -3,6 +3,7 @@
 import { FaGithub, FaTiktok, FaInstagram } from "react-icons/fa";
 import { LuArrowUpRight, LuArrowDown } from "react-icons/lu";
 import HeroPhoto from "./HeroPhoto";
+import { useLanguage } from "@/context/LanguageContext";
 
 const socialLinks = [
   {
@@ -26,6 +27,8 @@ const socialLinks = [
 ];
 
 export default function HeroSection() {
+  const { t } = useLanguage();
+
   return (
     <section className="hero-editorial-section relative w-full min-h-[100svh] overflow-hidden select-none bg-slate-950 transition-colors duration-500 flex flex-col justify-between">
       {/* 1. SPLIT BACKGROUND CANVAS */}
@@ -87,10 +90,10 @@ export default function HeroSection() {
         <div className="hero-anim-left hero-left-content pointer-events-auto max-w-[48%] sm:max-w-xs md:max-w-sm space-y-2.5 sm:space-y-4">
           <div className="space-y-0.5 sm:space-y-1">
             <p className="hero-tagline-text text-base sm:text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-tight leading-tight text-black drop-shadow-sm">
-              Code that works
+              {t("codeThatWorks")}
             </p>
             <p className="hero-tagline-text text-base sm:text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-tight leading-tight text-black drop-shadow-sm">
-              Design that sells
+              {t("designThatSells")}
             </p>
           </div>
 
@@ -98,7 +101,7 @@ export default function HeroSection() {
             href="/#projects"
             className="group inline-flex items-center gap-1.5 sm:gap-2 rounded-full bg-white px-3.5 sm:px-6 py-2 sm:py-3 text-[11px] sm:text-sm font-black text-black shadow-xl shadow-black/15 transition-all duration-300 hover:scale-105 hover:bg-slate-100 hover:shadow-2xl"
           >
-            <span className="text-black font-black">View Work</span>
+            <span className="text-black font-black">{t("viewWork")}</span>
             <LuArrowUpRight
               size={14}
               className="text-black transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
@@ -107,18 +110,23 @@ export default function HeroSection() {
         </div>
 
         {/* 5B. BOTTOM RIGHT (ON WHITE/DARK SIDE) */}
-        <div className="hero-anim-right hero-right-content pointer-events-auto max-w-[48%] sm:max-w-xs md:max-w-sm text-left lg:text-right flex flex-col items-start lg:items-end space-y-1.5 sm:space-y-3">
+        <div className="hero-anim-right hero-right-content pointer-events-auto max-w-[48%] sm:max-w-xs md:max-w-sm text-left lg:text-right flex flex-col items-start lg:items-end space-y-1.5 sm:space-y-2.5">
           {/* Eyebrow Label */}
           <span className="hero-right-eyebrow text-[9px] sm:text-xs md:text-sm font-bold uppercase tracking-[0.15em] sm:tracking-[0.25em] text-orange-600 transition-colors duration-300">
-            AVAILABLE FOR FREELANCE
+            {t("availableFreelance")}
           </span>
 
           {/* Big Role Heading */}
           <h1 className="hero-right-title text-xl sm:text-3xl md:text-5xl lg:text-6xl font-black tracking-tight text-slate-950 transition-colors duration-500 leading-[0.95]">
-            Fullstack
+            {t("fullstackDev")}
             <br />
-            Developer
+            {t("developer")}
           </h1>
+
+          {/* SMKN 1 Pasuruan Subtitle */}
+          <p className="font-mono text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-semibold tracking-wide">
+            {t("schoolSubtitle")}
+          </p>
 
           {/* Circular Social Outline Buttons + Scroll Down */}
           <div className="pt-1 sm:pt-3 flex flex-wrap items-center gap-1.5 sm:gap-2.5">

@@ -3,12 +3,14 @@
 import { useState } from "react";
 import { LuSend } from "react-icons/lu";
 import toast from "react-hot-toast";
+import { useLanguage } from "@/context/LanguageContext";
 
 const inputStyles =
   "contact-input w-full rounded-xl border border-slate-800/90 bg-slate-950/80 px-4 py-3.5 text-sm text-slate-100 placeholder-slate-500 shadow-inner outline-none transition-all duration-300 focus:border-cyan-400 focus:bg-slate-900/90 focus:ring-2 focus:ring-cyan-400/20";
 
 export default function ContactForm() {
   const [loading, setLoading] = useState(false);
+  const { t } = useLanguage();
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -27,7 +29,7 @@ export default function ContactForm() {
       const data = await response.json();
       if (data.success) {
         form.reset();
-        toast.success("Pesan berhasil terkirim! Terima kasih telah menghubungi.", {
+        toast.success(t("formSuccessToast"), {
           style: {
             background: "#0f172a",
             color: "#38bdf8",
@@ -35,7 +37,7 @@ export default function ContactForm() {
           },
         });
       } else {
-        toast.error("Gagal mengirim pesan. Silakan coba lagi.", {
+        toast.error(t("formErrorToast"), {
           style: {
             background: "#0f172a",
             color: "#f87171",
@@ -44,7 +46,7 @@ export default function ContactForm() {
         });
       }
     } catch {
-      toast.error("Terjadi kesalahan jaringan.", {
+      toast.error(t("formNetworkError"), {
         style: {
           background: "#0f172a",
           color: "#f87171",
@@ -63,23 +65,23 @@ export default function ContactForm() {
     >
       <div className="mb-6 flex items-center justify-between border-b border-slate-800/80 pb-3">
         <span className="text-xs font-bold uppercase tracking-widest text-cyan-400">
-          Direct Transmission
+          {t("contactDirectTransmission")}
         </span>
         <span className="inline-flex items-center gap-1.5 text-[0.65rem] font-semibold text-slate-400">
           <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-          Encrypted &bull; Fast Reply
+          {t("contactEncrypted")}
         </span>
       </div>
 
       <div className="space-y-4">
         <div>
           <label htmlFor="contact-name" className="mb-1 block text-xs font-semibold text-slate-300">
-            Nama Anda
+            {t("formNameLabel")}
           </label>
           <input
             id="contact-name"
             type="text"
-            placeholder="John Doe"
+            placeholder={t("formNamePlaceholder")}
             className={inputStyles}
             required
             name="name"
@@ -88,12 +90,12 @@ export default function ContactForm() {
 
         <div>
           <label htmlFor="contact-email" className="mb-1 block text-xs font-semibold text-slate-300">
-            Email Anda
+            {t("formEmailLabel")}
           </label>
           <input
             id="contact-email"
             type="email"
-            placeholder="johndoe@example.com"
+            placeholder={t("formEmailPlaceholder")}
             className={inputStyles}
             required
             name="email"
@@ -102,12 +104,12 @@ export default function ContactForm() {
 
         <div>
           <label htmlFor="contact-subject" className="mb-1 block text-xs font-semibold text-slate-300">
-            Subjek Pesan
+            {t("formSubjectLabel")}
           </label>
           <input
             id="contact-subject"
             type="text"
-            placeholder="Kolaborasi Project / Tanya Sesuatu"
+            placeholder={t("formSubjectPlaceholder")}
             className={inputStyles}
             required
             name="subject"
@@ -116,11 +118,11 @@ export default function ContactForm() {
 
         <div>
           <label htmlFor="contact-message" className="mb-1 block text-xs font-semibold text-slate-300">
-            Isi Pesan
+            {t("formMessageLabel")}
           </label>
           <textarea
             id="contact-message"
-            placeholder="Tuliskan pesan atau detail project Anda di sini..."
+            placeholder={t("formMessagePlaceholder")}
             required
             className={`${inputStyles} resize-none`}
             rows={4}
@@ -135,12 +137,12 @@ export default function ContactForm() {
           {loading ? (
             <>
               <span className="h-5 w-5 rounded-full border-2 border-white/30 border-t-white animate-spin" />
-              <span>Transmitting message...</span>
+              <span>{t("formTransmittingBtn")}</span>
             </>
           ) : (
             <>
               <LuSend size={18} className="transition-transform duration-300 group-hover:translate-x-1" />
-              <span>Kirim Pesan Sekarang</span>
+              <span>{t("formSendBtn")}</span>
             </>
           )}
         </button>

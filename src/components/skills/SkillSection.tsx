@@ -9,53 +9,56 @@ import { FiFigma } from "react-icons/fi";
 import { VscVscode } from "react-icons/vsc";
 import { SiXampp } from "react-icons/si";
 import TiltCard from "@/components/ui/TiltCard";
-
-const skillGroups = [
-  {
-    number: "01",
-    name: "Frontend Development",
-    tag: "UI & Logic",
-    description: "Teknologi modern untuk merancang antarmuka web yang responsif, interaktif, dan berperforma tinggi.",
-    skills: [
-      { name: "Next.js", icon: <RiNextjsFill />, color: "text-white", glow: "hover:shadow-white/20" },
-      { name: "React", icon: <DiReact />, color: "text-cyan-400", glow: "hover:shadow-cyan-400/30" },
-      { name: "TypeScript", icon: <SiTypescript />, color: "text-blue-400", glow: "hover:shadow-blue-400/30" },
-      { name: "JavaScript", icon: <DiJavascript />, color: "text-yellow-400", glow: "hover:shadow-yellow-400/30" },
-      { name: "Tailwind CSS", icon: <RiTailwindCssFill />, color: "text-teal-400", glow: "hover:shadow-teal-400/30" },
-      { name: "HTML5", icon: <FaHtml5 />, color: "text-orange-500", glow: "hover:shadow-orange-500/30" },
-    ],
-  },
-  {
-    number: "02",
-    name: "Backend & Database",
-    tag: "Server & Data",
-    description: "Fondasi backend untuk pengolahan data terstruktur, REST API, authentication, dan penyimpanan cloud.",
-    skills: [
-      { name: "Python", icon: <FaPython />, color: "text-yellow-400", glow: "hover:shadow-yellow-400/30" },
-      { name: "Supabase", icon: <SiSupabase />, color: "text-emerald-400", glow: "hover:shadow-emerald-400/30" },
-      { name: "Node.js", icon: <FaNodeJs />, color: "text-green-500", glow: "hover:shadow-green-500/30" },
-      { name: "XAMPP (MySQL)", icon: <SiXampp />, color: "text-orange-400", glow: "hover:shadow-orange-400/30" },
-    ],
-  },
-  {
-    number: "03",
-    name: "Design & Developer Tools",
-    tag: "Workflow & Prototyping",
-    description: "Ekosistem tools pendukung untuk prototyping desain antarmuka, version control, dan efisiensi coding.",
-    skills: [
-      { name: "Figma", icon: <FiFigma />, color: "text-purple-400", glow: "hover:shadow-purple-400/30" },
-      { name: "VS Code", icon: <VscVscode />, color: "text-blue-400", glow: "hover:shadow-blue-400/30" },
-    ],
-  },
-];
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function SkillSection() {
+  const { t } = useLanguage();
+
+  const skillGroups = [
+    {
+      number: "01",
+      name: t("skillGroupFrontend"),
+      tag: t("skillGroupFrontendTag"),
+      description: t("skillGroupFrontendDesc"),
+      skills: [
+        { name: "Next.js", icon: <RiNextjsFill />, color: "text-white", glow: "hover:shadow-white/20" },
+        { name: "React", icon: <DiReact />, color: "text-cyan-400", glow: "hover:shadow-cyan-400/30" },
+        { name: "TypeScript", icon: <SiTypescript />, color: "text-blue-400", glow: "hover:shadow-blue-400/30" },
+        { name: "JavaScript", icon: <DiJavascript />, color: "text-yellow-400", glow: "hover:shadow-yellow-400/30" },
+        { name: "Tailwind CSS", icon: <RiTailwindCssFill />, color: "text-teal-400", glow: "hover:shadow-teal-400/30" },
+        { name: "HTML5", icon: <FaHtml5 />, color: "text-orange-500", glow: "hover:shadow-orange-500/30" },
+      ],
+    },
+    {
+      number: "02",
+      name: t("skillGroupBackend"),
+      tag: t("skillGroupBackendTag"),
+      description: t("skillGroupBackendDesc"),
+      skills: [
+        { name: "Python", icon: <FaPython />, color: "text-yellow-400", glow: "hover:shadow-yellow-400/30" },
+        { name: "Supabase", icon: <SiSupabase />, color: "text-emerald-400", glow: "hover:shadow-emerald-400/30" },
+        { name: "Node.js", icon: <FaNodeJs />, color: "text-green-500", glow: "hover:shadow-green-500/30" },
+        { name: "XAMPP (MySQL)", icon: <SiXampp />, color: "text-orange-400", glow: "hover:shadow-orange-400/30" },
+      ],
+    },
+    {
+      number: "03",
+      name: t("skillGroupTools"),
+      tag: t("skillGroupToolsTag"),
+      description: t("skillGroupToolsDesc"),
+      skills: [
+        { name: "Figma", icon: <FiFigma />, color: "text-purple-400", glow: "hover:shadow-purple-400/30" },
+        { name: "VS Code", icon: <VscVscode />, color: "text-blue-400", glow: "hover:shadow-blue-400/30" },
+      ],
+    },
+  ];
+
   return (
     <div className="skill-section relative py-4 sm:py-8">
       <div className="mx-auto w-[90%] max-w-6xl">
-        <Header title="Skills & Tech Stack" />
+        <Header title={t("skillsTitle")} />
         <p className="skill-intro mx-auto -mt-8 mb-14 max-w-2xl text-center text-sm leading-relaxed text-slate-400 sm:text-base">
-          Teknologi dan tools yang saya kuasai dan terapkan dalam pengembangan aplikasi web nyata.
+          {t("skillsIntro")}
         </p>
 
         <div className="skill-groups space-y-12">

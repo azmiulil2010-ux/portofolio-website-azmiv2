@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 
 export type IntroPhase =
   | "loading"
@@ -14,6 +15,7 @@ interface SimpleIntroSceneProps {
 
 export default function SimpleIntroScene({ phase }: SimpleIntroSceneProps) {
   const [progress, setProgress] = useState(0);
+  const { t } = useLanguage();
 
   useEffect(() => {
     if (phase === "complete" || phase === "dissolving") {
@@ -99,7 +101,7 @@ export default function SimpleIntroScene({ phase }: SimpleIntroSceneProps) {
 
         {/* Subtitle */}
         <p className="text-xs sm:text-sm font-medium text-slate-400 tracking-wide mb-8">
-          Rekayasa Perangkat Lunak • Fullstack Developer
+          {t("introSubtitle")}
         </p>
 
         {/* Minimalist Glowing Progress Bar */}
@@ -122,7 +124,7 @@ export default function SimpleIntroScene({ phase }: SimpleIntroSceneProps) {
                 }`}
               />
               <span className={progress === 100 ? "text-emerald-400 font-semibold" : ""}>
-                {progress < 100 ? "Initializing system..." : "System Ready"}
+                {progress < 100 ? t("introInitializing") : t("introReady")}
               </span>
             </span>
             <span

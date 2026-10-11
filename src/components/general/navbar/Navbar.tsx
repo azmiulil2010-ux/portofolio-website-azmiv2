@@ -9,6 +9,8 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { navLinks } from "./navLinks";
 import { useActiveSection } from "./useActiveSection";
+import LanguageSwitcher from "../LanguageSwitcher";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function Navbar() {
   const [navOpen, setNavOpen] = useState(false);
@@ -16,6 +18,16 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const { activeSection, setActiveSectionManual } = useActiveSection();
+  const { t } = useLanguage();
+
+  const navLabelMap: Record<string, string> = {
+    home: t("navHome"),
+    about: t("navAbout"),
+    services: t("navServices"),
+    skills: t("navSkills"),
+    projects: t("navProjects"),
+    contact: t("navContact"),
+  };
 
   const isLinkActive = (section: string) => {
     if (pathname === "/") {
@@ -125,7 +137,7 @@ export default function Navbar() {
                       : "text-slate-700 hover:text-orange-600 hover:bg-orange-100/80 dark:text-slate-300 dark:hover:text-orange-400 dark:hover:bg-slate-800/90"
                   }`}
                 >
-                  {link.label}
+                  {navLabelMap[link.section] || link.label}
                   {active && (
                     <span
                       className="absolute bottom-0 left-1/2 h-[2px] w-4 -translate-x-1/2 rounded-full bg-white shadow-[0_0_8px_#fff]"
@@ -139,7 +151,10 @@ export default function Navbar() {
         </ul>
 
         {/* Actions */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5 sm:gap-3">
+          {/* Language Switcher Dropdown */}
+          <LanguageSwitcher />
+
           <button
             type="button"
             onClick={toggleTheme}
@@ -153,7 +168,7 @@ export default function Navbar() {
           <div className="hidden lg:block">
             <LinkButton
               href="/cv.png"
-              text="Download CV"
+              text={t("downloadCv")}
               download="CV-Muhammad-Ulil-Azmi.png"
               icon={LuDownload}
               iconPosition="left"
