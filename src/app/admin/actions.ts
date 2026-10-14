@@ -11,6 +11,7 @@ import {
   DOORPASS_COOKIE_NAME,
   DOORPASS_COOKIE_OPTIONS,
   DOORPASS_PENDING_COOKIE_NAME,
+  DOORPASS_PENDING_COOKIE_OPTIONS,
   DOORPASS_PENDING_USER_ID,
 } from "@/lib/doorpass";
 import {
@@ -83,9 +84,22 @@ export async function logoutAction(): Promise<void> {
 
   const cookieStore = await cookies();
   cookieStore.delete(DOORPASS_COOKIE_NAME);
-  cookieStore.delete(DOORPASS_PENDING_COOKIE_NAME);
 
-  redirect("/login");
+  // Buat token doorpass pending agar admin yang baru logout tetap bisa mengakses halaman /admin/login
+  const pendingToken = await createDoorpassToken(
+    DOORPASS_PENDING_USER_ID,
+    60 * 60 // 1 jam masa berlaku
+  );
+  cookieStore.set(
+    DOORPASS_PENDING_COOKIE_NAME,
+    pendingToken,
+    {
+      ...DOORPASS_PENDING_COOKIE_OPTIONS,
+      maxAge: 60 * 60,
+    }
+  );
+
+  redirect("/admin/login");
 }
 
 // Helper for security verification across CRUD Server Actions
