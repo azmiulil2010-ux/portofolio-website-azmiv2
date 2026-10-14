@@ -18,21 +18,21 @@ export const LANGUAGE_OPTIONS: LanguageOption[] = [
 export const TRANSLATIONS = {
   id: {
     // Nav
-    navHome: "Home",
+    navHome: "Beranda",
     navAbout: "Tentang",
     navServices: "Layanan",
     navSkills: "Keahlian",
     navProjects: "Proyek",
     navContact: "Kontak",
-    downloadCv: "Download CV",
+    downloadCv: "Unduh CV",
 
     // Hero
-    codeThatWorks: "Code that works",
-    designThatSells: "Design that sells",
+    codeThatWorks: "Kode yang fungsional",
+    designThatSells: "Desain yang bernilai",
     viewWork: "Lihat Karya",
     availableFreelance: "TERSEDIA UNTUK FREELANCE",
-    fullstackDev: "Fullstack",
-    developer: "Developer",
+    fullstackDev: "Pengembang",
+    developer: "Fullstack",
     schoolSubtitle: "Siswa Rekayasa Perangkat Lunak SMKN 1 Pasuruan",
 
     // Robot Speech & Actions
@@ -99,17 +99,17 @@ export const TRANSLATIONS = {
     droneContact: "Punya ide proyek menarik atau ingin berkolaborasi? Kirim pesan sekarang!",
 
     // About / Resume Section
-    aboutTitle: "About Me",
-    aboutRoleStudent: "Student SMKN 1 Pasuruan",
+    aboutTitle: "Tentang Saya",
+    aboutRoleStudent: "Siswa SMKN 1 Pasuruan",
     aboutRoleStudentDesc:
       "Saya Muhammad Ulil Azmi merupakan siswa SMK Negeri 1 Pasuruan dari jurusan Rekayasa Perangkat Lunak (RPL). Saya memiliki ketertarikan dan fokus pada bidang teknologi, khususnya pengembangan website dan aplikasi. Saya terus mengembangkan kemampuan dalam pemrograman, desain antarmuka, serta pembuatan aplikasi menggunakan teknologi modern seperti React, Next.js, dan database.",
-    aboutRoleLesson: "Lesson Learned",
+    aboutRoleLesson: "Keahlian & Pembelajaran",
     aboutRoleLessonDesc:
       "Saya mempelajari berbagai bidang dalam pengembangan perangkat lunak, mulai dari pembuatan dan pengelolaan database menggunakan XAMPP dan Supabase, hingga pengembangan website menggunakan JavaScript, TypeScript, React, Next.js, dan Tailwind CSS. Selain itu, saya juga mempelajari desain antarmuka menggunakan Figma serta dasar-dasar pemrograman menggunakan Python. Fokus saya adalah mengembangkan kemampuan dalam membuat website dan aplikasi yang modern, responsif, dan mudah digunakan.",
-    aboutRoleGoals: "Future Goals",
+    aboutRoleGoals: "Tujuan Masa Depan",
     aboutRoleGoalsDesc:
       "Future goals saya adalah terus mengembangkan kemampuan di bidang teknologi dan pemrograman, terutama dalam pengembangan website dan aplikasi. Saya ingin memperdalam skill seperti React, Next.js, JavaScript, Python, database, dan UI/UX. Ke depannya, saya berharap dapat menjadi seorang developer yang profesional, mampu membuat karya yang bermanfaat, serta terus belajar mengikuti perkembangan teknologi.",
-    openToWork: "Open to work & freelance",
+    openToWork: "Terbuka untuk Kerja & Freelance",
     pasuruanLocation: "Pasuruan, Jawa Timur",
     emailDirect: "Kirim Email",
     portfolioCv: "Lihat CV / Resume",
@@ -125,7 +125,7 @@ export const TRANSLATIONS = {
     introReady: "Sistem Siap",
 
     // Services Section
-    servicesTitle: "My Services",
+    servicesTitle: "Layanan Saya",
     servicesSubtitle: "Layanan yang saya tawarkan untuk membantu Anda mewujudkan kebutuhan digital.",
     serviceUiUxTitle: "UI/UX Website",
     serviceUiUxDesc: "Menyusun tampilan website yang jelas, rapi, dan mudah digunakan di berbagai ukuran layar.",
@@ -137,7 +137,7 @@ export const TRANSLATIONS = {
     serviceFullstackDesc: "Mengerjakan website dan aplikasi dari antarmuka sampai fungsi server sesuai kebutuhan proyek.",
 
     // Skills Section
-    skillsTitle: "Skills & Tech Stack",
+    skillsTitle: "Keahlian & Teknologi",
     skillsIntro: "Teknologi dan tools yang saya kuasai dan terapkan dalam pengembangan aplikasi web nyata.",
     skillGroupFrontend: "Frontend Development",
     skillGroupFrontendTag: "UI & Logika",
@@ -150,7 +150,7 @@ export const TRANSLATIONS = {
     skillGroupToolsDesc: "Ekosistem tools pendukung untuk prototyping desain antarmuka, version control, dan efisiensi coding.",
 
     // Projects Section
-    projectsTitle: "Recent Projects",
+    projectsTitle: "Proyek Terbaru",
     projectsSubtitle: "Karya dan aplikasi web yang telah saya kembangkan",
     allProjectsHeading: "Semua Proyek",
     searchResultsFor: "Hasil pencarian untuk",
@@ -162,8 +162,8 @@ export const TRANSLATIONS = {
     projectsFound: "proyek ditemukan",
     viewAllProjects: "Lihat semua proyek",
     noProjectsFound: "Tidak ada proyek ditemukan untuk",
-    visitLiveProject: "Visit live project",
-    githubRepo: "GitHub Repository",
+    visitLiveProject: "Kunjungi Proyek Langsung",
+    githubRepo: "Repositori GitHub",
     backToProjects: "Kembali ke proyek",
     projectSearchPlaceholder: "Cari proyek...",
     searchBtn: "Cari",
@@ -177,7 +177,7 @@ export const TRANSLATIONS = {
     projectDetailDesc: "Melihat lebih dekat konsep, teknologi, dan pembelajaran di balik proyek ini.",
 
     // Contact Section
-    contactGetInTouch: "Get in Touch",
+    contactGetInTouch: "Hubungi Saya",
     contactCritiqueTitle: "Beri Kritik Atau Saran Anda Di Sini",
     contactCritiqueDesc:
       "Punya pertanyaan, ide kolaborasi, atau ingin berdiskusi mengenai proyek web modern? Jangan ragu untuk menghubungi saya. Saya siap merespons dan terhubung untuk berbagai kesempatan.",
@@ -202,8 +202,8 @@ export const TRANSLATIONS = {
     // Footer Section
     footerBrandDesc:
       "Membangun pengalaman digital yang modern, responsif, dan berestetika tinggi. Rekayasa Perangkat Lunak berkualitas dari SMKN 1 Pasuruan.",
-    footerQuickLinks: "Quick Links",
-    footerGetInTouch: "Get in Touch",
+    footerQuickLinks: "Tautan Cepat",
+    footerGetInTouch: "Hubungi Saya",
     footerCtaDesc: "Tertarik berkolaborasi atau punya proyek impian? Jangan ragu untuk menghubungi saya.",
     footerCopyText: "Muhammad Ulil Azmi. Dibuat dengan cinta & kode bersih.",
     designedDevelopedBy: "Didesain & Dikembangkan oleh Azmi",

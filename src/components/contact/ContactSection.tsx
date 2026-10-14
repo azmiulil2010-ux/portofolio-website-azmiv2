@@ -71,11 +71,11 @@ export default function ContactSection() {
             <span>{t("contactGetInTouch")}</span>
           </div>
 
-          <h2 className="py-4 text-3xl md:text-5xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-100 to-indigo-300">
+          <h2 className="py-4 text-3xl md:text-5xl font-black tracking-tight text-slate-900 dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r dark:from-white dark:via-cyan-100 dark:to-indigo-300">
             {t("contactCritiqueTitle")}
           </h2>
 
-          <p className="text-slate-300 mb-8 text-sm md:text-base leading-relaxed">
+          <p className="text-slate-600 dark:text-slate-300 mb-8 text-sm md:text-base leading-relaxed">
             {t("contactCritiqueDesc")}
           </p>
 

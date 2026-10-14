@@ -42,8 +42,8 @@ export default function LanguageSwitcher({ className = "" }: { className?: strin
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-44 rounded-2xl border border-orange-500/30 bg-slate-950/95 p-1.5 text-xs shadow-2xl backdrop-blur-xl z-50 animate-in fade-in zoom-in-95 duration-200">
-          <div className="px-2.5 py-1 text-[10px] font-mono font-bold tracking-wider text-slate-400 uppercase border-b border-slate-800">
+        <div className="language-dropdown-menu absolute right-0 mt-2 w-48 rounded-2xl border border-orange-500/30 bg-white/95 text-slate-800 dark:bg-slate-950/95 dark:text-slate-100 p-1.5 text-xs shadow-2xl backdrop-blur-xl z-50 animate-in fade-in zoom-in-95 duration-200">
+          <div className="language-dropdown-header px-2.5 py-1.5 text-[10px] font-mono font-bold tracking-wider text-slate-500 dark:text-slate-400 uppercase border-b border-slate-200 dark:border-slate-800">
             Language / 言語
           </div>
           <div className="mt-1 space-y-0.5">
@@ -57,17 +57,25 @@ export default function LanguageSwitcher({ className = "" }: { className?: strin
                     setLanguage(opt.code);
                     setIsOpen(false);
                   }}
-                  className={`w-full flex items-center justify-between rounded-xl px-2.5 py-2 text-left transition-all cursor-pointer ${
+                  className={`language-dropdown-item w-full flex items-center justify-between rounded-xl px-2.5 py-2 text-left transition-all cursor-pointer ${
                     isSelected
-                      ? "bg-gradient-to-r from-orange-500/20 to-amber-500/20 border border-orange-500/40 text-orange-400 font-bold"
-                      : "text-slate-300 hover:bg-slate-900 hover:text-white"
+                      ? "is-selected bg-orange-500/10 border border-orange-500/40 text-orange-600 font-bold dark:bg-gradient-to-r dark:from-orange-500/20 dark:to-amber-500/20 dark:border-orange-500/40 dark:text-orange-400"
+                      : "text-slate-700 hover:bg-orange-50/80 hover:text-orange-600 dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-white"
                   }`}
                 >
                   <div className="flex items-center gap-2">
                     <span className="text-base">{opt.flag}</span>
-                    <span className="text-xs">{opt.nativeName}</span>
+                    <span className="text-xs font-semibold">{opt.nativeName}</span>
                   </div>
-                  <span className="font-mono text-[10px] text-slate-500">{opt.label}</span>
+                  <span
+                    className={`lang-code font-mono text-[10px] ${
+                      isSelected
+                        ? "text-orange-600 dark:text-orange-400 font-bold"
+                        : "text-slate-400 dark:text-slate-500"
+                    }`}
+                  >
+                    {opt.label}
+                  </span>
                 </button>
               );
             })}

@@ -10,6 +10,7 @@ import {
   LuFolder,
 } from "react-icons/lu";
 import ProjectCard from "./ProjectCard";
+import Header from "@/components/general/Header";
 import { PROJECT_CATEGORIES, type Project, type ProjectCategory } from "@/types/project.types";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -84,6 +85,12 @@ export default function ProjectSectionView({
     }
     if (category) {
       const meta = getCategoryMeta(category);
+      if (language === "ja") {
+        return `${meta.label}のプロジェクト`;
+      }
+      if (language === "id") {
+        return `Proyek ${meta.label}`;
+      }
       return `${meta.label} Projects`;
     }
     if (heading.toLowerCase().includes("all")) {
@@ -123,16 +130,23 @@ export default function ProjectSectionView({
   return (
     <section className="relative z-10 pb-16">
       {/* Top Heading */}
-      <div className="mx-auto w-[90%] max-w-5xl pb-6 pt-10 md:pt-14">
-        <h2 className="text-2xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-indigo-200 to-gray-300 sm:text-3xl">
-          {getHeadingText()}
-        </h2>
-        <p className="mt-2 text-sm text-gray-400">
-          {showAllLink && filteredProjects.length > displayedProjects.length
-            ? `${t("showingProjects")} ${displayedProjects.length} ${t("ofProjects")} ${filteredProjects.length} ${t("projectsFound")}`
-            : `${filteredProjects.length} ${t("projectsFound")}`}
-        </p>
-      </div>
+      {showAllLink ? (
+        <div className="pb-4">
+          <Header title={getHeadingText()} />
+          <p className="mx-auto -mt-8 mb-10 max-w-xl text-center text-sm leading-relaxed text-slate-600 dark:text-slate-400 sm:text-base w-[90%]">
+            {t("projectsSubtitle")}
+          </p>
+        </div>
+      ) : (
+        <div className="mx-auto w-[90%] max-w-5xl pb-6 pt-10 md:pt-14">
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r dark:from-indigo-200 dark:to-gray-300 sm:text-3xl">
+            {getHeadingText()}
+          </h2>
+          <p className="mt-2 text-sm text-slate-600 dark:text-gray-400">
+            {filteredProjects.length} {t("projectsFound")}
+          </p>
+        </div>
+      )}
 
       {/* Case 1: Categorized View (Separated per category with headers) */}
       {isCategorizedView ? (

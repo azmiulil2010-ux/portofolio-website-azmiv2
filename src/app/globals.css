@@ -503,6 +503,42 @@ body:has(.not-found-page) .intro-screen {
   color: #ffffff !important;
 }
 
+/* Language Switcher Dropdown in Light Theme */
+[data-theme="light"] .language-dropdown-menu {
+  background-color: #ffffff !important;
+  border-color: #fed7aa !important;
+  box-shadow: 0 15px 35px -5px rgba(249, 115, 22, 0.15), 0 10px 15px -5px rgba(0, 0, 0, 0.08) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .language-dropdown-header {
+  color: #64748b !important;
+  border-color: #f1f5f9 !important;
+}
+
+[data-theme="light"] .language-dropdown-item {
+  color: #334155 !important;
+}
+
+[data-theme="light"] .language-dropdown-item:hover {
+  background-color: #fff7ed !important;
+  color: #ea580c !important;
+}
+
+[data-theme="light"] .language-dropdown-item.is-selected {
+  background-color: #ffedd5 !important;
+  border-color: #f97316 !important;
+  color: #c2410c !important;
+}
+
+[data-theme="light"] .language-dropdown-item.is-selected span {
+  color: #c2410c !important;
+}
+
+[data-theme="light"] .language-dropdown-item.is-selected .lang-code {
+  color: #ea580c !important;
+}
+
 [data-theme="light"] .project-search button,
 [data-theme="light"] .contact-form button {
   color: #ffffff !important;
@@ -2628,6 +2664,104 @@ html.lenis body {
   background-color: rgba(249, 115, 22, 0.15) !important;
   color: #fb923c !important;
 }
+
+/* =========================================================================
+   LANGUAGE SWITCHER DROPDOWN: HIGH CONTRAST IN BOTH LIGHT AND DARK THEMES
+   ========================================================================= */
+[data-theme="light"] .language-dropdown-menu {
+  background-color: #ffffff !important;
+  border-color: #fed7aa !important;
+  box-shadow: 0 14px 35px rgba(249, 115, 22, 0.12), 0 4px 12px rgba(15, 23, 42, 0.08) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .language-dropdown-header {
+  color: #64748b !important;
+  border-color: #f1f5f9 !important;
+}
+
+[data-theme="light"] .language-dropdown-item {
+  color: #334155 !important;
+  background-color: transparent !important;
+}
+
+[data-theme="light"] .language-dropdown-item span {
+  color: #334155 !important;
+}
+
+[data-theme="light"] .language-dropdown-item:hover {
+  background-color: #fff7ed !important;
+  color: #ea580c !important;
+}
+
+[data-theme="light"] .language-dropdown-item:hover span {
+  color: #ea580c !important;
+}
+
+[data-theme="light"] .language-dropdown-item.is-selected {
+  background-color: #ffedd5 !important;
+  border-color: #fb923c !important;
+  color: #c2410c !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .language-dropdown-item.is-selected span {
+  color: #c2410c !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="dark"] .language-dropdown-menu {
+  background-color: rgba(9, 13, 22, 0.98) !important;
+  border-color: rgba(249, 115, 22, 0.35) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(249, 115, 22, 0.15) !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .language-dropdown-header {
+  color: #94a3b8 !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-theme="dark"] .language-dropdown-item {
+  color: #cbd5e1 !important;
+  background-color: transparent !important;
+}
+
+[data-theme="dark"] .language-dropdown-item span {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .language-dropdown-item:hover {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .language-dropdown-item:hover span {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .language-dropdown-item.is-selected {
+  background: linear-gradient(90deg, rgba(249, 115, 22, 0.22) 0%, rgba(245, 158, 11, 0.18) 100%) !important;
+  border-color: rgba(249, 115, 22, 0.5) !important;
+  color: #fb923c !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="dark"] .language-dropdown-item.is-selected span {
+  color: #fb923c !important;
+  font-weight: 700 !important;
+}
+
+/* =========================================================================
+   ROBOT MOBILE CYBER HUD SHEET: 100% OPAQUE & HIGH ELEVATION
+   ========================================================================= */
+.robot-mobile-sheet {
+  background-color: #090d16 !important;
+  opacity: 1 !important;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.95), 0 -2px 15px rgba(249, 115, 22, 0.2) !important;
+}
+
+
 
 
 

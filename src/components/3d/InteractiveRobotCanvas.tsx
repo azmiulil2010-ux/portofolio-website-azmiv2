@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback, ComponentType } from "react";
+import { createPortal } from "react-dom";
 import * as THREE from "three";
 import {
   Code2,
@@ -14,6 +15,7 @@ import {
   VolumeX,
   Gamepad2,
   Sparkles,
+  X,
 } from "lucide-react";
 import { robotAudio } from "@/lib/robotSoundSynth";
 import {
@@ -286,6 +288,23 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
   const [activeSkin, setActiveSkin] = useState<RobotSkinId>("orange");
   const [isMuted, setIsMuted] = useState(false);
   const [isArcadeOpen, setIsArcadeOpen] = useState(false);
+  const [isMobileSheetOpen, setIsMobileSheetOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (isMobileSheetOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMobileSheetOpen]);
 
   // References to Three.js internal controls
   const triggerActionRef = useRef<((action: RobotActionType) => void) | null>(null);
@@ -1714,11 +1733,11 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
           </div>
         )}
 
-        {/* 2. UNIFIED BOTTOM CYBER HUD DOCK */}
-        <div className="robot-floating-actions-container absolute bottom-24 sm:bottom-28 md:bottom-24 lg:bottom-6 inset-x-0 z-30 flex flex-col items-center pointer-events-none px-3">
-          <div className="w-full max-w-[340px] sm:max-w-[480px] md:max-w-[620px] rounded-2xl sm:rounded-full bg-slate-950/80 dark:bg-slate-950/90 border border-orange-500/25 p-1.5 sm:p-2 backdrop-blur-md shadow-2xl shadow-black/60 pointer-events-auto flex flex-col items-center gap-1.5 sm:gap-2">
+        {/* 2A. DESKTOP UNIFIED BOTTOM CYBER HUD DOCK (md:flex only) */}
+        <div className="hidden md:flex robot-floating-actions-container absolute bottom-6 md:bottom-8 lg:bottom-6 inset-x-0 z-30 flex-col items-center pointer-events-none px-3">
+          <div className="w-full max-w-[480px] md:max-w-[620px] rounded-full bg-slate-950/85 dark:bg-slate-950/95 border border-orange-500/25 p-2 backdrop-blur-md shadow-2xl shadow-black/60 pointer-events-auto flex flex-col items-center gap-2">
             {/* TIER 1: UTILITY STRIP */}
-            <div className="flex items-center justify-between w-full px-2 sm:px-3 py-0.5 border-b border-slate-800/80 text-[10.5px]">
+            <div className="flex items-center justify-between w-full px-3 py-0.5 border-b border-slate-800/80 text-[10.5px]">
               {/* Skin Palette */}
               <div className="flex items-center gap-1.5">
                 <span className="font-mono font-bold tracking-wider text-slate-400 text-[9.5px]">
@@ -1730,7 +1749,7 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
                       key={skin.id}
                       type="button"
                       onClick={() => handleSkinChange(skin.id)}
-                      className={`h-3.5 w-3.5 sm:h-4 sm:w-4 rounded-full border transition-all cursor-pointer ${
+                      className={`h-4 w-4 rounded-full border transition-all cursor-pointer ${
                         activeSkin === skin.id
                           ? "scale-125 border-white shadow-[0_0_10px_rgba(255,255,255,0.9)] ring-1 ring-white/60"
                           : "border-transparent opacity-60 hover:opacity-100 hover:scale-110"
@@ -1780,7 +1799,7 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
             </div>
 
             {/* TIER 2: ACTION PILLS STRIP */}
-            <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-1.5 w-full">
+            <div className="flex flex-wrap items-center justify-center gap-1.5 w-full">
               {ACTION_LIST.map((action) => {
                 const isActive = activeAction === action.id;
                 const ActionIcon = action.icon;
@@ -1793,7 +1812,7 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
                       e.stopPropagation();
                       handleActionClick(action.id);
                     }}
-                    className={`group relative flex items-center gap-1 rounded-full px-2 sm:px-2.5 py-1 text-[10px] sm:text-[11px] font-bold backdrop-blur-md transition-all duration-300 cursor-pointer ${
+                    className={`group relative flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold backdrop-blur-md transition-all duration-300 cursor-pointer ${
                       isActive
                         ? "!bg-gradient-to-r !from-orange-500 !to-amber-500 !text-white !border-orange-300 shadow-[0_0_20px_rgba(255,98,0,0.6)] ring-1 ring-orange-300"
                         : "bg-slate-900/90 text-slate-200 border border-slate-700/60 hover:border-orange-500/60 hover:text-orange-400 hover:bg-slate-800/90"
@@ -1814,6 +1833,147 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
             </div>
           </div>
         </div>
+
+        {/* 2B. MOBILE CLEAN FLOATING TRIGGER (md:hidden) */}
+        <div className="md:hidden absolute bottom-[21%] sm:bottom-[23%] inset-x-0 z-30 flex justify-center pointer-events-none px-3">
+          <button
+            type="button"
+            onClick={() => setIsMobileSheetOpen(true)}
+            className="pointer-events-auto flex items-center gap-2 rounded-full border border-orange-500/50 bg-slate-950/90 px-4 py-2 text-xs font-bold text-orange-400 shadow-xl shadow-black/80 backdrop-blur-md transition-all active:scale-95 hover:border-orange-400 hover:text-white cursor-pointer"
+          >
+            <Sparkles size={13} className="text-amber-400 animate-spin" style={{ animationDuration: "3s" }} />
+            <span>Aksi Robot & Game</span>
+            <span className="rounded-full bg-orange-500/20 px-1.5 py-0.5 text-[9px] font-mono text-orange-300">
+              7
+            </span>
+          </button>
+        </div>
+
+        {/* 2C. MOBILE CYBER HUD BOTTOM SHEET DRAWER (md:hidden) */}
+        {mounted && isMobileSheetOpen && createPortal(
+          <div className="md:hidden fixed inset-0 z-[9999] flex flex-col justify-end pointer-events-auto">
+            {/* Dark Backdrop */}
+            <div
+              onClick={() => setIsMobileSheetOpen(false)}
+              className="fixed inset-0 bg-black/85 backdrop-blur-md transition-opacity"
+              aria-hidden="true"
+            />
+
+            {/* Slide-Up Bottom Sheet */}
+            <div className="robot-mobile-sheet relative z-10 w-full max-h-[82vh] overflow-y-auto rounded-t-3xl border-t border-orange-500/50 bg-[#090d16] p-5 shadow-2xl text-slate-100 animate-in slide-in-from-bottom duration-300">
+              {/* Top Handle Pill */}
+              <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-slate-700" />
+
+              {/* Header Row */}
+              <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                <div className="flex items-center gap-2.5">
+                  <div className="grid h-9 w-9 place-items-center rounded-xl border border-orange-500/40 bg-orange-500/20 text-orange-400">
+                    <Sparkles size={16} />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-bold text-white leading-tight">Robot RPL Hub</h3>
+                    <span className="text-[10px] text-slate-400 font-mono">SMKN 1 PASURUAN</span>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setIsMobileSheetOpen(false)}
+                  className="grid h-8 w-8 place-items-center rounded-full border border-slate-800 bg-slate-900 text-slate-400 hover:text-white cursor-pointer"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+
+              {/* Utility Strip: Skins + SFX + Game */}
+              <div className="py-3.5 space-y-3">
+                {/* Skins */}
+                <div>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                    PILIH TEMA / SKIN ROBOT
+                  </span>
+                  <div className="mt-1.5 flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+                    {ROBOT_SKIN_LIST.map((skin) => (
+                      <button
+                        key={skin.id}
+                        type="button"
+                        onClick={() => handleSkinChange(skin.id)}
+                        className={`flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-semibold transition-all cursor-pointer shrink-0 ${
+                          activeSkin === skin.id
+                            ? "border-orange-500 bg-orange-500/20 text-white shadow-md shadow-orange-500/30"
+                            : "border-slate-800 bg-slate-900 text-slate-300"
+                        }`}
+                      >
+                        <span
+                          className="h-3 w-3 rounded-full"
+                          style={{ backgroundColor: skin.dotColor }}
+                        />
+                        <span>{skin.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Quick Buttons: Sound + Rocket Arcade */}
+                <div className="flex items-center gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={handleToggleSound}
+                    className="flex-1 flex items-center justify-center gap-1.5 rounded-xl border border-slate-800 bg-slate-900/80 py-2.5 text-xs font-bold text-slate-300 hover:border-orange-500 cursor-pointer"
+                  >
+                    {isMuted ? <VolumeX size={14} className="text-slate-500" /> : <Volume2 size={14} className="text-orange-400" />}
+                    <span>{isMuted ? "SFX: Mute" : "SFX: Aktif"}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsMobileSheetOpen(false);
+                      handleOpenArcade();
+                    }}
+                    className="flex-1 flex items-center justify-center gap-1.5 rounded-xl border border-orange-500/40 bg-gradient-to-r from-orange-500/30 to-amber-500/30 py-2.5 text-xs font-bold text-orange-300 shadow-md shadow-orange-500/20 cursor-pointer"
+                  >
+                    <Rocket size={14} />
+                    <span>{t("actionArcade")}</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Action Buttons Grid (7 Actions) */}
+              <div className="pt-2">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                  PILIH AKSI ANIMASI
+                </span>
+                <div className="mt-2 grid grid-cols-2 gap-2">
+                  {ACTION_LIST.map((action) => {
+                    const isActive = activeAction === action.id;
+                    const ActionIcon = action.icon;
+                    const actionLabel = t(action.translationKey) || action.label;
+                    return (
+                      <button
+                        key={action.id}
+                        type="button"
+                        onClick={() => {
+                          handleActionClick(action.id);
+                          setIsMobileSheetOpen(false);
+                        }}
+                        className={`flex items-center gap-2 rounded-xl border p-2.5 text-xs font-bold transition-all cursor-pointer ${
+                          isActive
+                            ? "border-orange-400 bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg shadow-orange-500/40"
+                            : "border-slate-800 bg-slate-900 text-slate-200 hover:border-orange-500/50 hover:bg-slate-850"
+                        }`}
+                      >
+                        <ActionIcon size={14} className="shrink-0" />
+                        <span className="truncate">{actionLabel}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>,
+          document.body
+        )}
       </div>
 
       {/* 3. CYBER BUG ARCADE MINI-GAME MODAL */}
