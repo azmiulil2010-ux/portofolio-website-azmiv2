@@ -4,6 +4,7 @@ import ProjectSearch from "@/components/projects/ProjectSearch";
 import ProjectsPageLeadClient from "@/components/projects/ProjectsPageLeadClient";
 import FuturisticBackground from "@/components/general/FuturisticBackground";
 import ProjectCategoryFilter from "@/components/projects/ProjectCategoryFilter";
+import { getProjects } from "@/components/projects/projectData";
 import { PROJECT_CATEGORIES, type ProjectCategory } from "@/types/project.types";
 import { absoluteSiteUrl } from "@/lib/seo";
 
@@ -52,13 +53,37 @@ export default async function Projects({ searchParams }: ProjectsPageProps) {
     ? (params.category as ProjectCategory)
     : "";
 
+  const projects = await getProjects();
+
+  // Project count per category for filter badges
+  const categoryCounts: Record<string, number> = {
+    "": projects.length,
+  };
+  PROJECT_CATEGORIES.forEach((item) => {
+    categoryCounts[item.value] = projects.filter((p) => p.category === item.value).length;
+  });
+
   return (
     <main className="relative overflow-hidden pt-18 bg-slate-950 text-slate-100">
       <FuturisticBackground show3D={false} />
       <ProjectsPageLeadClient />
-      <ProjectSearch searchTerm={searchTerm} category={category} />
-      <ProjectCategoryFilter category={category} searchTerm={searchTerm} />
-      <ProjectSection searchTerm={searchTerm} category={category} heading="All Projects" />
+
+      {/* Filter and Search Control Bar */}
+      <section className="relative z-10 mx-auto w-[90%] max-w-5xl space-y-3.5">
+        <ProjectSearch searchTerm={searchTerm} category={category} />
+        <ProjectCategoryFilter
+          category={category}
+          searchTerm={searchTerm}
+          categoryCounts={categoryCounts}
+        />
+      </section>
+
+      <ProjectSection
+        searchTerm={searchTerm}
+        category={category}
+        heading="All Projects"
+        projects={projects}
+      />
     </main>
   );
 }

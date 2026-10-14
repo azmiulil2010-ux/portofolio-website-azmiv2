@@ -44,7 +44,7 @@ export const TRANSLATIONS = {
     actionDeploy: "Deploy App",
     actionThumbsUp: "Clean Code",
     actionDance: "Victory",
-    actionArcade: "🎮 Arcade",
+    actionArcade: "🚀 Misi Roket",
 
     // Robot Speeches
     speechWave: [
@@ -172,6 +172,7 @@ export const TRANSLATIONS = {
     filterIot: "IoT",
     filterMobile: "Mobile App",
     filterDesign: "Desain",
+    viewCategoryOnly: "Lihat kategori ini →",
     projectDetailEyebrow: "Detail Proyek",
     projectDetailDesc: "Melihat lebih dekat konsep, teknologi, dan pembelajaran di balik proyek ini.",
 
@@ -207,22 +208,27 @@ export const TRANSLATIONS = {
     footerCopyText: "Muhammad Ulil Azmi. Dibuat dengan cinta & kode bersih.",
     designedDevelopedBy: "Didesain & Dikembangkan oleh Azmi",
 
-    // Arcade Game Strings
-    arcadeTitle: "AZMI DEV RUSH ARCADE",
+    // Rocket Arcade Game Strings
+    arcadeTitle: "COSMIC ROCKET ODYSSEY",
     arcadeSchoolTag: "SMKN 1 PASURUAN • RPL",
-    arcadeMission: "Misi:",
-    arcadeCompleted: "Selesai",
-    arcadeEmpReady: "EMP READY!",
-    arcadeStartTitle: "SIMULASI DEVELOPER SMKN 1 PASURUAN",
+    arcadeMission: "Sektor",
+    arcadeCompleted: "LEVEL FINISH REACHED! 🎉",
+    arcadeCrashed: "HULL CRITICAL: MISI GAGAL 💥",
+    arcadeEmpReady: "SHIELD BOOST READY!",
+    arcadeStartTitle: "EKSPEDISI ROKET KOSMIK (10 LEVEL)",
     arcadeStartDesc:
-      "Bantu Azmi mendeploy proyek-proyek portofolionya! Klik/tap pada icon Tech Stack (Next.js, React, TypeScript, Supabase, Python) untuk mengisi bar proyek, dan basmi Bug sebelum merusak sistem!",
-    arcadeStartBtn: "MULAI MAIN SEKARANG (25 DETIK)",
-    arcadeResultTitle: "HASIL SIMULASI PRODUKSI",
-    arcadeDeployedProjectsLabel: "PROYEK TERDEPLOY",
-    arcadeMaxComboLabel: "MAX COMBO STREAK",
-    arcadePlayAgain: "Main Lagi",
-    arcadeClose: "Tutup Game",
-    arcadeTip: "💡 Tap Tech Stacks Azmi untuk build proyek, tekan [SPASI] untuk EMP blast!",
+      "Kemudikan roket melintasi sabuk asteroid berbahaya hingga ke Stasiun Finish! Hindari batu-batu kosmik, kumpulkan kristal starlight, gunakan turbo shield, dan selesaikan 10 tingkat kesulitan dengan tingkat keberhasilan tertinggi!",
+    arcadeStartBtn: "LUNCURKAN ROKET SEKARANG 🚀",
+    arcadeResultTitle: "LAPORAN HASIL MISI PENERBANGAN",
+    arcadeSuccessRateLabel: "TINGKAT KEBERHASILAN",
+    arcadePointsLabel: "TOTAL POIN DIDAPAT",
+    arcadeDistanceLabel: "JARAK DITEMPUH",
+    arcadeDodgedLabel: "ASTEROID DIHINDARI",
+    arcadeNextLevelBtn: "Lanjut Level Berikutnya 🚀",
+    arcadePlayAgain: "Coba Lagi",
+    arcadeClose: "Keluar Game",
+    arcadeSelectLevel: "Pilih Sektor Level",
+    arcadeTip: "💡 Gerakkan pointer/drag atau tombol [A/D / Panah] untuk menghindar. Tekan [SPASI] / Boost untuk Shield Pulse!",
   },
 
   en: {
@@ -253,7 +259,7 @@ export const TRANSLATIONS = {
     actionDeploy: "Deploy App",
     actionThumbsUp: "Clean Code",
     actionDance: "Victory",
-    actionArcade: "🎮 Arcade",
+    actionArcade: "🚀 Rocket Game",
 
     // Robot Speeches
     speechWave: [
@@ -381,6 +387,7 @@ export const TRANSLATIONS = {
     filterIot: "IoT",
     filterMobile: "Mobile App",
     filterDesign: "Design",
+    viewCategoryOnly: "View category →",
     projectDetailEyebrow: "Project Detail",
     projectDetailDesc: "A closer look at the idea, technology, and lessons behind this project.",
 
@@ -416,22 +423,27 @@ export const TRANSLATIONS = {
     footerCopyText: "Muhammad Ulil Azmi. Built with love & clean code.",
     designedDevelopedBy: "Designed & Developed by Azmi",
 
-    // Arcade Game Strings
-    arcadeTitle: "AZMI DEV RUSH ARCADE",
+    // Rocket Arcade Game Strings
+    arcadeTitle: "COSMIC ROCKET ODYSSEY",
     arcadeSchoolTag: "SMKN 1 PASURUAN • RPL",
-    arcadeMission: "Mission:",
-    arcadeCompleted: "Completed",
-    arcadeEmpReady: "EMP READY!",
-    arcadeStartTitle: "SMKN 1 PASURUAN DEVELOPER SIMULATION",
+    arcadeMission: "Sector",
+    arcadeCompleted: "LEVEL FINISH REACHED! 🎉",
+    arcadeCrashed: "HULL BREACH: MISSION FAILED 💥",
+    arcadeEmpReady: "SHIELD BOOST READY!",
+    arcadeStartTitle: "COSMIC ROCKET EXPEDITION (10 LEVELS)",
     arcadeStartDesc:
-      "Help Azmi deploy his portfolio projects! Tap Tech Stack icons (Next.js, React, TypeScript, Supabase, Python) to fill the project bar, and eliminate Bugs before they compromise the system!",
-    arcadeStartBtn: "START GAME NOW (25 SECONDS)",
-    arcadeResultTitle: "PRODUCTION SIMULATION RESULTS",
-    arcadeDeployedProjectsLabel: "PROJECTS DEPLOYED",
-    arcadeMaxComboLabel: "MAX COMBO STREAK",
-    arcadePlayAgain: "Play Again",
-    arcadeClose: "Close Game",
-    arcadeTip: "💡 Tap Azmi's Tech Stacks to build projects, press [SPACE] for EMP blast!",
+      "Pilot Azmi's rocket through perilous asteroid belts to reach the finish warp gate! Dodge cosmic rocks, collect starlight crystals, deploy your turbo shield, and conquer all 10 difficulty sectors with top success rate!",
+    arcadeStartBtn: "LAUNCH ROCKET NOW 🚀",
+    arcadeResultTitle: "FLIGHT MISSION REPORT",
+    arcadeSuccessRateLabel: "SUCCESS RATE",
+    arcadePointsLabel: "TOTAL POINTS EARNED",
+    arcadeDistanceLabel: "DISTANCE TRAVELED",
+    arcadeDodgedLabel: "ASTEROIDS DODGED",
+    arcadeNextLevelBtn: "Next Sector Level 🚀",
+    arcadePlayAgain: "Try Again",
+    arcadeClose: "Exit Game",
+    arcadeSelectLevel: "Select Sector Level",
+    arcadeTip: "💡 Move mouse/drag or [A/D / Arrows] to steer. Press [SPACE] / Boost button for Shield Pulse!",
   },
 
   ja: {
@@ -462,7 +474,7 @@ export const TRANSLATIONS = {
     actionDeploy: "デプロイ",
     actionThumbsUp: "クリーン",
     actionDance: "勝利ダンス",
-    actionArcade: "🎮 アーケード",
+    actionArcade: "🚀 ロケット作戦",
 
     // Robot Speeches
     speechWave: [
@@ -590,6 +602,7 @@ export const TRANSLATIONS = {
     filterIot: "IoT",
     filterMobile: "モバイルアプリ",
     filterDesign: "デザイン",
+    viewCategoryOnly: "このカテゴリーを見る →",
     projectDetailEyebrow: "プロジェクト詳細",
     projectDetailDesc: "このプロジェクトのコンセプト、技術スタック、学びについての詳細。",
 
@@ -625,21 +638,26 @@ export const TRANSLATIONS = {
     footerCopyText: "Muhammad Ulil Azmi. クリーンコードで構築。",
     designedDevelopedBy: "Designed & Developed by Azmi",
 
-    // Arcade Game Strings
-    arcadeTitle: "AZMI DEV RUSH ARCADE",
+    // Rocket Arcade Game Strings
+    arcadeTitle: "COSMIC ROCKET ODYSSEY",
     arcadeSchoolTag: "SMKN 1 PASURUAN • RPL",
-    arcadeMission: "ミッション:",
-    arcadeCompleted: "完了",
-    arcadeEmpReady: "EMP準備完了！",
-    arcadeStartTitle: "SMKN 1 PASURUAN 開発者シミュレーション",
+    arcadeMission: "セクター",
+    arcadeCompleted: "ゴール到達！クリア！ 🎉",
+    arcadeCrashed: "機体大破：ミッション失敗 💥",
+    arcadeEmpReady: "シールドブースト準備完了！",
+    arcadeStartTitle: "宇宙ロケット大作戦 (全10レベル)",
     arcadeStartDesc:
-      "アズミのポートフォリオプロジェクトをデプロイしよう！Tech Stackアイコン（Next.js、React、TypeScript、Supabase、Python）をタップしてゲージを溜め、バグを素早く撃退しましょう！",
-    arcadeStartBtn: "今すぐゲームを開始（25秒）",
-    arcadeResultTitle: "本番シミュレーション結果",
-    arcadeDeployedProjectsLabel: "デプロイ完了プロジェクト",
-    arcadeMaxComboLabel: "最大連続コンボ",
-    arcadePlayAgain: "もう一度プレイ",
+      "ロケットを操縦して危険な小惑星帯を回避しながらゴールゲートを目指そう！スターライトクリスタルを集め、ターボシールドを展開し、全10ステージを最高成功率で攻略しよう！",
+    arcadeStartBtn: "ロケット発進！ 🚀",
+    arcadeResultTitle: "フライトミッションレポート",
+    arcadeSuccessRateLabel: "任務成功率",
+    arcadePointsLabel: "獲得合計ポイント",
+    arcadeDistanceLabel: "飛行距離",
+    arcadeDodgedLabel: "回避した小惑星",
+    arcadeNextLevelBtn: "次のレベルへ進む 🚀",
+    arcadePlayAgain: "もう一度挑戦",
     arcadeClose: "ゲームを閉じる",
-    arcadeTip: "💡 技術スタックをタップしてプロジェクトを構築、[スペースキー]でEMP発動！",
+    arcadeSelectLevel: "レベル選択",
+    arcadeTip: "💡 マウス/ドラッグまたは[A/D/矢印キー]で操縦。[スペース]でシールド衝撃波発動！",
   },
 };

@@ -386,7 +386,7 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
 
   const handleGameWin = useCallback((score: number) => {
     showSpeech(
-      `🏆 Skor Anda: ${score.toLocaleString()} PTS! Anda telah lulus sertifikasi Developer SMKN 1 Pasuruan!`,
+      `🏆 Misi Kosmik Berhasil! Skor: ${score.toLocaleString()} PTS! Anda pilot roket terbaik SMKN 1 Pasuruan!`,
       6000
     );
   }, [showSpeech]);
@@ -1771,9 +1771,9 @@ export default function InteractiveRobotCanvas({ className = "" }: RobotCanvasPr
                   type="button"
                   onClick={handleOpenArcade}
                   className="flex items-center gap-1 rounded-full px-2.5 py-0.5 font-bold transition-all cursor-pointer text-[10.5px] bg-gradient-to-r from-orange-500/25 to-amber-500/25 border border-orange-500/40 text-orange-300 hover:from-orange-500 hover:to-amber-500 hover:text-white hover:shadow-[0_0_15px_rgba(255,98,0,0.5)]"
-                  title="Mainkan Cyber Arcade Game 20 detik"
+                  title="Mainkan Game Roket Luar Angkasa 10 Level"
                 >
-                  <Gamepad2 size={12} />
+                  <Rocket size={12} />
                   <span>{t("actionArcade")}</span>
                 </button>
               </div>
